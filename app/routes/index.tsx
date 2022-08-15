@@ -12,6 +12,12 @@ import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
 
 export const meta: MetaFunction = ({ data }) => {
+
+  if(!data.data) return {
+    title: 'blotion',
+    description: 'Turn your notion Database into Blog',
+  }
+
   return {
     title: `${data.data.site_name} ~ Blotion`,
     description: `${data.data.site_name} ~ Blotion`,
