@@ -32,7 +32,7 @@ export const supabaseClient = createClient(window.env.SUPABASE_URL, window.env.S
   persistSession: false
 });
 
-export const signInWithNotion = (redirectTo = process.env.NODE_ENV != "development" ? 'https://notion-to-blog.vercel.app/oauth/callback' : 'http://localhost:3000/oauth/callback') =>
+export const signInWithNotion = (redirectTo = process.env.NODE_ENV != "development" ? 'https://blotion.vercel.app/oauth/callback' : 'http://localhost:3000/oauth/callback') =>
   supabaseClient.auth.signIn(
     {
       provider: 'notion'
