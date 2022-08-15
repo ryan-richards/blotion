@@ -1,15 +1,16 @@
-import { Text, Stack, Center, Heading, Flex, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList } from '@chakra-ui/react';
+import { Text, Stack, Center, Heading, Flex, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image } from '@chakra-ui/react';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { marked } from 'marked';
-import { FiCheck, FiCopy } from 'react-icons/fi';
+import { FiBook, FiCheck, FiCopy } from 'react-icons/fi';
 import { getDBid, getNotionPagebyID, getPublishedBlogPosts } from '~/lib/notion/notion-api';
 import { signInWithNotion } from '~/lib/storage/supabase.client';
 import { supabaseAdmin } from '~/lib/storage/supabase.server';
 import TimeAgo from 'timeago-react';
 import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
+import blotionImage from '../../public/blotionImage.png'
 
 export const meta: MetaFunction = ({ data }) => {
 
@@ -129,24 +130,32 @@ export default function Home() {
 
   if (status === 'home') {
     return (
-      <Stack gap={10}>
-        <Center width={'full'} h={'55vh'}>
+      <Stack gap={10} mt={10}>
+        <Center width={'full'} h={{ base: 'full', md: '55vh' }}>
           <Stack>
             <Flex direction={'column'} align={'center'} gap={5}>
+              <Flex mb={3}>
+                <Image src={blotionImage} maxH={250}></Image>
+              </Flex>
 
               <Flex direction={'column'} align={'center'}>
                 <Heading>blotion</Heading>
                 <Heading fontWeight={'normal'} size={'md'}>Create a blog with Notion</Heading>
               </Flex>
 
-              <Center>
-                <List w={'full'} marginLeft={'auto'} marginRight={'auto'}>
+              <Center mt={5}>
+                <List w={'full'} marginLeft={'auto'} marginRight={'auto'} spacing={2}>
                   <ListItem>
                     <Button minW={200} as={Link} href={'https://pinnate-tie-7a0.notion.site/Ryan-s-Website-7304261e002b417db66fdbe742c05a49'} isExternal target={'_blank'}>
                       <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
                       Copy Template
                     </Button>
                   </ListItem>
+
+                  <Center>
+                    <ListItem alignItems={'center'}>and then...</ListItem>
+                  </Center>
+
                   <ListItem>
                     <Button
                       minW={200}
