@@ -12,9 +12,6 @@ import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
 
 export const meta: MetaFunction = ({ data }) => {
-
-  console.log(data)
-
   return {
     title: `${data.data.site_name} ~ Blotion`,
     description: `${data.data.site_name} ~ Blotion`,
@@ -26,7 +23,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const host = new URL(request.url)
   if (!host) throw new Error('Missing host')
 
-
   let subdomain = null
 
   if (host) {
@@ -35,7 +31,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     }
     subdomain = host.hostname.split('.')[0]
 
-    if (subdomain === 'notion-to-blog') {
+    if (subdomain === 'blotion') {
       return json({ status: 'home' })
     }
 

@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         }
         subdomain = host.hostname.split('.')[0]
 
-        if (subdomain === 'notion-to-blog') {
+        if (subdomain === 'blotion') {
             return json({ status: 'home' })
         }
     }
@@ -38,7 +38,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!data) {
         return redirect('/')
     }
-    
+
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
     const content = await getSingleBlogPost(data.db_page, decryptedToken, slug)
 
