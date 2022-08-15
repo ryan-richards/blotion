@@ -13,7 +13,7 @@ import { SiNotion } from "react-icons/si";
 
 export const meta: MetaFunction = ({ data }) => {
 
-  if(!data.data) return {
+  if (!data.data) return {
     title: 'blotion',
     description: 'Turn your notion Database into Blog',
   }
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     }
     subdomain = host.hostname.split('.')[0]
 
-    if (subdomain === 'blotion') {
+    if (subdomain === 'www' || subdomain === 'blotion') {
       return json({ status: 'home' })
     }
 
@@ -50,8 +50,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     .single()
 
   if (!data) {
-    return redirect('/auth/signup')
+    return json({ status: 'home' })
   }
+
+  //Site Exisits
 
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
@@ -73,12 +75,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
   }
 
-  if (!data.db_page && pageObject?.posts) {
-    const { data } = await supabaseAdmin
-      .from('sites')
-      .update({ db_page: pageObject?.posts })
-      .match({ site_name: subdomain })
-  }
 
   let navItems: { title: any, slug: any }[] = []
 
@@ -105,6 +101,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
   }
 
+  if (!data.db_page && pageObject?.posts) {
+    const { data } = await supabaseAdmin
+      .from('sites')
+      .update({ db_page: pageObject?.posts })
+      .match({ site_name: subdomain })
+  }
 
   return json({ data, html, pageObject, pageLinks, navItems }, {
     headers: {
@@ -171,13 +173,13 @@ export default function Home() {
     <Stack mt={10}>
       <Flex direction={'row'} justify={'space-between'}>
         <Heading size={'lg'}>{data.site_name}</Heading>
-        
+
         <HStack gap={1}>
           {navItems.map((item: any) =>
             <Link key={item.slug} as={RemixLink} to={item.slug}>{item.title}</Link>
           )}
         </HStack>
-      
+
       </Flex>
 
       <Prose>

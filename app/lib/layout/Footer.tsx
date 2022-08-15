@@ -5,11 +5,11 @@ const Footer = () => {
   return (
     <Flex as="footer" justify={'center'} width="full" align="center" pb={10}>
       <Tag>
-        <Link href="https://turbopage.io" isExternal>
+        <Link href="https://blotion.com" isExternal>
           <Flex align={'center'}>
             <Icon as={SiNotion} mr={2} />
             <Text>
-              notion-to-blog
+              made with blotion
             </Text>
           </Flex>
         </Link>

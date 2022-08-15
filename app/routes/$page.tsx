@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         }
         subdomain = host.hostname.split('.')[0]
 
-        if (subdomain === 'blotion') {
+        if (subdomain === 'www' || subdomain === 'blotion') {
             return json({ status: 'home' })
         }
     }
