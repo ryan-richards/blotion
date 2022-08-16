@@ -1,5 +1,5 @@
 import { ActionFunction, json } from "@remix-run/node";
-import { supabaseClient } from "~/lib/storage/supabase";
+import { supabaseAdmin } from "~/lib/storage/supabase.server";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SIG;
 const localEndpointSecret = 'whsec_c135883d17ebeff872becad700ed0c640202be5a8b94372c800fa4d72118f890'
@@ -77,7 +77,7 @@ export const action: ActionFunction = async ({ request }) => {
 
             if (session.payment_status === 'paid') {
                 console.log('Payment succeeded for order:', session.id);
-                const { data } = await supabaseClient
+                const { data } = await supabaseAdmin
                     .from('user_data')
                     .update({ plan: planLevel })
                     .eq('stripe_customer_id', customer)
@@ -102,7 +102,7 @@ export const action: ActionFunction = async ({ request }) => {
 
             // Fulfill the purchase...
             console.log('Payment succeeded for order:', session.id);
-            const { data } = await supabaseClient
+            const { data } = await supabaseAdmin
                 .from('user_data')
                 .update({ plan: 'pro' })
                 .eq('stripe_customer_id', customer)
@@ -145,7 +145,7 @@ export const action: ActionFunction = async ({ request }) => {
             }
 
             if (planLevel) {
-                const { data } = await supabaseClient
+                const { data } = await supabaseAdmin
                     .from('user_data')
                     .update({ plan: planLevel })
                     .eq('stripe_customer_id', customer)
@@ -163,7 +163,7 @@ export const action: ActionFunction = async ({ request }) => {
             const customer = subscription.customer;
 
             if (customer) {
-                const { data } = await supabaseClient
+                const { data } = await supabaseAdmin
                     .from('user_data')
                     .update({ plan: 'free' })
                     .eq('stripe_customer_id', customer)
