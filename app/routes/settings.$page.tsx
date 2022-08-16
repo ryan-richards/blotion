@@ -1,7 +1,6 @@
 import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button } from "@chakra-ui/react";
 import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import { Form, useActionData, useFetcher, useLoaderData, useTransition } from "@remix-run/react";
-import { Link as RemixLink } from "react-router-dom";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { useNavigate } from "react-router-dom";
