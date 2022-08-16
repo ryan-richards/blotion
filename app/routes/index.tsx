@@ -11,6 +11,7 @@ import TimeAgo from 'timeago-react';
 import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
 import blotionImage from '../../public/blotionImage.png'
+import { oAuthStrategy } from '~/lib/storage/auth.server';
 
 export const meta: MetaFunction = ({ data }) => {
 
@@ -26,6 +27,10 @@ export const meta: MetaFunction = ({ data }) => {
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
+
+  const session = await oAuthStrategy.checkSession(request, {
+    successRedirect: "/account",
+  });
 
   const host = new URL(request.url)
   if (!host) throw new Error('Missing host')
@@ -132,7 +137,7 @@ export default function Home() {
 
   if (status === 'home') {
     return (
-      <Stack gap={10} mt={{base:2, md:10}}>
+      <Stack gap={10} mt={{ base: 2, md: 10 }}>
         <Center width={'full'} h={{ base: 'full', md: '55vh' }}>
           <Stack>
             <Flex direction={'column'} align={'center'} gap={5}>
@@ -181,7 +186,7 @@ export default function Home() {
   }
 
   return (
-    <Stack mt={{base:2, md:10}}>
+    <Stack mt={{ base: 2, md: 10 }}>
       <Flex direction={'row'} justify={'space-between'}>
         <Heading size={'lg'}>{data.site_name}</Heading>
 
@@ -201,11 +206,11 @@ export default function Home() {
       <Stack>
         {pageLinks.map((page: any, index: number) =>
           <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
-            <Flex justify={'space-between'} direction={{base:'column',md:'row'}}>
+            <Flex justify={'space-between'} direction={{ base: 'column', md: 'row' }}>
               <Text>
                 {page.title}
               </Text>
-              <TimeAgo style={{fontSize:'12px'}} datetime={page.date} />
+              <TimeAgo style={{ fontSize: '12px' }} datetime={page.date} />
             </Flex>
           </Link>
         )}

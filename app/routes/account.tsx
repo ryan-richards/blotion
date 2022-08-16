@@ -61,7 +61,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         const { Client } = require('@notionhq/client');
 
-        let pages
+        let pages: { results: { id: any; map: (arg0: (page: any) => Promise<void>) => void; }; }
 
         if (decrypted) {
             const notion = new Client({ auth: decrypted.toString() });
@@ -73,10 +73,10 @@ export const loader: LoaderFunction = async ({ request }) => {
                 },
             });
 
-            pages.results.map(async (page: any) => {
 
+            pages.results.map(async (page: any) => {
                 if (page.parent.type === 'workspace') {
-                    const { data } = await supabaseAdmin
+                    const { data, error } = await supabaseAdmin
                         .from('connected_pages')
                         .insert({
                             user: session.user?.id,
@@ -84,21 +84,13 @@ export const loader: LoaderFunction = async ({ request }) => {
                             page_name: tidyName(page.properties.title.title[0].plain_text),
                             page_cover: page.cover.external.url
                         })
-
-                    if (data) {
-                        const { data: userData } = await supabaseAdmin
-                            .from('users')
-                            .select('*, sites(*)')
-                            .eq('id', session.user?.id)
-                            .single()
-
-                        return json({ userData })
-                    }
                 }
             })
         }
     }
 
+
+    // if you come to account page just get userdata and sites 
     const { data: userData } = await supabaseAdmin
         .from('users')
         .select('*, sites(*)')
@@ -140,27 +132,38 @@ export default function Account() {
     const actionData = useActionData();
     const transition = useTransition();
     const nav = useNavigate();
-
-    const [hashed, setHashed] = useState('');
-    const [secret, setSecret] = useState('');
     const [hover, setHover] = useState('')
 
     const message = actionData ? actionData.encrypted ? actionData.encrypted : actionData.decrypted : '';
     const isSubmitting = transition.state === 'submitting'
+    const canManagePlan = userData.plan === "creative" || userData.plan === "pro"
+    const canPurchase = userData.plan === "free"
 
+    const redirectURL = canManagePlan ? '/api/create-customer-portal-session' : '/pricing'
 
     return (
         <>
             <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
                 <Flex direction={{ base: 'column', md: 'row' }} width={'100%'} justify={'space-between'} gap={2}>
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
-                        <Flex direction={{ base: 'row', md: 'row' }} justify={'space-between'} w={'full'}>
+                        <Flex direction={{ base: 'row', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
                             <Flex gap={3}>
                                 <Avatar name={userData.email} ></Avatar>
                                 <Flex direction={'column'}>
-                                    <Text>{userData.name}</Text>
+                                    <Flex gap={2} align={'center'}>
+                                        <Text>{userData.name}</Text>
+                                        <Badge maxWidth={'50px'} h={'20px'} variant={'subtle'} colorScheme={'purple'} textAlign={'center'} width={'50%'}>{userData.plan}</Badge>
+                                    </Flex>
                                     <Text>{userData.email}</Text>
                                 </Flex>
+                            </Flex>
+                            <Flex align={'center'} gap={2} direction={{ base: 'column', md: 'row' }}>
+                                <Form method={canManagePlan ? 'post' : 'get'} action={redirectURL}>
+                                    <Button size={'sm'} minW={'100px'} colorScheme={'blue'} variant={'outline'} type={'submit'}>{canManagePlan ? 'Manage Plan' : 'Upgrade'}</Button>
+                                </Form>
+                                <Form method={'post'} action={'/auth/logout'}>
+                                    <Button size={'sm'} minW={'100px'} colorScheme={'gray'} variant={'outline'} type={'submit'}>Logout</Button>
+                                </Form>
                             </Flex>
                         </Flex>
                     </Flex>
@@ -186,7 +189,7 @@ export default function Account() {
                                         <Tag colorScheme={'green'} position={'absolute'} top={'2%'} right={'2%'} zIndex={100}>{page.published ? 'Live' : null}</Tag>
                                     </Flex>
                                     {hover == page.id ?
-                                        <Stack direction={{base:'row', md:'column'}} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
+                                        <Stack direction={{ base: 'row', md: 'column' }} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
                                             <Button variant={'outline'} size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
                                         </Stack> : null}
                                     <Stack>
