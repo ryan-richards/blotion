@@ -22,7 +22,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     const { data } = await supabaseDB
-        .from('user_data')
+        .from('users')
         .select('*')
         .eq('id', supaSession.user?.id)
         .single()

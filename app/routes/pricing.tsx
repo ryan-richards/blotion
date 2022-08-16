@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
 
     const { data: userData } = await supabaseDB
-        .from("user_data")
+        .from("users")
         .select("plan")
         .eq('id', session.user?.id)
         .single()

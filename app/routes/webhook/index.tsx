@@ -78,7 +78,7 @@ export const action: ActionFunction = async ({ request }) => {
             if (session.payment_status === 'paid') {
                 console.log('Payment succeeded for order:', session.id);
                 const { data } = await supabaseAdmin
-                    .from('user_data')
+                    .from('users')
                     .update({ plan: planLevel })
                     .eq('stripe_customer_id', customer)
                 return json({ status: 'success' })
@@ -103,7 +103,7 @@ export const action: ActionFunction = async ({ request }) => {
             // Fulfill the purchase...
             console.log('Payment succeeded for order:', session.id);
             const { data } = await supabaseAdmin
-                .from('user_data')
+                .from('users')
                 .update({ plan: 'pro' })
                 .eq('stripe_customer_id', customer)
 
@@ -146,7 +146,7 @@ export const action: ActionFunction = async ({ request }) => {
 
             if (planLevel) {
                 const { data } = await supabaseAdmin
-                    .from('user_data')
+                    .from('users')
                     .update({ plan: planLevel })
                     .eq('stripe_customer_id', customer)
                 return json({ status: 'success' })
@@ -164,7 +164,7 @@ export const action: ActionFunction = async ({ request }) => {
 
             if (customer) {
                 const { data } = await supabaseAdmin
-                    .from('user_data')
+                    .from('users')
                     .update({ plan: 'free' })
                     .eq('stripe_customer_id', customer)
                 return json({ status: 'success' })

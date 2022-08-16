@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     const session = await stripe.billingPortal.sessions.create({
         customer: data.stripe_customer_id,
-        return_url: 'http://localhost:3000/settings',
+        return_url: 'http://www.blotion.com/account',
     });
 
     if (session) {
