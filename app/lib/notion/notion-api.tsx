@@ -48,6 +48,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     let pageObject = {
         index: '',
         posts: '',
+        postsTitle:''
     }
 
     if (results.length === 0) {
@@ -63,6 +64,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
         //loop through the blocks and find the blog post database id
         if (block.type === 'child_database') {
             pageObject.posts = block.id
+            pageObject.postsTitle = block.child_database.title
         }
     })
 

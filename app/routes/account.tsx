@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Flex, FormLabel, Heading, Image, Input, Stack, Tex
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, Link as RemixLink, useActionData, useLoaderData, useNavigate, useTransition } from "@remix-run/react";
 import { useState } from "react";
-import { FiEdit, FiPlus } from "react-icons/fi";
+import { FiEdit, FiPlus, FiSettings } from "react-icons/fi";
 import { Stat } from "~/lib/components/Stat";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { createSite } from "~/lib/storage/post.server";
@@ -164,19 +164,11 @@ export default function Account() {
                             </Flex>
                         </Flex>
                     </Flex>
-
-                    <Flex bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'center'} width={'full'}>
-                        <HStack gap={5} justify={'space-between'} w={'full'} pl={3} pr={3}>
-                            <Stat label={'Published'} value={'1'} limit={' / ' + '1'} />
-                            <Stat label={'Total Pages'} value={'1'} limit={' / ' + '25'} />
-                            <Stat label={'Combined Views'} value={''} limit={'495'} />
-                        </HStack>
-                    </Flex>
                 </Flex>
 
                 <Flex mt={5} direction={'column'}>
                     <Flex justify={'flex-start'} width={'100%'} gap={2}>
-                        <Flex width={'85%'} justify={'flex-start'} bg={'gray.100'} rounded={'md'} pb={1} pt={2}>
+                        <Flex width={{ base: 'full', md: '85%' }} justify={'flex-start'} bg={'gray.100'} rounded={'md'} pb={1} pt={2}>
                             <Text ml={5}>Sites</Text>
                         </Flex>
                         <Flex>
@@ -189,14 +181,20 @@ export default function Account() {
                     <Wrap mt={5}>
                         {userData.sites.map((page: any) =>
                             <WrapItem key={page.id}>
-                                <Box position={'relative'} bg={hover == page.id ? 'gray.200' : 'gray.100'} border={'1px'} borderColor={'gray.300'} rounded={'lg'} p={4} maxH={{ base: 'full', md: 250 }} maxWidth={{ base: 'full', md: 322 }} cursor={'pointer'}>
+                                <Box position={'relative'} border={'1px'} borderColor={'gray.300'} rounded={'lg'} p={4} maxH={{ base: 'full', md: 250 }} maxWidth={{ base: 'full', md: 322 }} cursor={'pointer'} onClick={() => setHover(page.id)} onMouseEnter={() => setHover(page.id)} onMouseLeave={() => setHover('')}>
                                     <Flex justify={'flex-end'} display={page.published ? 'flex' : 'none'} >
                                         <Tag colorScheme={'green'} position={'absolute'} top={'2%'} right={'2%'} zIndex={100}>{page.published ? 'Live' : null}</Tag>
                                     </Flex>
+                                    {hover == page.id ?
+                                        <Stack direction={{base:'row', md:'column'}} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
+                                            <Button variant={'outline'} size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
+                                        </Stack> : null}
                                     <Stack>
-                                        <Box rounded={'md'} overflow={'hidden'} maxH={{base:'250px',md:'180px'}}>
-                                            <Image  src={page.cover ? page.cover : 'https://images.unsplash.com/photo-1554147090-e1221a04a025?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=848&q=80'} />
-                                        </Box>
+                                        <Stack opacity={hover == page.id ? '50%' : '100%'}>
+                                            <Box rounded={'md'} overflow={'hidden'} maxH={{ base: '250px', md: '180px' }}>
+                                                <Image src={page.cover ? page.cover : 'https://images.unsplash.com/photo-1554147090-e1221a04a025?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=848&q=80'} />
+                                            </Box>
+                                        </Stack>
                                         <Flex justify={'center'} bg={'gray.200'} rounded={'md'} pb={1} pt={1}>
                                             <Link href={`https://${page.site_name}.blotion.com`} isExternal>
                                                 <Text key={page.id}>https://{page.site_name}.blotion.com</Text>

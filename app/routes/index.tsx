@@ -128,9 +128,11 @@ export default function Home() {
 
   const { data, status, html, pageObject, pageLinks, navItems } = useLoaderData()
 
+  console.log(pageObject)
+
   if (status === 'home') {
     return (
-      <Stack gap={10} mt={10}>
+      <Stack gap={10} mt={{base:2, md:10}}>
         <Center width={'full'} h={{ base: 'full', md: '55vh' }}>
           <Stack>
             <Flex direction={'column'} align={'center'} gap={5}>
@@ -179,7 +181,7 @@ export default function Home() {
   }
 
   return (
-    <Stack mt={10}>
+    <Stack mt={{base:2, md:10}}>
       <Flex direction={'row'} justify={'space-between'}>
         <Heading size={'lg'}>{data.site_name}</Heading>
 
@@ -195,15 +197,15 @@ export default function Home() {
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
 
-      <Heading size={'md'}>Posts</Heading>
+      <Heading size={'md'}>{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
       <Stack>
         {pageLinks.map((page: any, index: number) =>
           <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
-            <Flex justify={'space-between'}>
+            <Flex justify={'space-between'} direction={{base:'column',md:'row'}}>
               <Text>
                 {page.title}
               </Text>
-              <TimeAgo datetime={page.date} />
+              <TimeAgo style={{fontSize:'12px'}} datetime={page.date} />
             </Flex>
           </Link>
         )}
