@@ -17,22 +17,27 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!pageID) throw new Error('Missing pageID')
 
     let subdomain = null
+    let customDomain = null
 
     if (host) {
         if (host.hostname === 'localhost') {
-            return json({ status: 'home' })
+            return redirect('/')
         }
         subdomain = host.hostname.split('.')[0]
 
         if (subdomain === 'www' || subdomain === 'blotion') {
-            return json({ status: 'home' })
+            return redirect('/')
+        }
+
+        if (!host.host.includes('blotion.com')) {
+            customDomain = host.host
         }
     }
 
     const { data, error } = await supabaseAdmin
         .from('sites')
         .select('*, users(notion_token)')
-        .match({ site_name: subdomain })
+        .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
         .single()
 
     if (!data) {

@@ -56,7 +56,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { data, error } = await supabaseAdmin
     .from('sites')
     .select('*, users(notion_token)')
-    .match({ site_name: subdomain })
     .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .single()
 

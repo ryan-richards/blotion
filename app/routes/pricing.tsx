@@ -208,13 +208,13 @@ export default function Pricing() {
                                         },
                                     }}
                                 >
-                                    {canPurchase ? 'Purchase' : 'Current Plan'}
+                                    {canPurchase ? 'Purchase' : null}
+                                    {canDowngrade ? 'Manage Plan' : null} 
                                 </Button>
                             </Form>
                         </Flex>
                         <Stack direction="column" p="6" spacing="3" flexGrow="1">
                             <Feature>1 Published Blog</Feature>
-                            <Feature>Custom Subdomain on blotion.com</Feature>
                             <Feature>Add a Custom Domain</Feature>
                             <Feature>Dark / Light Toggle</Feature>
                         </Stack>
@@ -301,6 +301,7 @@ export default function Pricing() {
                                 >
                                     {canPurchase ? 'Purchase' : null}
                                     {canUpgrade ? 'Upgrade' : null}
+                                    {canDowngrade ? 'Manage Plan' : null} 
                                 </Button>
                             </Form>
                         </Flex>
