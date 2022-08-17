@@ -36,6 +36,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (!host) throw new Error('Missing host')
 
   let subdomain = null
+  let customDomain = null
 
   if (host) {
     if (host.hostname === 'localhost') {
@@ -47,12 +48,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       return json({ status: 'home' })
     }
 
+    if (!host.host.includes('blotion.com')) {
+      customDomain = host.host
+    }
   }
 
   const { data, error } = await supabaseAdmin
     .from('sites')
     .select('*, users(notion_token)')
     .match({ site_name: subdomain })
+    .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .single()
 
   if (!data) {
@@ -60,7 +65,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   //Site Exisits
-
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
 
@@ -132,8 +136,6 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 export default function Home() {
 
   const { data, status, html, pageObject, pageLinks, navItems } = useLoaderData()
-
-  console.log(pageObject)
 
   if (status === 'home') {
     return (

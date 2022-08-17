@@ -2,7 +2,7 @@ import { ActionFunction, json } from "@remix-run/node";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SIG;
-const localEndpointSecret = 'whsec_c135883d17ebeff872becad700ed0c640202be5a8b94372c800fa4d72118f890'
+const localEndpointSecret = process.env.STRIPE_LOCAL_WEBHOOK_SIG;
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const endpoint = process.env.NODE_ENV === "development" ? localEndpointSecret : endpointSecret;

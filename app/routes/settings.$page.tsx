@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button } from "@chakra-ui/react";
+import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot } from "@chakra-ui/react";
 import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
 import { Form, useActionData, useFetcher, useLoaderData, useTransition, useNavigate } from "@remix-run/react";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
@@ -13,7 +13,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     });
 
     const page = params.page;
-    console.log(page)
 
     if (!page) {
         return json({
@@ -22,14 +21,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         });
     }
 
+    const { data: userData } = await supabaseAdmin
+        .from("users")
+        .select("plan")
+        .eq('id', session.user?.id)
+        .single()
+
     const { data: siteData } = await supabaseAdmin
         .from('sites')
         .select('*')
         .eq('id', page)
         .eq('owner', session.user?.id)
         .single()
-
-    console.log(siteData)
 
     if (!siteData) {
         return json({
@@ -38,7 +41,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         });
     }
 
-    return json({ siteData });
+    return json({ siteData, userData });
 };
 
 
@@ -77,20 +80,25 @@ export const action: ActionFunction = async ({ request, params }) => {
 
 export default function Settings() {
 
-    const { siteData: page } = useLoaderData()
+    const { siteData: page, userData } = useLoaderData()
     const [subdomain, setSubdomain] = useState(page.site_name)
     const nav = useNavigate();
 
     const actionData = useActionData();
     const siteNameAvailable = useFetcher()
+    const customDomainAction = useFetcher()
+    const checkCustomDomain = useFetcher()
     let [siteNameValid, setSiteNameValid] = useState(false)
     let [nameCheckCount, setNameCheckCount] = useState(0)
     let [input, setInput] = useState(page.site_name)
+    let [customDomain, setCustomDomain] = useState(page.custom_domain ? page.custom_domain : '')
     let [inputError, setInputError] = useState('')
     const transition = useTransition();
 
     const isSubmitting = transition.state === 'submitting'
     let isSaved = actionData ? actionData.status === 'success' : false;
+
+    let customDomainStatus = customDomainAction.data ? customDomainAction.data.status : '';
 
     const handleNameCheck = async (value: any) => {
 
@@ -132,6 +140,44 @@ export default function Settings() {
         }
     }, [siteNameAvailable]);
 
+    useEffect(() => {
+        //check if domain is configured correctly
+        console.log('checking custom domain')
+
+        if (page.custom_domain) {
+            checkCustomDomain.submit(
+                { domain: page.custom_domain },
+                { method: "post", action: "/api/check-domain" }
+            );
+
+        }
+    }, [customDomainStatus]);
+
+    const customDomainConfigured = checkCustomDomain.data ? checkCustomDomain.data.valid ? true : false : false
+
+    const addCustomDomain = async (value: any) => {
+        const formData = new FormData();
+        formData.append("site", page.id);
+        formData.append("domain", value);
+
+        customDomainAction.submit(
+            formData,
+            { method: "post", action: "/api/domain" }
+        );
+    }
+
+    const removeCustomDomain = async (value: any) => {
+
+        const formData = new FormData();
+        formData.append("site", page.id);
+        formData.append("domain", value);
+
+        customDomainAction.submit(
+            formData,
+            { method: "delete", action: "/api/domain" }
+        );
+    }
+
 
     return (
         <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
@@ -171,14 +217,42 @@ export default function Settings() {
             </Flex>
 
             <Flex mt={5} direction={'column'}>
-                <Form method='post' autoComplete="false">
-                    <FormLabel>Custom Domain</FormLabel>
-                    <InputGroup gap={2}>
-                        <Input placeholder="coming soon" name={'custom_domain'} isDisabled />
-                        <Button type={'submit'} isDisabled>Add</Button>
-                    </InputGroup>
-                </Form>
+                <FormLabel>Custom Domain</FormLabel>
+                <InputGroup gap={2}>
+                    <Input placeholder="your domain" name={'custom_domain'} value={customDomain} onChange={(e: any) => setCustomDomain(e.target.value)} />
+                    {!page.custom_domain ?
+                        <Button type={'submit'} colorScheme={'blue'} isDisabled={!customDomain} onClick={() => addCustomDomain(customDomain)} isLoading={isSubmitting} >Add</Button> :
+                        <Button type={'submit'} colorScheme={'red'} isDisabled={!customDomain} onClick={() => removeCustomDomain(customDomain)} isLoading={isSubmitting} >Remove</Button>}
+                </InputGroup>
+                <Flex direction={'column'} align={'center'} mt={3} display={customDomainConfigured ? 'flex' : 'none'}>
+                    <Text color={'green.400'}>Domain is successfully configured</Text>
+                    <Text color={'green.400'}>Please allow 48hr for DNS changes to take effect</Text>
+                </Flex>
             </Flex>
+
+            {page.custom_domain && !customDomainConfigured ?
+                <Flex direction={'column'} mt={5}>
+                    <TableContainer>
+                        <Table variant='simple'>
+                            <TableCaption>Set the above record on your DNS provider to continue</TableCaption>
+                            <Thead>
+                                <Tr>
+                                    <Th>Type</Th>
+                                    <Th>Name</Th>
+                                    <Th>Value</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                <Tr>
+                                    <Td>A</Td>
+                                    <Td>@</Td>
+                                    <Td>76.76.21.21</Td>
+                                </Tr>
+                            </Tbody>
+                        </Table>
+                    </TableContainer>
+                </Flex>
+                : null}
         </Box>
     )
 }

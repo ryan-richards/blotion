@@ -96,7 +96,7 @@ export default function Pricing() {
                         color: "gray.400",
                     }}
                 >
-                    Ready to publish more ideas, dive deeper into your page metrics and reach more potenital users?
+                    Ready to build more sites and connect custom domains?
                 </chakra.p>
                 <Flex justify="center" mx={{ base: 'auto', md: 0 }} mb={-2}>
                     <Stack
@@ -213,9 +213,9 @@ export default function Pricing() {
                             </Form>
                         </Flex>
                         <Stack direction="column" p="6" spacing="3" flexGrow="1">
-                            <Feature>10 Published Pages</Feature>
-                            <Feature>25 Draft Pages</Feature>
-                            <Feature>Page Metrics</Feature>
+                            <Feature>1 Published Blog</Feature>
+                            <Feature>Custom Subdomain on blotion.com</Feature>
+                            <Feature>Add a Custom Domain</Feature>
                             <Feature>Dark / Light Toggle</Feature>
                         </Stack>
                     </Box>
@@ -305,13 +305,9 @@ export default function Pricing() {
                             </Form>
                         </Flex>
                         <Stack direction="column" p="6" spacing="3" flexGrow="1">
-                            <Feature>50 Published Pages</Feature>
-                            <Feature>Unlimted Drafts</Feature>
-                            <Feature>Advanced Page Metrics</Feature>
-                            <Feature>Hook up your own email server</Feature>
-                            <Feature>Send email captures to Airtable / Notion</Feature>
-                            <Feature>Custom Domains</Feature>
-                            <Feature>Remove turbopage branding</Feature>
+                            <Feature>50 Published Blogs</Feature>
+                            <Feature>Add Custom Domains</Feature>
+                            <Feature>Remove blotion branding</Feature>
                             <Feature>Dark / Light Toggle</Feature>
                         </Stack>
                     </Box>

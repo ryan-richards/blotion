@@ -61,7 +61,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
         const { Client } = require('@notionhq/client');
 
-        let pages: { results: { id: any; map: (arg0: (page: any) => Promise<void>) => void; }; }
+        let pages;
 
         if (decrypted) {
             const notion = new Client({ auth: decrypted.toString() });
@@ -73,6 +73,23 @@ export const loader: LoaderFunction = async ({ request }) => {
                 },
             });
 
+            //put all pages.results id's into an array where page.parent.type is workspace
+            const workspaces = pages.results.filter((page: any) => page.parent.type === 'workspace');
+            // extract the id's from the workspaces array
+            const workspaceIds = workspaces.map((workspace: any) => workspace.id);
+            //extract all index_page from the userData.sites array
+            const indexPages = userData.sites.map((site: any) => site.index_page);
+
+
+            // check if workspaces array is the same as the indexPages array
+            let result = indexPages.every(function (element: any) {
+                return workspaceIds.includes(element);
+            });
+
+            if (result) {
+                // if they are the same then redirect to the account page you dont need to add more connected pages
+                return redirect(`/account`);
+            }
 
             pages.results.map(async (page: any) => {
                 if (page.parent.type === 'workspace') {
@@ -90,7 +107,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
 
 
-    // if you come to account page just get userdata and sites 
+    // if you come to /account page just get userdata and sites 
     const { data: userData } = await supabaseAdmin
         .from('users')
         .select('*, sites(*)')
@@ -109,21 +126,64 @@ export const action: ActionFunction = async ({ request }) => {
     });
 
     const formData = await request.formData();
-    const site_name = formData?.get('site');
-    const index_id = formData?.get('index');
+    const action = formData.get('action')
+    const page = formData.get('page')
 
-    const siteDetails = {
-        owner: session.user?.id,
-        site_name: site_name,
-        index_id: index_id,
+    // Get user data
+    const { data: userData } = await supabaseAdmin
+        .from("users")
+        .select("plan")
+        .eq('id', session.user?.id)
+        .single()
+
+    //if user is on free plan, they can only have one published page
+    if (userData.plan === "free") {
+
+        const { data: pages } = await supabaseAdmin
+            .from("sites")
+            .select("published", { count: 'exact' })
+            .eq('published', true)
+            .eq('owner', session.user?.id)
+
+
+        if (!pages) {
+            return json({ error: "cant find pages" })
+        }
+
+        if (pages.length < 1) {
+            if (action === 'pub') {
+                const { data } = await supabaseAdmin
+                    .from('sites')
+                    .update({ published: true })
+                    .eq('id', page)
+                    .eq('owner', session.user?.id)
+
+                if (data) {
+                    return json({ status: 'success page published' });
+                }
+            }
+        }
+
+        if (pages.length == 1) {
+            if (action === 'unpub') {
+                const { data } = await supabaseAdmin
+                    .from('sites')
+                    .update({ published: false })
+                    .eq('id', page)
+                    .eq('owner', session.user?.id)
+
+                if (data) {
+                    return json({ status: 'success page unpublished' });
+                }
+            }
+            return json({ error: "You have reached the maximum number of pages you can publish." });
+        }
+
+
+
+
     }
-
-    const { data } = await createSite(siteDetails)
-
-    console.log(data)
-
-    return json({ status: 'success' });
-};
+}
 
 export default function Account() {
 
@@ -133,6 +193,10 @@ export default function Account() {
     const transition = useTransition();
     const nav = useNavigate();
     const [hover, setHover] = useState('')
+
+
+    const pagePublishLimit = userData.plan === "free" || userData.plan === "creative" ? 1 : 10
+    const pagesPublished = userData.sites.filter((page: { published: any; }) => page.published).length
 
     const message = actionData ? actionData.encrypted ? actionData.encrypted : actionData.decrypted : '';
     const isSubmitting = transition.state === 'submitting'
@@ -171,8 +235,8 @@ export default function Account() {
 
                 <Flex mt={5} direction={'column'}>
                     <Flex justify={'flex-start'} width={'100%'} gap={2}>
-                        <Flex width={{ base: 'full', md: '85%' }} justify={'flex-start'} bg={'gray.100'} rounded={'md'} pb={1} pt={2}>
-                            <Text ml={5}>Sites</Text>
+                        <Flex width={{ base: 'full', md: '85%' }} justify={'flex-start'} bg={'gray.100'} rounded={'md'} pb={1} pt={1} align={'center'} gap={4}>
+                            <Tag colorScheme={pagesPublished < 1 ? 'red' : 'green'} h={5} ml={3}>Sites Live {pagesPublished}</Tag>
                         </Flex>
                         <Flex>
                             <Button rounded={'md'} onClick={() => signInWithNotion()}>
@@ -191,6 +255,12 @@ export default function Account() {
                                     {hover == page.id ?
                                         <Stack direction={{ base: 'row', md: 'column' }} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
                                             <Button variant={'outline'} size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
+                                            <Form method='post'>
+                                                <Input hidden name='page' value={page.id} readOnly></Input>
+                                                <Tooltip display={page.published || pagesPublished < pagePublishLimit ? 'none' : 'flex'} placement="top" hasArrow label='Upgrade to Pro to publish more pages' shouldWrapChildren mb='3'>
+                                                    <Button size={'sm'} type={'submit'} name='action' isLoading={isSubmitting} isDisabled={page.published == false && pagesPublished >= pagePublishLimit} value={page.published ? 'unpub' : 'pub'} variant={'outline'} colorScheme={page.published ? 'orange' : 'green'}>{page.published ? 'Unpublish' : 'Publish'}</Button>
+                                                </Tooltip>
+                                            </Form>
                                         </Stack> : null}
                                     <Stack>
                                         <Stack opacity={hover == page.id ? '50%' : '100%'}>
