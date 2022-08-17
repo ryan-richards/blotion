@@ -1,7 +1,8 @@
 import { Box, Flex, Icon, chakra, useColorModeValue, useToken, Badge, Stack, Text, Link, SimpleGrid, Button } from "@chakra-ui/react";
 import { json, LoaderFunction } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
+import { FiArrowLeft } from "react-icons/fi";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseDB } from "~/lib/storage/db.access";
 
@@ -34,12 +35,13 @@ export default function Pricing() {
     const { status } = useLoaderData()
 
     const [frequency, setFrequency] = useState("month");
+    const nav = useNavigate()
 
     const canPurchase = status === "free" || status === "not-logged-in"
-    const canUpgrade = status === "creative"
+    const canManage = status === "creative" || status === 'pro'
     const canDowngrade = status === "pro"
 
-    const redirectURL = canUpgrade ? `/api/create-customer-portal-session` : `/api/create-checkout-session?plan=pro_${frequency}`
+    const redirectURL = canManage ? `/api/create-customer-portal-session` : `/api/create-checkout-session?plan=pro_${frequency}`
 
     const Feature = (props: any) => {
         return (
@@ -80,10 +82,16 @@ export default function Pricing() {
 
     return (
         <Box
-            mt={30}
-            py="64px"
+            mt={{base:0, md:30}}
+            py={{base:"34px",md:'64px'}}
             px="10"
         >
+            <Flex justify={'flex-start'} mb={3} display={status != 'not-logged-in' ? 'flex' : 'none'}>
+                <Button onClick={() => nav('/account')}>
+                    <Icon as={FiArrowLeft} mr={3}></Icon>
+                    Account
+                </Button>
+            </Flex>
             <Box w="full" px={{ base: 10, md: 4 }} mx="auto" textAlign="center">
                 <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
                     Plans + Pricing
@@ -209,7 +217,7 @@ export default function Pricing() {
                                     }}
                                 >
                                     {canPurchase ? 'Purchase' : null}
-                                    {canDowngrade ? 'Manage Plan' : null} 
+                                    {canDowngrade ? 'Manage Plan' : null}
                                 </Button>
                             </Form>
                         </Flex>
@@ -300,8 +308,8 @@ export default function Pricing() {
                                     }}
                                 >
                                     {canPurchase ? 'Purchase' : null}
-                                    {canUpgrade ? 'Upgrade' : null}
-                                    {canDowngrade ? 'Manage Plan' : null} 
+                                    {canManage && !canDowngrade ? 'Upgrade' : null}
+                                    {canDowngrade ? 'Manage Plan' : null}
                                 </Button>
                             </Form>
                         </Flex>

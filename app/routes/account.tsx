@@ -210,7 +210,7 @@ export default function Account() {
             <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
                 <Flex direction={{ base: 'column', md: 'row' }} width={'100%'} justify={'space-between'} gap={2}>
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
-                        <Flex direction={{ base: 'row', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
+                        <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
                             <Flex gap={3}>
                                 <Avatar name={userData.email} ></Avatar>
                                 <Flex direction={'column'}>
@@ -221,7 +221,7 @@ export default function Account() {
                                     <Text>{userData.email}</Text>
                                 </Flex>
                             </Flex>
-                            <Flex align={'center'} gap={2} direction={{ base: 'column', md: 'row' }}>
+                            <Flex align={'center'} mt={{base:5,md:0}} gap={2} direction={{ base: 'row', md: 'row' }}>
                                 <Form method={canManagePlan ? 'post' : 'get'} action={redirectURL}>
                                     <Button size={'sm'} minW={'100px'} colorScheme={'blue'} variant={'outline'} type={'submit'}>{canManagePlan ? 'Manage Plan' : 'Upgrade'}</Button>
                                 </Form>
