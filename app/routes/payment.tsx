@@ -30,7 +30,7 @@ export default function Payment() {
 
         //wait 3 seconds then run a function
         setTimeout(() => {
-            setStatus('Setting up your Pro Account')
+            setStatus('Setting up your Upgraded Account')
         }, 1000);
 
         setTimeout(() => {
@@ -38,7 +38,7 @@ export default function Payment() {
         }, 3000);
 
         setTimeout(() => {
-            setStatus('Your Pro Account is ready!')
+            setStatus('Your Account is ready!')
         }, 7000)
 
         setTimeout(() => {

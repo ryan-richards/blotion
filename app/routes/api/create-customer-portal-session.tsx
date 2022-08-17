@@ -1,6 +1,6 @@
 import { ActionFunction, json, redirect } from "@remix-run/node";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
-import { supabaseDB } from "~/lib/storage/db.access";
+import { supabaseAdmin } from "~/lib/storage/supabase.server";
 
 export const action: ActionFunction = async ({ request }) => {
 
@@ -10,8 +10,8 @@ export const action: ActionFunction = async ({ request }) => {
         failureRedirect: "/",
     });
 
-    const { data } = await supabaseDB
-        .from('user_data')
+    const { data } = await supabaseAdmin
+        .from('users')
         .select('*')
         .eq('id', supaSession.user?.id)
         .single()

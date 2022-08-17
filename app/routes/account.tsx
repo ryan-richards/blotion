@@ -216,7 +216,7 @@ export default function Account() {
                                 <Flex direction={'column'}>
                                     <Flex gap={2} align={'center'}>
                                         <Text>{userData.name}</Text>
-                                        <Badge maxWidth={'50px'} h={'20px'} variant={'subtle'} colorScheme={'purple'} textAlign={'center'} width={'50%'}>{userData.plan}</Badge>
+                                        <Badge minW={'50px'} maxWidth={'70px'} h={'20px'} variant={'subtle'} colorScheme={'purple'} textAlign={'center'} width={'50%'}>{userData.plan}</Badge>
                                     </Flex>
                                     <Text>{userData.email}</Text>
                                 </Flex>
