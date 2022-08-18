@@ -1,4 +1,4 @@
-import { Text, Stack, Center, Heading, Flex, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image } from '@chakra-ui/react';
+import { Text, Stack, Center, Heading, Flex, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image, AspectRatio } from '@chakra-ui/react';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
@@ -10,7 +10,7 @@ import { supabaseAdmin } from '~/lib/storage/supabase.server';
 import TimeAgo from 'timeago-react';
 import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
-import blotionImage from '../../public/blotionImage.png'
+import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 
 export const meta: MetaFunction = ({ data }) => {
@@ -144,7 +144,9 @@ export default function Home() {
           <Stack>
             <Flex direction={'column'} align={'center'} gap={5}>
               <Flex mb={3}>
-                <Image src={blotionImage} maxH={250}></Image>
+                <AspectRatio w='250px' p={10} ratio={5/4}>
+                  <Image src={blotionImage} objectFit={'contain'}></Image>
+                </AspectRatio>
               </Flex>
 
               <Flex direction={'column'} align={'center'}>
