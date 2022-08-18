@@ -10,6 +10,12 @@ export const getPublishedBlogPosts = async (pageID: string, token: string) => {
     // list blog posts
     const response = await notion.databases.query({
         database_id: pageID,
+        filter: {
+            property: 'Status',
+            select: {
+                equals: 'Live',
+            }
+        },
         sorts: [
             {
                 property: 'Updated',
@@ -48,7 +54,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     let pageObject = {
         index: '',
         posts: '',
-        postsTitle:''
+        postsTitle: ''
     }
 
     if (results.length === 0) {
@@ -153,6 +159,8 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
 export const getSingleBlogPost = async (pageID: string, token: string, slug: string) => {
     let post, markdown
 
+    console.log(slug)
+
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
@@ -160,19 +168,17 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
     const response = await notion.databases.query({
         database_id: pageID,
         filter: {
-            property: 'slug',
-            rich_text: {
-                equals: slug // slug
+            property: "Slug",
+            formula: {
+                string: {
+                    equals: 'how-does-blotion-work', // slug
+                },
             },
             // add option for tags in the future
         },
-        sorts: [
-            {
-                property: 'Updated',
-                direction: 'descending'
-            }
-        ]
     });
+
+    console.log(response)
 
     if (!response.results[0]) {
         throw 'No results available'

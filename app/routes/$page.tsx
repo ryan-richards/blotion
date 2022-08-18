@@ -56,7 +56,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
             let pageLink = {
                 title: page.properties.Name.title[0].plain_text,
-                slug: page.properties.slug.rich_text[0].plain_text,
+                slug: page.properties.Slug.formula.string,
                 date: page.properties.Updated.last_edited_time,
             }
             console.log(pageLink)

@@ -47,9 +47,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
     const content = await getSingleBlogPost(data.db_page, decryptedToken, slug)
 
-    console.log(content)
 
     if (!content) throw new Error('Missing pageID')
+    
+    console.log(content)
 
     const html = marked(content.markdown)
 
@@ -73,7 +74,7 @@ export default function Slug() {
                 <Heading size={'lg'}>{data.site_name}</Heading>
             </Link>
 
-            <Flex pt={8}>
+            <Flex>
                 <Prose>
                     <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
                 </Prose>

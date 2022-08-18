@@ -75,9 +75,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (pageObject && pageObject.posts != '') {
     const posts = await getPublishedBlogPosts(pageObject.posts, decryptedToken)
     posts.map((page: any) => {
+      console.log(page.properties.Status)
       let pageLink = {
         title: page.properties.Name.title[0].plain_text,
-        slug: page.properties.slug.rich_text[0].plain_text,
+        slug: page.properties.Slug.formula.string,
         date: page.properties.Updated.last_edited_time,
       }
       pageLinks.push(pageLink)

@@ -73,8 +73,10 @@ export const loader: LoaderFunction = async ({ request }) => {
                 },
             });
 
+            
             //put all pages.results id's into an array where page.parent.type is workspace
             const workspaces = pages.results.filter((page: any) => page.parent.type === 'workspace');
+            console.log(workspaces)
             // extract the id's from the workspaces array
             const workspaceIds = workspaces.map((workspace: any) => workspace.id);
             //extract all index_page from the userData.sites array
@@ -82,9 +84,11 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 
             // check if workspaces array is the same as the indexPages array
-            let result = indexPages.every(function (element: any) {
-                return workspaceIds.includes(element);
+            let result = workspaceIds.every(function (element: any) {
+                return indexPages.includes(element);
             });
+
+            console.log(result)
 
             if (result) {
                 // if they are the same then redirect to the account page you dont need to add more connected pages
