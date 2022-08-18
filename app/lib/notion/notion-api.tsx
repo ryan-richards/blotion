@@ -171,7 +171,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
             property: "Slug",
             formula: {
                 string: {
-                    equals: 'how-does-blotion-work', // slug
+                    equals: slug, // slug
                 },
             },
             // add option for tags in the future
