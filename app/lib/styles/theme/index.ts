@@ -24,7 +24,16 @@ const customTheme = extendTheme({
   }
 }, withProse({
   baseStyle: {
+    h1: {
+      mt: { base: 4, md: 6 },
+      mb: { base: 3, md: 4 }
+    },
     h2: {
+      mt: { base: 4, md: 6 },
+      mb: { base: 3, md: 4 }
+    },
+    h3: {
+      mt: { base: 2, md: 3 },
       mb: { base: 3, md: 4 }
     }
   }

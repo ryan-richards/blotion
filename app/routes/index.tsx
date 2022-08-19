@@ -224,7 +224,7 @@ export default function Home() {
               <Text>
                 {page.title}
               </Text>
-              <TimeAgo style={{ fontSize: '12px' }} datetime={page.date} />
+              <TimeAgo style={{ fontSize: '14px' }} datetime={page.date} />
             </Flex>
           </Link>
         )}

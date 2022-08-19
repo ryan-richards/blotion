@@ -4,8 +4,7 @@ import { Client } from "@notionhq/client";
 
 export const getPublishedBlogPosts = async (pageID: string, token: string) => {
 
-    const notion = new Client({ auth: token });
-    const n2m = new NotionToMarkdown({ notionClient: notion });
+    const notion = new Client({ auth: token })
 
     // list blog posts
     const response = await notion.databases.query({
@@ -19,14 +18,22 @@ export const getPublishedBlogPosts = async (pageID: string, token: string) => {
         sorts: [
             {
                 property: 'Updated',
-                direction: 'descending'
+                direction: 'descending',
             }
         ],
     });
 
+
     const dbResults = response.results;
 
     return dbResults
+}
+
+export const getDatabaseName = async (pageID: string, token: string) => {
+    const notion = new Client({ auth: token })
+    const database = await notion.databases.retrieve({ database_id: pageID });
+    const databaseName = database.title[0].plain_text;
+    return databaseName
 }
 
 export const getDBid = async (pageID: string, token: string) => {
@@ -40,7 +47,6 @@ export const getDBid = async (pageID: string, token: string) => {
     }
 
 }
-
 
 export const getNotionPagebyID = async (pageID: string, token: string) => {
 
@@ -60,7 +66,6 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     if (results.length === 0) {
         //console.log('maybe its a database?')
         const dbResults = await getPublishedBlogPosts(pageID, token);
-
         let markdown = 'none'
 
         return { dbResults, markdown }
@@ -111,20 +116,24 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         block_id: pageID
     });
 
-    //console.log(results)
+    console.log(results)
 
     const pageObject = {
         index: '',
         posts: '',
-
     }
 
     if (results.length === 0) {
         //console.log('maybe its a database?')
         const dbResults = await getPublishedBlogPosts(pageID, token);
+        const databaseName = await getDatabaseName(pageID, token);
         let markdown = 'none'
-        return { dbResults, markdown }
+        return { dbResults, markdown, databaseName }
     }
+
+    const response = await notion.pages.properties.retrieve({ page_id: pageID, property_id: 'title' });
+    //const response = await notion.pages.retrieve({ page_id: pageID });
+    let pageTitle = response.results[0].title.plain_text
 
     results.map((block: any) => {
         //loop through the blocks and find the blog post database id
@@ -145,10 +154,10 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         parentBlockOnly?.push(newBlock)
     })
 
-    //console.log(parentBlockOnly)
     let markdown = n2m.toMarkdownString(parentBlockOnly);
 
     return {
+        pageTitle,
         pageObject,
         markdown
     }
@@ -185,16 +194,21 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
     // grab page from notion
     const page = response.results[0];
 
-    const { results } = await notion.blocks.children.list({
-        block_id: page.id,
-    });
-
     const mdBlocks = await n2m.pageToMarkdown(page.id)
     markdown = n2m.toMarkdownString(mdBlocks);
-    //post = NotionService.pageToPostTransformer(page);
+    post = pageToPostTransformer(page);
 
     return {
-        //post,
+        post,
         markdown
+    }
+}
+
+const pageToPostTransformer = (page: any) => {
+    return {
+        id: page.id,
+        title: page.properties.Name.title[0].plain_text,
+        date: page.properties.Updated.last_edited_time,
+        slug: page.properties.Slug.formula.string,
     }
 }

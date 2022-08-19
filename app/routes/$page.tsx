@@ -86,13 +86,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             pageLinks.push(pageLink)
         })
 
-        return json({ data, pageLinks })
+        //console.log(content.databaseName)
+
+        return json({ data, pageLinks, pageTitle: content.databaseName })
     }
 
 
     const html = marked(content.markdown);
+    const pageTitle = content.pageTitle
 
-    return json({ data, html }, {
+    return json({ data, html, pageTitle }, {
         headers: {
             "Cache-Control":
                 "s-maxage=60, stale-while-revalidate=3600",
@@ -103,32 +106,35 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 
 export default function Page() {
-    const { data, pageLinks, html } = useLoaderData();
+    const { data, pageLinks, html, pageTitle } = useLoaderData();
 
-    const params = useParams();
-    const dbID = params.page?.toString();
+
 
     return (
-        <Stack mt={10}>
+        <Stack mt={{ base: 2, md: 10 }}>
             <Link as={RemixLink} to={'/'}>
                 <Heading size={'lg'}>{data.site_name}</Heading>
             </Link>
 
-            <Stack pt={5}>
+            <Stack pt={5} display={pageLinks ? 'flex' : 'none'}>
+                <Heading as={'h1'} mb={{ base: 3, md: 4 }}>{pageTitle}</Heading>
                 {pageLinks ? pageLinks.map((page: any) =>
                     <Link key={page.title} as={RemixLink} to={`/blog/${page.slug}`}>
                         <Flex justify={'space-between'}>
                             <Text>
                                 {page.title}
                             </Text>
-                            <TimeAgo datetime={page.date} />
+                            <TimeAgo datetime={page.date} style={{ fontSize: '14px' }} />
                         </Flex>
                     </Link>
                 ) : null}
             </Stack>
 
-            <Prose>
-                <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
+            <Prose display={pageLinks ? 'none' : 'flex'}>
+                <Flex direction={'column'}>
+                    <Heading as={'h1'}>{pageTitle}</Heading>
+                    <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
+                </Flex>
             </Prose>
         </Stack>
     )

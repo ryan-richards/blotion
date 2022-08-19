@@ -49,12 +49,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 
     if (!content) throw new Error('Missing pageID')
-    
+
     //console.log(content)
 
     const html = marked(content.markdown)
+    const post = content.post
 
-    return json({ data, html },
+    return json({ data, html, post },
         {
             headers: {
                 "Cache-Control":
@@ -66,16 +67,19 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function Slug() {
 
-    const { data, html } = useLoaderData()
+    const { data, html, post } = useLoaderData()
+    //console.log(post)
 
     return (
-        <Stack mt={10}>
-            <Link as={RemixLink} to={'/'}>
-                <Heading size={'lg'}>{data.site_name}</Heading>
-            </Link>
-
+        <Stack mt={{ base: 2, md: 10 }}>
+            <Flex style={{ marginBottom: 0 }}>
+                <Link as={RemixLink} to={'/'}>
+                    <Heading size={'lg'}>{data.site_name}</Heading>
+                </Link>
+            </Flex>
             <Flex>
                 <Prose>
+                    <Heading as={'h2'}>{post.title}</Heading>
                     <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
                 </Prose>
             </Flex>
