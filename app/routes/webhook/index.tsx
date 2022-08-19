@@ -19,7 +19,7 @@ export const action: ActionFunction = async ({ request }) => {
     try {
         event = stripe.webhooks.constructEvent(payload, sig, endpoint);
     } catch (err) {
-        console.log(err)
+        //console.log(err)
         return json({ status: 'error' })
     }
 
@@ -56,7 +56,7 @@ export const action: ActionFunction = async ({ request }) => {
             const plan = line_items.data[0].price.id
             const planPurchased = plans.find(p => p.product_code === plan)?.product_code
             // Save an order in your database, marked as 'awaiting payment'
-            console.log('Awaiting Payment:', session.id);
+            //console.log('Awaiting Payment:', session.id);
             //createOrder(session);
 
             // Check if the order is paid (for example, from a card payment)
@@ -76,7 +76,7 @@ export const action: ActionFunction = async ({ request }) => {
             }
 
             if (session.payment_status === 'paid') {
-                console.log('Payment succeeded for order:', session.id);
+                //console.log('Payment succeeded for order:', session.id);
                 const { data } = await supabaseAdmin
                     .from('users')
                     .update({ plan: planLevel })
@@ -98,10 +98,10 @@ export const action: ActionFunction = async ({ request }) => {
                 }
             );
 
-            console.log(line_items)
+            //console.log(line_items)
 
             // Fulfill the purchase...
-            console.log('Payment succeeded for order:', session.id);
+            //console.log('Payment succeeded for order:', session.id);
             const { data } = await supabaseAdmin
                 .from('users')
                 .update({ plan: 'pro' })
@@ -114,7 +114,7 @@ export const action: ActionFunction = async ({ request }) => {
             const session = event.data.object;
 
             // Send an email to the customer asking them to retry their order
-            console.log('Payment failed for order:', session.id);
+            //console.log('Payment failed for order:', session.id);
             //emailCustomerAboutFailedPayment(session);
 
             break;
@@ -122,9 +122,9 @@ export const action: ActionFunction = async ({ request }) => {
 
         //webhook for upgraded or downgraded plans
         case 'customer.subscription.updated': {
-            console.log('customer subscription updated')
+            //console.log('customer subscription updated')
             const subscription = event.data.object;
-            console.log(subscription)
+            //console.log(subscription)
 
             const customer = subscription.customer
             const plan = subscription.plan.id
@@ -157,7 +157,7 @@ export const action: ActionFunction = async ({ request }) => {
 
         //webhook for cancelled plans
         case 'customer.subscription.deleted': {
-            console.log('customer subscription deleted')
+            //console.log('customer subscription deleted')
             
             const subscription = event.data.object;
             const customer = subscription.customer;

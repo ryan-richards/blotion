@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Flex, FormLabel, Heading, Image, Input, Stack, Text, Link, Badge, HStack, Icon, Wrap, WrapItem, Tag, Tooltip } from "@chakra-ui/react";
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, Link as RemixLink, useActionData, useLoaderData, useNavigate, useTransition } from "@remix-run/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiEdit, FiPlus, FiSettings } from "react-icons/fi";
 import { Stat } from "~/lib/components/Stat";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
@@ -21,6 +21,29 @@ function tidySlug(str: string) {
     return str.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase();
 }
 
+async function subdomainCheck(str: string) {
+
+    let nameFree
+
+    const { data, error } = await supabaseAdmin
+        .from('sites')
+        .select('*')
+        .match({ site_name: str })
+        .single()
+
+    //console.log(data)
+    //console.log(error?.message)
+
+    if (data) {
+        //console.log('match')
+        return nameFree = false
+    }
+
+    else if (!data) {
+        return nameFree = true
+    }
+}
+
 export const loader: LoaderFunction = async ({ request }) => {
 
     const session = await oAuthStrategy.checkSession(request, {
@@ -30,6 +53,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const url = new URL(request.url);
     const token = url.searchParams.get("token");
     const pageConnected = url.searchParams.get("pageConnected");
+    const prompt = url.searchParams.get("prompt");
 
     if (token) {
         const { data, error } = await supabaseAdmin
@@ -73,40 +97,60 @@ export const loader: LoaderFunction = async ({ request }) => {
                 },
             });
 
-            
+
             //put all pages.results id's into an array where page.parent.type is workspace
             const workspaces = pages.results.filter((page: any) => page.parent.type === 'workspace');
-            console.log(workspaces)
+            //console.log(workspaces)
             // extract the id's from the workspaces array
             const workspaceIds = workspaces.map((workspace: any) => workspace.id);
             //extract all index_page from the userData.sites array
             const indexPages = userData.sites.map((site: any) => site.index_page);
-
 
             // check if workspaces array is the same as the indexPages array
             let result = workspaceIds.every(function (element: any) {
                 return indexPages.includes(element);
             });
 
-            console.log(result)
+            //get all workspaces that are not in the indexPages array
+            const newWorkspaces = workspaces.filter((workspace: any) => !indexPages.includes(workspace.id));
 
             if (result) {
                 // if they are the same then redirect to the account page you dont need to add more connected pages
                 return redirect(`/account`);
             }
 
-            pages.results.map(async (page: any) => {
+            var randomWord = require('random-words');
+
+            newWorkspaces.map(async (page: any) => {
                 if (page.parent.type === 'workspace') {
+                    //check if name is valid before saving to database
+                    let nameValid
+                    let name = tidyName(page.properties.title.title[0].plain_text)
+
+                    while (!nameValid) {
+                        nameValid = await subdomainCheck(name);
+                        //console.log(nameValid)
+                        //console.log(name)
+
+                        if (!nameValid) {
+                            let word = randomWord()
+                            name = [name, word].join('-')
+                            //console.log(name)
+                        }
+                    }
+
                     const { data, error } = await supabaseAdmin
                         .from('connected_pages')
                         .insert({
                             user: session.user?.id,
                             page_id: page.id,
-                            page_name: tidyName(page.properties.title.title[0].plain_text),
+                            page_name: name,
                             page_cover: page.cover.external.url
                         })
                 }
             })
+
+            return redirect(`/account?prompt=true`);
         }
     }
 
@@ -116,8 +160,12 @@ export const loader: LoaderFunction = async ({ request }) => {
         .from('users')
         .select('*, sites(*)')
         .eq('id', session.user?.id)
+        .order('created_at', {foreignTable: 'sites', ascending: true })
         .single()
 
+    if (prompt) {
+        return json({ userData, prompt })
+    }
 
     return json({ userData });
 };
@@ -191,7 +239,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Account() {
 
-    const { userData, pages } = useLoaderData()
+    const { userData, pages, prompt } = useLoaderData()
 
     const actionData = useActionData();
     const transition = useTransition();
@@ -209,6 +257,13 @@ export default function Account() {
 
     const redirectURL = canManagePlan ? '/api/create-customer-portal-session' : '/pricing'
 
+    useEffect(() => {
+        if (prompt) {
+            //console.log('prompt causing reload')
+            nav(`/account`)
+        }
+    }, [prompt])
+
     return (
         <>
             <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
@@ -225,7 +280,7 @@ export default function Account() {
                                     <Text>{userData.email}</Text>
                                 </Flex>
                             </Flex>
-                            <Flex align={'center'} mt={{base:5,md:0}} gap={2} direction={{ base: 'row', md: 'row' }}>
+                            <Flex align={'center'} mt={{ base: 5, md: 0 }} gap={2} direction={{ base: 'row', md: 'row' }}>
                                 <Form method={canManagePlan ? 'post' : 'get'} action={redirectURL}>
                                     <Button size={'sm'} minW={'100px'} colorScheme={'blue'} variant={'outline'} type={'submit'}>{canManagePlan ? 'Manage Plan' : 'Upgrade'}</Button>
                                 </Form>
@@ -269,7 +324,7 @@ export default function Account() {
                                     <Stack>
                                         <Stack opacity={hover == page.id ? '50%' : '100%'}>
                                             <Box rounded={'md'} overflow={'hidden'} maxH={{ base: '250px', md: '180px' }}>
-                                                <Image src={page.cover ? page.cover : 'https://images.unsplash.com/photo-1554147090-e1221a04a025?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=848&q=80'} />
+                                                <Image minH={'200px'} objectFit={'cover'} src={page.cover ? page.cover : 'https://images.unsplash.com/photo-1554147090-e1221a04a025?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=848&q=80'} />
                                             </Box>
                                         </Stack>
                                         <Flex justify={'center'} bg={'gray.200'} rounded={'md'} pb={1} pt={1}>

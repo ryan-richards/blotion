@@ -58,7 +58,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     }
 
     if (results.length === 0) {
-        console.log('maybe its a database?')
+        //console.log('maybe its a database?')
         const dbResults = await getPublishedBlogPosts(pageID, token);
 
         let markdown = 'none'
@@ -80,7 +80,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     let parentBlockOnly: any[] | undefined = [];
     let nav: any[] | undefined = [];
 
-    console.log(mdBlocks)
+    //console.log(mdBlocks)
 
     mdBlocks.map((block: any) => {
         if (block.parent.charAt(0) != '[') {
@@ -111,7 +111,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         block_id: pageID
     });
 
-    console.log(results)
+    //console.log(results)
 
     const pageObject = {
         index: '',
@@ -120,11 +120,9 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
     }
 
     if (results.length === 0) {
-        console.log('maybe its a database?')
+        //console.log('maybe its a database?')
         const dbResults = await getPublishedBlogPosts(pageID, token);
-
         let markdown = 'none'
-
         return { dbResults, markdown }
     }
 
@@ -147,7 +145,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         parentBlockOnly?.push(newBlock)
     })
 
-    console.log(parentBlockOnly)
+    //console.log(parentBlockOnly)
     let markdown = n2m.toMarkdownString(parentBlockOnly);
 
     return {
@@ -159,7 +157,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
 export const getSingleBlogPost = async (pageID: string, token: string, slug: string) => {
     let post, markdown
 
-    console.log(slug)
+    //console.log(slug)
 
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
@@ -171,14 +169,14 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
             property: "Slug",
             formula: {
                 string: {
-                    equals: 'how-does-blotion-work', // slug
+                    equals: slug, // slug
                 },
             },
             // add option for tags in the future
         },
     });
 
-    console.log(response)
+    //console.log(response)
 
     if (!response.results[0]) {
         throw 'No results available'

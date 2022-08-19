@@ -6,7 +6,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     const data = await request.json();
 
-    console.log(data)
+    //console.log(data)
 
     const decrypted = await decryptAPIKey(data.record.notion_token.toString());
 

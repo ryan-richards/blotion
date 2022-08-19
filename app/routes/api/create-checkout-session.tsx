@@ -14,7 +14,7 @@ export const action: ActionFunction = async ({ request }) => {
         failureRedirect: "/",
     });
 
-    console.log(supaSession.user?.id)
+    //console.log(supaSession.user?.id)
 
     //performs actions on the database the user -- allow for RLS
     if (!supabaseDB.auth.session()) {
@@ -45,7 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
     }]
 
     const plan_code = plans.find(p => p.id === plan)?.product_code
-    console.log(plan_code)
+    //console.log(plan_code)
 
     if (!data) {
         return json({ status: 'error', message: 'no stripe customer details found in supabase' });
@@ -70,7 +70,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
 
     if (session) {
-        console.log(session)
+        //(session)
         return redirect(session.url);
     }
 

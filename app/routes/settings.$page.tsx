@@ -1,5 +1,5 @@
-import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot } from "@chakra-ui/react";
-import { ActionFunction, json, LoaderFunction } from "@remix-run/node";
+import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
+import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, useActionData, useFetcher, useLoaderData, useTransition, useNavigate } from "@remix-run/react";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
@@ -53,6 +53,19 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const formData = await request.formData();
     const siteName = formData.get('site_name');
+    const action = formData.get('action');
+
+    if (action) {
+        if (action === 'delete_site') {
+            await supabaseAdmin
+                .from('sites')
+                .delete()
+                .eq('id', params.page)
+                .eq('owner', session.user?.id)
+
+            return redirect('/account')
+        }
+    }
 
     if (!siteName) {
         return json({
@@ -94,6 +107,12 @@ export default function Settings() {
     let [customDomain, setCustomDomain] = useState(page.custom_domain ? page.custom_domain : '')
     let [inputError, setInputError] = useState('')
     const transition = useTransition();
+
+    //State for confirming site deletion
+    const [deleteInput, setDeleteInput] = useState('')
+    const deleteConfirm = `delete-${page.site_name}`
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     const isSubmitting = transition.state === 'submitting'
     let isSaved = actionData ? actionData.status === 'success' : false;
@@ -142,7 +161,7 @@ export default function Settings() {
 
     useEffect(() => {
         //check if domain is configured correctly
-        console.log('checking custom domain')
+        //console.log('checking custom domain')
 
         if (page.custom_domain) {
             checkCustomDomain.submit(
@@ -253,6 +272,28 @@ export default function Settings() {
                     </TableContainer>
                 </Flex>
                 : null}
+
+            <Flex justify={'flex-end'} mt={10}>
+                <Button size={'sm'} colorScheme={'red'} onClick={onOpen}>Delete Site</Button>
+            </Flex>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Are you sure?</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody mb={5}>
+                        <Text>This will delete your site and all of its content.</Text>
+                        <FormLabel mt={2}>Please type delete-{page.site_name}</FormLabel>
+                        <InputGroup gap={2}>
+                            <Input onChange={(e) => setDeleteInput(e.target.value)}></Input>
+                            <Form method={'post'}>
+                                <Button type={'submit'} name={'action'} value={'delete_site'} isDisabled={deleteInput != deleteConfirm} colorScheme={'red'}>Delete</Button>
+                            </Form>
+                        </InputGroup>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
         </Box>
     )
 }

@@ -16,6 +16,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const pageID = params.page?.toString();
     if (!pageID) throw new Error('Missing pageID')
 
+    const page_name = params.page?.toString();
+    if (!page_name) throw new Error('Missing pageID')
+
     let subdomain = null
     let customDomain = null
 
@@ -43,12 +46,32 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     if (!data) {
         return redirect('/')
     }
+
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
-    const content = await getNotionSubPagebyID(pageID, decryptedToken)
+    const { Client } = require('@notionhq/client');
+    const notion = new Client({ auth: decryptedToken.toString() });
+
+    const pagebyname = await notion.search({
+        query: page_name,
+        sort: {
+            direction: 'descending',
+            timestamp: 'last_edited_time',
+        },
+    });
+    //filter pagebyname where parent is equal to userdata.index_page
+    //console.log(pagebyname.results)
+    //console.log(pagebyname.results[0].parent)
+    let pagebynamefilter
+    pagebynamefilter = pagebyname.results.filter((page: any) => page.parent.page_id === data.index_page)
+    //console.log(pagebynamefilter)
+
+    if (pagebynamefilter.length < 1) {
+        return redirect('/')
+    }
+
+    const content = await getNotionSubPagebyID(pagebynamefilter[0].id, decryptedToken)
 
     if (content.markdown === 'none') {
-
-        console.log(content.dbResults)
 
         let pageLinks: { title: any; slug: string; }[] = []
 
@@ -59,12 +82,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
                 slug: page.properties.Slug.formula.string,
                 date: page.properties.Updated.last_edited_time,
             }
-            console.log(pageLink)
 
             pageLinks.push(pageLink)
         })
-
-        console.log(pageLinks)
 
         return json({ data, pageLinks })
     }

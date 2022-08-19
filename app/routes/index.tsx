@@ -13,6 +13,16 @@ import { SiNotion } from "react-icons/si";
 import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 
+//regex function to remove special characters from string and replace spaces with hyphens
+const slugify = (text: any) => {
+  return text.toString().toLowerCase()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
+}
+
 export const meta: MetaFunction = ({ data }) => {
 
   if (!data.data) return {
@@ -75,7 +85,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   if (pageObject && pageObject.posts != '') {
     const posts = await getPublishedBlogPosts(pageObject.posts, decryptedToken)
     posts.map((page: any) => {
-      console.log(page.properties.Status)
+      //console.log(page.properties.Status)
       let pageLink = {
         title: page.properties.Name.title[0].plain_text,
         slug: page.properties.Slug.formula.string,
@@ -144,7 +154,7 @@ export default function Home() {
           <Stack>
             <Flex direction={'column'} align={'center'} gap={5}>
               <Flex mb={3}>
-                <AspectRatio w='250px' p={10} ratio={5/4}>
+                <AspectRatio w='250px' p={10} ratio={5 / 4}>
                   <Image src={blotionImage} objectFit={'contain'}></Image>
                 </AspectRatio>
               </Flex>
@@ -196,7 +206,7 @@ export default function Home() {
 
         <HStack gap={1}>
           {navItems.map((item: any) =>
-            <Link key={item.slug} as={RemixLink} to={item.slug}>{item.title}</Link>
+            <Link key={item.slug} as={RemixLink} to={slugify(item.title)}>{item.title}</Link>
           )}
         </HStack>
 
