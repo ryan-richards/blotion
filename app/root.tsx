@@ -12,10 +12,14 @@ export const loader: LoaderFunction = () => {
   };
 };
 
-// https://remix.run/api/app#links
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: globalStylesUrl },
+    {
+      rel: "stylesheet",
+      href: "https://fonts.googleapis.com/css?family=Outfit",
+      as: 'font',
+    },
   ];
 };
 

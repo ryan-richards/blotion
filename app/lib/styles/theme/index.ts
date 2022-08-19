@@ -5,6 +5,7 @@ import Button from "./components/button";
 import fonts from "./fonts";
 
 const customTheme = extendTheme({
+  fonts,
   colors,
   components: {
     Button,
