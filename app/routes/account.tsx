@@ -1,8 +1,8 @@
-import { Avatar, Box, Button, Flex, FormLabel, Heading, Image, Input, Stack, Text, Link, Badge, HStack, Icon, Wrap, WrapItem, Tag, Tooltip } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, FormLabel, Heading, Image, Input, Stack, Text, Link, Badge, HStack, Icon, Wrap, WrapItem, Tag, Tooltip, ButtonGroup } from "@chakra-ui/react";
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, Link as RemixLink, useActionData, useLoaderData, useNavigate, useTransition } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { FiEdit, FiPlus, FiSettings } from "react-icons/fi";
+import { FiEdit, FiPlus, FiRefreshCw, FiSettings } from "react-icons/fi";
 import { Stat } from "~/lib/components/Stat";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { createSite } from "~/lib/storage/post.server";
@@ -160,7 +160,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         .from('users')
         .select('*, sites(*)')
         .eq('id', session.user?.id)
-        .order('created_at', {foreignTable: 'sites', ascending: true })
+        .order('created_at', { foreignTable: 'sites', ascending: true })
         .single()
 
     if (prompt) {
@@ -298,10 +298,17 @@ export default function Account() {
                             <Tag colorScheme={pagesPublished < 1 ? 'red' : 'green'} h={5} ml={3}>Sites Live {pagesPublished}</Tag>
                         </Flex>
                         <Flex>
-                            <Button rounded={'md'} onClick={() => signInWithNotion()}>
-                                <Icon as={FiPlus} mr={{ base: 0, md: 2 }} />
-                                <Text display={{ base: 'none', md: 'flex' }}>Connect New Page</Text>
-                            </Button>
+                            <ButtonGroup>
+                                <Button rounded={'md'} onClick={() => signInWithNotion()}>
+                                    <Icon as={FiPlus} mr={{ base: 0, md: 2 }} />
+                                    <Text display={{ base: 'none', md: 'flex' }}>Connect New Page</Text>
+                                </Button>
+                                <Tooltip placement='top' hasArrow label='Sync with Notion Workspace' shouldWrapChildren>
+                                    <Button rounded={'md'} onClick={() => nav(`/account?pageConnected=true`)}>
+                                        <Icon as={FiRefreshCw} />
+                                    </Button>
+                                </Tooltip>
+                            </ButtonGroup>
                         </Flex>
                     </Flex>
                     <Wrap mt={5}>
@@ -328,7 +335,7 @@ export default function Account() {
                                             </Box>
                                         </Stack>
                                         <Flex justify={'center'} bg={'gray.200'} rounded={'md'} pb={1} pt={1}>
-                                            <Link href={`https://${page.site_name}.blotion.com`} isExternal>
+                                            <Link href={`https://${page.site_name}.blotion.com?preview=${page.owner}`} isExternal>
                                                 <Text key={page.id}>https://{page.site_name}.blotion.com</Text>
                                             </Link>
                                         </Flex>

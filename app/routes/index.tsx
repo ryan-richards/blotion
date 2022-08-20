@@ -38,9 +38,10 @@ export const meta: MetaFunction = ({ data }) => {
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 
-  const session = await oAuthStrategy.checkSession(request, {
-    successRedirect: "/account",
-  });
+  const session = await oAuthStrategy.checkSession(request);
+
+  const url = new URL(request.url);
+  const preview = url.searchParams.get('preview');
 
   const host = new URL(request.url)
   if (!host) throw new Error('Missing host')
@@ -49,12 +50,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   let customDomain = null
 
   if (host) {
-    if (host.hostname === 'localhost') {
-      return json({ status: 'home' })
-    }
     subdomain = host.hostname.split('.')[0]
 
-    if (subdomain === 'www' || subdomain === 'blotion') {
+    if (host.hostname === 'localhost' && !session) {
+      return json({ status: 'home' })
+    }
+
+    if (subdomain === 'www' || subdomain === 'blotion' || subdomain === 'localhost') {
+      if (session) {
+        return redirect('/account')
+      }
       return json({ status: 'home' })
     }
 
@@ -71,6 +76,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!data) {
     return json({ status: 'home' })
+  }
+
+  if (data.published === false && !preview) {
+    console.log('site not published')
+    return redirect(process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com')
+  }
+
+  if (preview) {
+    if (preview !== data.owner) {
+      return redirect(process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com')
+    }
   }
 
   //Site Exisits
@@ -95,7 +111,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
   }
 
-
   let navItems: { title: any, slug: any }[] = []
 
   if (nav) {
@@ -116,7 +131,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         title: pageName,
         slug: id,
       }
-
       navItems.push(pageLink)
     })
   }
@@ -128,7 +142,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
       .match({ site_name: subdomain })
   }
 
-  return json({ data, html, pageObject, pageLinks, navItems }, {
+  const previewMode = preview ? true : false
+
+  return json({ data, html, pageObject, pageLinks, navItems, previewMode }, {
     headers: {
       "Cache-Control":
         "s-maxage=60, stale-while-revalidate=3600",
@@ -145,7 +161,7 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 
 export default function Home() {
 
-  const { data, status, html, pageObject, pageLinks, navItems } = useLoaderData()
+  const { data, status, html, pageObject, pageLinks, navItems, previewMode } = useLoaderData()
 
   if (status === 'home') {
     return (
@@ -229,6 +245,11 @@ export default function Home() {
           </Link>
         )}
       </Stack>
+
+      <Flex justify={'center'} display={previewMode ? 'flex' : 'none'} opacity={'50%'}>
+        <Heading pt={10}>Site in Preview Mode</Heading>
+      </Flex>
+
     </Stack>
   );
 

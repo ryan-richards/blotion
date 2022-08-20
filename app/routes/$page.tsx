@@ -41,6 +41,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         .from('sites')
         .select('*, users(notion_token)')
         .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
+        .eq('published', true)
         .single()
 
     if (!data) {
@@ -104,6 +105,11 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 
+export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
+    return {
+        "cache-control": loaderHeaders.get("cache-control"),
+    };
+}
 
 export default function Page() {
     const { data, pageLinks, html, pageTitle } = useLoaderData();

@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Link, Stack } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import { json, LoaderFunction, redirect } from "@remix-run/node";
-import { useLoaderData, Link as RemixLink } from "@remix-run/react";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { useLoaderData, Link as RemixLink, useLocation } from "@remix-run/react";
 import { marked } from "marked";
 import { getSingleBlogPost } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
@@ -38,6 +38,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         .from('sites')
         .select('*, users(notion_token)')
         .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
+        .eq('published', true)
         .single()
 
     if (!data) {
@@ -64,6 +65,45 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         });
 };
 
+export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
+    return {
+        "cache-control": loaderHeaders.get("cache-control"),
+    };
+}
+
+interface MetaLoaderData {
+    post: any
+}
+
+const objectIsEmpty = (obj: any) => Object.keys(obj).length === 0;
+
+export const meta: MetaFunction = ({ params, data, location }) => {
+
+    if (objectIsEmpty(data.post)) {
+        return {
+            title: "Missing Blog Meta",
+            description: `No Meta found for this blog post`,
+        };
+    }
+    const { post } = data as MetaLoaderData
+
+    return {
+        title: `${post.title}`,
+        description: post.description,
+        author: `${data.data.site_name}`,
+        "og:type": "website",
+        "og:url": `https://${data.data.site_name}.blotion.com/blog/${post?.slug}`,
+        "og:title": `${post.title}`,
+        "og:description": post.title,
+        "og:image": `${post.cover}`,
+        "twitter:image": `${post.cover}`,
+        "twitter:card": "summary_large_image",
+        "twitter:creator": "@blotion_",
+        "twitter:site": "@blotion_",
+        "twitter:title": post.title,
+        "twitter:description": post.description,
+    }
+};
 
 export default function Slug() {
 
