@@ -206,10 +206,12 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 
 const pageToPostTransformer = (page: any) => {
 
+    console.log(page)
+
     let cover = page.cover;
 
-    if (cover.external.url) {
-        cover = page.cover.external.url;
+    if (cover) {
+        cover = cover.external.url;
     } else {
         // default cover
         cover = 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80';
