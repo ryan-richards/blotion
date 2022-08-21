@@ -190,7 +190,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     //if user is on free plan, they can only have one published page
     if (userData.plan === "free" || userData.plan === "creative") {
-
+        
         const { data: pages } = await supabaseAdmin
             .from("sites")
             .select("published", { count: 'exact' })
