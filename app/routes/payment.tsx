@@ -1,6 +1,6 @@
 import { Center, Flex, Heading, Spinner } from "@chakra-ui/react";
 import { json, LoaderFunction, redirect } from "@remix-run/node";
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import { useEffect, useState } from "react";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -22,7 +22,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Payment() {
 
-    const [status, setStatus] = useState('')
+    const [status, setStatus] = useState('Loading...');
 
     const nav = useNavigate()
 
@@ -43,7 +43,7 @@ export default function Payment() {
 
         setTimeout(() => {
             nav('/account')
-        }, 8000)
+        }, 9000)
 
     }, [])
 
@@ -52,6 +52,9 @@ export default function Payment() {
             <Flex flexDirection={'column'} align='center' width={'full'} h={400}>
                 <Spinner size={'lg'} />
                 <Heading mt={5}>{status}</Heading>
+                <Flex mt={2} display={status === 'Your Account is ready!' ? 'flex' : 'none'}>
+                    <Link to={'/account'}>Click here if you are not redirected to your account page.</Link>
+                </Flex>
             </Flex>
         </Center>
     )

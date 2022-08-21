@@ -8,9 +8,7 @@ import { supabaseDB } from "~/lib/storage/db.access";
 
 export const loader: LoaderFunction = async ({ request }) => {
 
-    const session = await oAuthStrategy.checkSession(request, {
-        failureRedirect: "/",
-    });
+    const session = await oAuthStrategy.checkSession(request);
 
     if (!session) {
         return json({ status: 'not-logged-in' });
@@ -82,7 +80,7 @@ export default function Pricing() {
 
     return (
         <Box
-            mt={{base:0, md:30}}
+            mt={{base:0, md:10}}
             py={{base:"34px",md:'64px'}}
             px="10"
         >

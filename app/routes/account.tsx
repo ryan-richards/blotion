@@ -189,7 +189,7 @@ export const action: ActionFunction = async ({ request }) => {
         .single()
 
     //if user is on free plan, they can only have one published page
-    if (userData.plan === "free") {
+    if (userData.plan === "free" || userData.plan === "creative") {
 
         const { data: pages } = await supabaseAdmin
             .from("sites")
@@ -230,10 +230,53 @@ export const action: ActionFunction = async ({ request }) => {
             }
             return json({ error: "You have reached the maximum number of pages you can publish." });
         }
+    }
 
 
+    //If user is on pro plan, they can publish 50 pages.
+    if (userData.plan === "pro") {
 
+        const { data: pages } = await supabaseAdmin
+            .from("sites")
+            .select("published", { count: 'exact' })
+            .eq('published', true)
+            .eq('owner', session.user?.id)
 
+        if (!pages) {
+            return json({ error: "cant find pages" })
+        }
+
+        if (action === 'pub') {
+            if (pages.length < 50) {
+                const { data } = await supabaseAdmin
+                    .from('sites')
+                    .update({ published: true })
+                    .eq('id', page)
+                    .eq('owner', session.user?.id)
+
+                if (data) {
+                    return json({ status: 'success page published' });
+                }
+            }
+            return json({ error: "You have reached the maximum number of pages you can publish." });
+        }
+
+        if (action === 'unpub') {
+            const { data } = await supabaseAdmin
+                .from('sites')
+                .update({ published: false })
+                .eq('id', page)
+                .eq('owner', session.user?.id)
+
+            if (data) {
+                return json({ status: 'success page unpublished' });
+            }
+        }
+
+        return json({
+            status: "error",
+            message: "You are not authorized to create pages",
+        });
     }
 }
 
