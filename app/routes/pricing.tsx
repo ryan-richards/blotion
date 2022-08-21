@@ -215,7 +215,8 @@ export default function Pricing() {
                                     }}
                                 >
                                     {canPurchase ? 'Purchase' : null}
-                                    {canDowngrade ? 'Manage Plan' : 'Current Plan'}
+                                    {canDowngrade ? 'Manage Plan' : null}
+                                    {canManage && status === 'creative' ? 'Current Plan' : null}
                                 </Button>
                             </Form>
                         </Flex>

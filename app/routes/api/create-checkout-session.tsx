@@ -27,8 +27,6 @@ export const action: ActionFunction = async ({ request }) => {
         .eq('id', supaSession.user?.id)
         .single()
 
-
-
     const plans = [{
         id: 'creative_month',
         product_code: 'price_1LZGg9F1IUyiGjXJGyH0BRMc',
