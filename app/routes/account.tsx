@@ -190,7 +190,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     //if user is on free plan, they can only have one published page
     if (userData.plan === "free" || userData.plan === "creative") {
-        
+
         const { data: pages } = await supabaseAdmin
             .from("sites")
             .select("published", { count: 'exact' })
@@ -309,7 +309,7 @@ export default function Account() {
 
     return (
         <>
-            <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
+            <Box bg={'box'} width={'full'} mt={{base:2,md:10}} p={{ base: 2, md: 10 }} rounded={'lg'}>
                 <Flex direction={{ base: 'column', md: 'row' }} width={'100%'} justify={'space-between'} gap={2}>
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
                         <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
@@ -389,6 +389,12 @@ export default function Account() {
                     </Wrap>
                 </Flex>
             </Box>
+            <Flex mt={5} justify={'center'} >
+                <Flex direction={'column'} align={'center'}>
+                    <Text>Having issues, or need help with your account? </Text>
+                    <Text>Get in touch <Link href="mailto:support@blotion.com" fontWeight={'bold'}>support@blotion.com</Link></Text>
+                </Flex>
+            </Flex>
         </>
     )
 }

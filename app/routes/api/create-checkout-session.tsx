@@ -63,7 +63,7 @@ export const action: ActionFunction = async ({ request }) => {
         product_code: 'price_1LZGMzF1IUyiGjXJq8FCxKOw',
     }]
 
-    const plan_code = plans.find(p => p.id === plan)?.product_code
+    const plan_code = plans_live.find(p => p.id === plan)?.product_code
     //console.log(plan_code)
 
     if (!data) {

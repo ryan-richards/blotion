@@ -215,7 +215,7 @@ export default function Pricing() {
                                     }}
                                 >
                                     {canPurchase ? 'Purchase' : null}
-                                    {canDowngrade ? 'Manage Plan' : null}
+                                    {canDowngrade ? 'Manage Plan' : 'Current Plan'}
                                 </Button>
                             </Form>
                         </Flex>
@@ -314,7 +314,6 @@ export default function Pricing() {
                         <Stack direction="column" p="6" spacing="3" flexGrow="1">
                             <Feature>50 Published Blogs</Feature>
                             <Feature>Add Custom Domains</Feature>
-                            <Feature>Remove blotion branding</Feature>
                             <Feature>Dark / Light Toggle</Feature>
                         </Stack>
                     </Box>

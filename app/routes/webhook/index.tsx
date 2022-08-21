@@ -73,8 +73,8 @@ export const action: ActionFunction = async ({ request }) => {
             const plan = line_items.data[0].price.id
             const planPurchasedTest = plans.find(p => p.product_code === plan)?.product_code
             const planPurchasedLive = plans_live.find(p => p.product_code === plan)?.product_code
-            //const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
-            const planPurchased = planPurchasedTest
+            const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
+            //const planPurchased = planPurchasedTest
             
             // Save an order in your database, marked as 'awaiting payment'
             //console.log('Awaiting Payment:', session.id);
@@ -161,8 +161,8 @@ export const action: ActionFunction = async ({ request }) => {
             const plan = subscription.plan.id
             const planPurchasedTest = plans.find(p => p.product_code === plan)?.product_code
             const planPurchasedLive = plans_live.find(p => p.product_code === plan)?.product_code
-            //const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
-            const planPurchased = planPurchasedTest
+            const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
+            //const planPurchased = planPurchasedTest
             const cancelled = subscription.cancel_at_period_end
 
             if(cancelled) {
