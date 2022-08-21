@@ -25,19 +25,36 @@ export const action: ActionFunction = async ({ request }) => {
 
     const plans = [{
         id: 'creative_month',
-        product_code: 'price_1LQZmWB4JLIlDcPQpjuAG4Ge',
+        product_code: 'price_1LZGg9F1IUyiGjXJGyH0BRMc',
     },
     {
         id: 'creative_year',
-        product_code: 'price_1LQZmWB4JLIlDcPQRGvuQ3N5',
+        product_code: 'price_1LZGg9F1IUyiGjXJtCyAImlL',
     },
     {
         id: 'pro_month',
-        product_code: 'price_1LPPyoB4JLIlDcPQz15z4m2D',
+        product_code: 'price_1LZGfkF1IUyiGjXJnOXaKC4G',
     },
     {
         id: 'pro_year',
-        product_code: 'price_1LQZmvB4JLIlDcPQJsYeg5RM',
+        product_code: 'price_1LZGfkF1IUyiGjXJindA8W6X',
+    }]
+
+    const plans_live = [{
+        id: 'creative_month',
+        product_code: 'price_1LZGNXF1IUyiGjXJV0nhP5GS',
+    },
+    {
+        id: 'creative_year',
+        product_code: 'price_1LZGNXF1IUyiGjXJRQy9RMqp',
+    },
+    {
+        id: 'pro_month',
+        product_code: 'price_1LZGMzF1IUyiGjXJgDBzIkyz',
+    },
+    {
+        id: 'pro_year',
+        product_code: 'price_1LZGMzF1IUyiGjXJq8FCxKOw',
     }]
 
     switch (event.type) {
@@ -54,7 +71,11 @@ export const action: ActionFunction = async ({ request }) => {
 
 
             const plan = line_items.data[0].price.id
-            const planPurchased = plans.find(p => p.product_code === plan)?.product_code
+            const planPurchasedTest = plans.find(p => p.product_code === plan)?.product_code
+            const planPurchasedLive = plans_live.find(p => p.product_code === plan)?.product_code
+            //const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
+            const planPurchased = planPurchasedTest
+            
             // Save an order in your database, marked as 'awaiting payment'
             //console.log('Awaiting Payment:', session.id);
             //createOrder(session);
@@ -67,11 +88,21 @@ export const action: ActionFunction = async ({ request }) => {
 
             let planLevel;
 
-            if (planPurchased === 'price_1LPPyoB4JLIlDcPQz15z4m2D' || planPurchased === 'price_1LQZmvB4JLIlDcPQJsYeg5RM') {
+            if (planPurchased === 'price_1LZGfkF1IUyiGjXJnOXaKC4G' || planPurchased === 'price_1LZGfkF1IUyiGjXJindA8W6X') {
                 planLevel = 'pro'
             }
 
-            if (planPurchased === 'price_1LQZmWB4JLIlDcPQpjuAG4Ge' || planPurchased === 'price_1LQZmWB4JLIlDcPQRGvuQ3N5') {
+            //live check pro
+            if (planPurchased === 'price_1LZGMzF1IUyiGjXJgDBzIkyz' || planPurchased === 'price_1LZGMzF1IUyiGjXJq8FCxKOw') {
+                planLevel = 'pro'
+            }
+
+            if (planPurchased === 'price_1LZGg9F1IUyiGjXJGyH0BRMc' || planPurchased === 'price_1LZGg9F1IUyiGjXJtCyAImlL') {
+                planLevel = 'creative'
+            }
+
+            //live check creative
+            if (planPurchased === 'price_1LZGNXF1IUyiGjXJV0nhP5GS' || planPurchased === 'price_1LZGNXF1IUyiGjXJRQy9RMqp') {
                 planLevel = 'creative'
             }
 
@@ -128,7 +159,10 @@ export const action: ActionFunction = async ({ request }) => {
 
             const customer = subscription.customer
             const plan = subscription.plan.id
-            const planPurchased = plans.find(p => p.product_code === plan)?.product_code
+            const planPurchasedTest = plans.find(p => p.product_code === plan)?.product_code
+            const planPurchasedLive = plans_live.find(p => p.product_code === plan)?.product_code
+            //const planPurchased = process.env.NODE_ENV === "development" ? planPurchasedTest : planPurchasedLive
+            const planPurchased = planPurchasedTest
             const cancelled = subscription.cancel_at_period_end
 
             if(cancelled) {
@@ -136,11 +170,22 @@ export const action: ActionFunction = async ({ request }) => {
             }
 
             let planLevel;
-            if (planPurchased === 'price_1LPPyoB4JLIlDcPQz15z4m2D' || planPurchased === 'price_1LQZmvB4JLIlDcPQJsYeg5RM') {
+            
+            if (planPurchased === 'price_1LZGfkF1IUyiGjXJnOXaKC4G' || planPurchased === 'price_1LZGfkF1IUyiGjXJindA8W6X') {
                 planLevel = 'pro'
             }
 
-            if (planPurchased === 'price_1LQZmWB4JLIlDcPQpjuAG4Ge' || planPurchased === 'price_1LQZmWB4JLIlDcPQRGvuQ3N5') {
+            //live check pro
+            if (planPurchased === 'price_1LZGMzF1IUyiGjXJgDBzIkyz' || planPurchased === 'price_1LZGMzF1IUyiGjXJq8FCxKOw') {
+                planLevel = 'pro'
+            }
+
+            if (planPurchased === 'price_1LZGg9F1IUyiGjXJGyH0BRMc' || planPurchased === 'price_1LZGg9F1IUyiGjXJtCyAImlL') {
+                planLevel = 'creative'
+            }
+
+            //live check creative
+            if (planPurchased === 'price_1LZGNXF1IUyiGjXJV0nhP5GS' || planPurchased === 'price_1LZGNXF1IUyiGjXJRQy9RMqp') {
                 planLevel = 'creative'
             }
 

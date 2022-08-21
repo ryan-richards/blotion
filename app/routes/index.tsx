@@ -183,7 +183,7 @@ export default function Home() {
               <Center mt={5}>
                 <List w={'full'} marginLeft={'auto'} marginRight={'auto'} spacing={2}>
                   <ListItem>
-                    <Button minW={200} as={Link} href={'https://pinnate-tie-7a0.notion.site/Ryan-s-Website-7304261e002b417db66fdbe742c05a49'} isExternal target={'_blank'}>
+                    <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
                       <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
                       Copy Template
                     </Button>
@@ -196,8 +196,6 @@ export default function Home() {
                   <ListItem>
                     <Button
                       minW={200}
-                      mt={2}
-                      mr={2}
                       colorScheme='gray'
                       className={'button block'}
                       onClick={() => signInWithNotion()}

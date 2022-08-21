@@ -27,21 +27,40 @@ export const action: ActionFunction = async ({ request }) => {
         .eq('id', supaSession.user?.id)
         .single()
 
+
+
     const plans = [{
         id: 'creative_month',
-        product_code: 'price_1LQZmWB4JLIlDcPQpjuAG4Ge',
+        product_code: 'price_1LZGg9F1IUyiGjXJGyH0BRMc',
     },
     {
         id: 'creative_year',
-        product_code: 'price_1LQZmWB4JLIlDcPQRGvuQ3N5',
+        product_code: 'price_1LZGg9F1IUyiGjXJtCyAImlL',
     },
     {
         id: 'pro_month',
-        product_code: 'price_1LPPyoB4JLIlDcPQz15z4m2D',
+        product_code: 'price_1LZGfkF1IUyiGjXJnOXaKC4G',
     },
     {
         id: 'pro_year',
-        product_code: 'price_1LQZmvB4JLIlDcPQJsYeg5RM',
+        product_code: 'price_1LZGfkF1IUyiGjXJindA8W6X',
+    }]
+
+    const plans_live = [{
+        id: 'creative_month',
+        product_code: 'price_1LZGNXF1IUyiGjXJV0nhP5GS',
+    },
+    {
+        id: 'creative_year',
+        product_code: 'price_1LZGNXF1IUyiGjXJRQy9RMqp',
+    },
+    {
+        id: 'pro_month',
+        product_code: 'price_1LZGMzF1IUyiGjXJgDBzIkyz',
+    },
+    {
+        id: 'pro_year',
+        product_code: 'price_1LZGMzF1IUyiGjXJq8FCxKOw',
     }]
 
     const plan_code = plans.find(p => p.id === plan)?.product_code
