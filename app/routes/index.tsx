@@ -1,9 +1,9 @@
-import { Text, Stack, Center, Heading, Flex, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image, AspectRatio } from '@chakra-ui/react';
+import { Text, Stack, Center, Heading, Flex, Menu, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image, AspectRatio, useBreakpointValue, MenuButton, MenuList, MenuItem, MenuDivider } from '@chakra-ui/react';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { marked } from 'marked';
-import { FiBook, FiCheck, FiCopy } from 'react-icons/fi';
+import { FiBook, FiCheck, FiCopy, FiMenu } from 'react-icons/fi';
 import { getDBid, getNotionPagebyID, getPublishedBlogPosts } from '~/lib/notion/notion-api';
 import { signInWithNotion } from '~/lib/storage/supabase.client';
 import { supabaseAdmin } from '~/lib/storage/supabase.server';
@@ -12,6 +12,7 @@ import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
 import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
+import ThemeToggle from '~/lib/layout/ThemeToggle';
 
 //regex function to remove special characters from string and replace spaces with hyphens
 const slugify = (text: any) => {
@@ -70,7 +71,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const { data, error } = await supabaseAdmin
     .from('sites')
-    .select('*, users(notion_token)')
+    .select('*, users(notion_token,plan)')
     .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .single()
 
@@ -213,17 +214,50 @@ export default function Home() {
     )
   }
 
+  const buttonIconMargin = useBreakpointValue({ base: '0', md: '1', lg: '2' })
+  const buttonMargin = useBreakpointValue({ base: '0', md: '0', lg: '0' })
+  const isMobile = useBreakpointValue({ base: 'none', lg: 'flex' })
+  const isMobileMode = useBreakpointValue({ base: true, lg: false })
+
   return (
     <Stack mt={{ base: 2, md: 10 }}>
       <Flex direction={'row'} justify={'space-between'}>
         <Heading size={'lg'}>{data.site_name}</Heading>
-
         <HStack gap={1}>
-          {navItems.map((item: any) =>
-            <Link key={item.slug} as={RemixLink} to={slugify(item.title)}>{item.title}</Link>
-          )}
+          {navItems.length > 3 || isMobileMode ?
+            <Menu>
+              <MenuButton as={Button} variant={'link'} mr={buttonMargin}>
+                <Flex>
+                  <Icon fontSize={'xl'} mt={0} mr={buttonIconMargin} as={FiMenu} />
+                  <Text display={isMobile}>Menu</Text>
+                </Flex>
+              </MenuButton>
+              <MenuList zIndex={10}>
+                {navItems.map((val: any) =>
+                  <Link
+                    as={RemixLink}
+                    _hover={{ textDecor: 'none', textColor: "gray.400" }}
+                    w={"100%"}
+                    prefetch='intent'
+                    to={slugify(val.title)}
+                    key={val.slug}
+                  >
+                    <MenuItem w="100%">
+                      {val.title}
+                    </MenuItem>
+                  </Link>
+                )}
+              </MenuList>
+            </Menu> :
+            <>
+              {navItems.map((item: any) =>
+                <Link key={item.slug} as={RemixLink} to={slugify(item.title)}>{item.title}</Link>
+              )}
+            </>
+          }
+          {data.users.plan === 'free' ? null :
+            <ThemeToggle />}
         </HStack>
-
       </Flex>
 
       <Prose>
