@@ -302,14 +302,13 @@ export default function Account() {
 
     useEffect(() => {
         if (prompt) {
-            //console.log('prompt causing reload')
             nav(`/account`)
         }
     }, [prompt])
 
     return (
         <>
-            <Box bg={'box'} width={'full'} mt={{base:2,md:10}} p={{ base: 2, md: 10 }} rounded={'lg'}>
+            <Box bg={'box'} width={'full'} mt={{ base: 2, md: 10 }} p={{ base: 2, md: 10 }} rounded={'lg'}>
                 <Flex direction={{ base: 'column', md: 'row' }} width={'100%'} justify={'space-between'} gap={2}>
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
                         <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
@@ -353,6 +352,9 @@ export default function Account() {
                                 </Tooltip>
                             </ButtonGroup>
                         </Flex>
+                    </Flex>
+                    <Flex justify={'center'} mt={4} display={userData && userData.sites.length < 1 ? 'flex' : 'none'}>
+                        <Text>Site not appearing yet? <Link as={RemixLink} to={'/account'} fontWeight={'bold'} textDecoration={'underline'}>Try Refreshing</Link></Text>
                     </Flex>
                     <Wrap mt={5}>
                         {userData.sites.map((page: any) =>
