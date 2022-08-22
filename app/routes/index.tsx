@@ -29,6 +29,17 @@ export const meta: MetaFunction = ({ data }) => {
   if (!data.data) return {
     title: 'blotion',
     description: 'Turn your notion Database into Blog',
+    "og:type": "website",
+    "og:url": `https://www.blotion.com`,
+    "og:title": `Blotion - Turn a Notion Database into Blog`,
+    "og:description": `Blotion is a Notion Database to Blog converter. a your notion Database into Blog.`,
+    "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/blotion_promo.png`,
+    "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/blotion_promo.png`,
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@blotion_",
+    "twitter:site": "@blotion_",
+    "twitter:title": `Blotion - Turn a Notion Database into Blog`,
+    "twitter:description": 'Blotion is a minimalist website builder for converting Notion templates into a hosted blog website.',
   }
 
   return {
@@ -182,35 +193,28 @@ export default function Home() {
                 <Heading fontWeight={'normal'} size={'md'}>Create a blog with Notion</Heading>
               </Flex>
 
-              
-                <Flex direction={'column'} justify={'center'} align={'center'} gap={4}>
-                  <Text>Blotion currently only works with the template below</Text>
-                  <Flex w={'full'} align={'center'} direction={'column'} justify={'center'} gap={2}>
-    
-                      <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
-                        <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
-                        Copy Template
-                      </Button>
-                   
 
-                    <Center>
-                      <Text align={'center'}>and then...</Text>
-                    </Center>
-
-                  
-                      <Button
-                        minW={200}
-                        colorScheme='gray'
-                        className={'button block'}
-                        onClick={() => signInWithNotion()}
-                      >
-                        <Icon as={SiNotion} fontSize='xl' mr={2}></Icon>
-                        <span>Login with Notion</span>
-                      </Button>
-                   
-                  </Flex>
+              <Flex direction={'column'} justify={'center'} align={'center'} gap={4}>
+                <Text>Blotion currently only works with the template below</Text>
+                <Flex w={'full'} align={'center'} direction={'column'} justify={'center'} gap={2}>
+                  <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
+                    <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
+                    Copy Template
+                  </Button>
+                  <Center>
+                    <Text align={'center'}>and then...</Text>
+                  </Center>
+                  <Button
+                    minW={200}
+                    colorScheme='gray'
+                    className={'button block'}
+                    onClick={() => signInWithNotion()}
+                  >
+                    <Icon as={SiNotion} fontSize='xl' mr={2}></Icon>
+                    <span>Login with Notion</span>
+                  </Button>
                 </Flex>
-             
+              </Flex>
             </Flex>
           </Stack>
         </Center>
