@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Flex, FormLabel, Heading, Image, Input, Stack, Tex
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
 import { Form, Link as RemixLink, useActionData, useLoaderData, useNavigate, useTransition } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { FiEdit, FiPlus, FiRefreshCw, FiSettings } from "react-icons/fi";
+import { FiCopy, FiEdit, FiPlus, FiRefreshCw, FiSettings } from "react-icons/fi";
 import { Stat } from "~/lib/components/Stat";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { createSite } from "~/lib/storage/post.server";
@@ -98,7 +98,7 @@ export const loader: LoaderFunction = async ({ request }) => {
             });
 
             //should fix first sign in but no conncected pages
-            if (pages.results.length < 1){
+            if (pages.results.length < 1) {
                 return redirect(`/account`);
             }
 
@@ -357,7 +357,8 @@ export default function Account() {
                             </ButtonGroup>
                         </Flex>
                     </Flex>
-                    <Flex justify={'center'} mt={4} display={userData && userData.sites.length < 1 ? 'flex' : 'none'}>
+                    <Flex justify={'center'} mt={4} display={userData && userData.sites.length < 1 ? 'flex' : 'none'} direction={'column'} gap={2}>
+                        <Text>Need help getting started? <Link href={'https://guide.blotion.com'} isExternal fontWeight={'normal'} textDecoration={'underline'}>Check the guide</Link></Text>
                         <Text>Site not appearing yet? <Link as={RemixLink} to={'/account'} fontWeight={'bold'} textDecoration={'underline'}>Try Refreshing</Link></Text>
                     </Flex>
                     <Wrap mt={5}>
@@ -397,6 +398,10 @@ export default function Account() {
             </Box>
             <Flex mt={5} justify={'center'} >
                 <Flex direction={'column'} align={'center'}>
+                    <Button minW={200} mb={4} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
+                        <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
+                        Copy Notion Template
+                    </Button>
                     <Text>Having issues, or need help with your account? </Text>
                     <Text>Get in touch <Link href="mailto:support@blotion.com" fontWeight={'bold'}>support@blotion.com</Link></Text>
                 </Flex>
