@@ -317,7 +317,7 @@ export default function Account() {
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
                         <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
                             <Flex gap={3}>
-                                <Avatar name={userData.email} ></Avatar>
+                                <Avatar name={userData.name ? userData.name : userData.email} src={userData.avatar_url}></Avatar>
                                 <Flex direction={'column'}>
                                     <Flex gap={2} align={'center'}>
                                         <Text>{userData.name}</Text>
@@ -357,7 +357,7 @@ export default function Account() {
                             </ButtonGroup>
                         </Flex>
                     </Flex>
-                    <Flex justify={'center'} mt={4} display={userData && userData.sites.length < 1 ? 'flex' : 'none'} direction={'column'} gap={2}>
+                    <Flex justify={'center'} mt={4} display={userData && userData.sites.length < 1 ? 'flex' : 'none'} direction={'column'} gap={2} align={'center'}>
                         <Text>Need help getting started? <Link href={'https://guide.blotion.com'} isExternal fontWeight={'normal'} textDecoration={'underline'}>Check the guide</Link></Text>
                         <Text>Site not appearing yet? <Link as={RemixLink} to={'/account'} fontWeight={'bold'} textDecoration={'underline'}>Try Refreshing</Link></Text>
                     </Flex>
