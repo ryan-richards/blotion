@@ -56,6 +56,7 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: style.css }}
             />
           ))}
+          <script async defer data-website-id="efc7fae6-1355-438a-8795-907f1bd3c7ef" src="https://umami-one-tan.vercel.app/umami.js"></script>
         </head>
         <body>
           <Providers>
