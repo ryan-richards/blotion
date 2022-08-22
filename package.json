@@ -29,7 +29,7 @@
     "focus-visible": "^5.2.0",
     "framer-motion": "^6.3.3",
     "marked": "^4.0.18",
-    "notion-to-md": "^2.4.0",
+    "notion-to-md": "^2.5.5",
     "random-words": "^1.2.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

@@ -53,6 +53,15 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
+    n2m.setCustomTransformer('embed', async (block) => {
+        const { embed } = block as any;
+        if (!embed?.url) return '';
+        return `<figure>
+  <iframe src="${embed?.url}"></iframe>
+  <figcaption>${await n2m.blockToMarkdown(embed?.caption)}</figcaption>
+</figure>`;
+    });
+
     const { results } = await notion.blocks.children.list({
         block_id: pageID
     });
@@ -112,6 +121,15 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
+    n2m.setCustomTransformer('embed', async (block) => {
+        const { embed } = block as any;
+        if (!embed?.url) return '';
+        return `<figure>
+  <iframe src="${embed?.url}"></iframe>
+  <figcaption>${await n2m.blockToMarkdown(embed?.caption)}</figcaption>
+</figure>`;
+    });
+
     const { results } = await notion.blocks.children.list({
         block_id: pageID
     });
@@ -142,6 +160,9 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         }
     })
 
+
+
+
     const mdBlocks = await n2m.blocksToMarkdown(results);
 
     //const mdBlocks = await n2m.pageToMarkdown(pageID)
@@ -170,6 +191,15 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
+
+    n2m.setCustomTransformer('embed', async (block) => {
+        const { embed } = block as any;
+        if (!embed?.url) return '';
+        return `<figure>
+  <iframe src="${embed?.url}"></iframe>
+  <figcaption>${await n2m.blockToMarkdown(embed?.caption)}</figcaption>
+</figure>`;
+    });
 
     // list of blog posts
     const response = await notion.databases.query({

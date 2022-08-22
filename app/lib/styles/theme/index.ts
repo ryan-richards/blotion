@@ -35,6 +35,10 @@ const customTheme = extendTheme({
     h3: {
       mt: { base: 2, md: 3 },
       mb: { base: 3, md: 4 }
+    },
+    iframe:{
+      width:'full',
+      minHeight:'400px'
     }
   }
 }));
