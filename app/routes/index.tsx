@@ -182,32 +182,35 @@ export default function Home() {
                 <Heading fontWeight={'normal'} size={'md'}>Create a blog with Notion</Heading>
               </Flex>
 
-              <Center mt={5}>
-                <List w={'full'} marginLeft={'auto'} marginRight={'auto'} spacing={2}>
-                  <ListItem>
-                    <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
-                      <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
-                      Copy Template
-                    </Button>
-                  </ListItem>
+              
+                <Flex direction={'column'} justify={'center'} align={'center'} gap={4}>
+                  <Text>Blotion currently only works with the template below</Text>
+                  <Flex w={'full'} align={'center'} direction={'column'} justify={'center'} gap={2}>
+    
+                      <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
+                        <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
+                        Copy Template
+                      </Button>
+                   
 
-                  <Center>
-                    <ListItem alignItems={'center'}>and then...</ListItem>
-                  </Center>
+                    <Center>
+                      <Text align={'center'}>and then...</Text>
+                    </Center>
 
-                  <ListItem>
-                    <Button
-                      minW={200}
-                      colorScheme='gray'
-                      className={'button block'}
-                      onClick={() => signInWithNotion()}
-                    >
-                      <Icon as={SiNotion} fontSize='xl' mr={2}></Icon>
-                      <span>Login with Notion</span>
-                    </Button>
-                  </ListItem>
-                </List>
-              </Center>
+                  
+                      <Button
+                        minW={200}
+                        colorScheme='gray'
+                        className={'button block'}
+                        onClick={() => signInWithNotion()}
+                      >
+                        <Icon as={SiNotion} fontSize='xl' mr={2}></Icon>
+                        <span>Login with Notion</span>
+                      </Button>
+                   
+                  </Flex>
+                </Flex>
+             
             </Flex>
           </Stack>
         </Center>
