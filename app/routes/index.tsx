@@ -31,14 +31,14 @@ export const meta: MetaFunction = ({ data }) => {
     description: 'Turn your notion Database into Blog',
     "og:type": "website",
     "og:url": `https://www.blotion.com`,
-    "og:title": `Blotion - Turn a Notion Database into Blog`,
-    "og:description": `Blotion is a Notion Database to Blog converter. a your notion Database into Blog.`,
+    "og:title": `Blotion - Turn a Notion Database into a Blog`,
+    "og:description": `Blotion is a Notion Database to Blog converter. Turn your notion Database into a Blog.`,
     "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/Desktop%20-%201%20(4).png`,
     "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/Desktop%20-%201%20(4).png`,
     "twitter:card": "summary_large_image",
     "twitter:creator": "@blotion_",
     "twitter:site": "@blotion_",
-    "twitter:title": `Blotion - Turn a Notion Database into Blog`,
+    "twitter:title": `Blotion - Turn a Notion Database into a Blog`,
     "twitter:description": 'Blotion is a minimalist website builder for converting Notion templates into a hosted blog website.',
   }
 
