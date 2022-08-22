@@ -97,6 +97,10 @@ export const loader: LoaderFunction = async ({ request }) => {
                 },
             });
 
+            //should fix first sign in but no conncected pages
+            if (pages.results.length < 1){
+                return redirect(`/account`);
+            }
 
             //put all pages.results id's into an array where page.parent.type is workspace
             const workspaces = pages.results.filter((page: any) => page.parent.type === 'workspace');

@@ -114,7 +114,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   let navItems: { title: any, slug: any }[] = []
 
-  if (nav) {
+  //Check if nav is empty
+  if (nav && nav.length > 0) {
     nav.map((item: any) => {
 
       let page = item.parent
@@ -223,7 +224,7 @@ export default function Home() {
     <Stack mt={{ base: 2, md: 10 }}>
       <Flex direction={'row'} justify={'space-between'}>
         <Heading size={'lg'}>{data.site_name}</Heading>
-        <HStack gap={1}>
+        <HStack gap={1} display={navItems ? 'flex' : 'none'}>
           {navItems.length > 3 || isMobileMode ?
             <Menu>
               <MenuButton as={Button} variant={'link'} mr={buttonMargin}>
