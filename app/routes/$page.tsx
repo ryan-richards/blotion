@@ -124,7 +124,7 @@ export default function Page() {
 
             <Stack pt={5} display={pageLinks ? 'flex' : 'none'}>
                 <Heading as={'h1'} mb={{ base: 3, md: 4 }}>{pageTitle}</Heading>
-                {pageLinks ? pageLinks.map((page: any) =>
+                {pageLinks && pageLinks.length > 0 ? pageLinks.map((page: any) =>
                     <Link key={page.title} as={RemixLink} to={`/blog/${page.slug}`}>
                         <Flex justify={'space-between'}>
                             <Text>
@@ -133,7 +133,7 @@ export default function Page() {
                             <TimeAgo datetime={page.date} style={{ fontSize: '14px' }} />
                         </Flex>
                     </Link>
-                ) : null}
+                ) : <Text>No posts yet</Text>}
             </Stack>
 
             <Prose display={pageLinks ? 'none' : 'flex'}>

@@ -238,7 +238,7 @@ export default function Settings() {
             <Flex mt={5} direction={'column'}>
                 <FormLabel>Custom Domain</FormLabel>
                 <InputGroup gap={2}>
-                    <Input placeholder="your domain" name={'custom_domain'} value={customDomain} isDisabled={userData.plan === 'free'} onChange={(e: any) => setCustomDomain(e.target.value)} />
+                    <Input placeholder="your domain" name={'custom_domain'} value={customDomain} isDisabled={userData.plan === 'free' || !page.published} onChange={(e: any) => setCustomDomain(e.target.value)} />
                     {!page.custom_domain ?
                         <Button type={'submit'} colorScheme={'blue'} isDisabled={!customDomain} onClick={() => addCustomDomain(customDomain)} isLoading={isSubmitting} >Add</Button> :
                         <Button type={'submit'} colorScheme={'red'} isDisabled={!customDomain} onClick={() => removeCustomDomain(customDomain)} isLoading={isSubmitting} >Remove</Button>}

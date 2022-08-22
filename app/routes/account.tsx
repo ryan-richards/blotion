@@ -380,7 +380,7 @@ export default function Account() {
                                             </Box>
                                         </Stack>
                                         <Flex justify={'center'} bg={'gray.200'} rounded={'md'} pb={1} pt={1}>
-                                            <Link href={`https://${page.site_name}.blotion.com?preview=${page.owner}`} isExternal>
+                                            <Link href={page.published ? `https://${page.site_name}.blotion.com` : `https://${page.site_name}.blotion.com?preview=${page.owner}`} isExternal>
                                                 <Text key={page.id}>https://{page.site_name}.blotion.com</Text>
                                             </Link>
                                         </Flex>

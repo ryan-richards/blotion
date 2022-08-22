@@ -264,9 +264,9 @@ export default function Home() {
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
 
-      <Heading size={'md'}>{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
+      <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
       <Stack>
-        {pageLinks.map((page: any, index: number) =>
+        {pageLinks && pageLinks.map((page: any, index: number) =>
           <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
             <Flex justify={'space-between'} direction={{ base: 'column', md: 'row' }}>
               <Text>
