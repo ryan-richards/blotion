@@ -27,7 +27,7 @@ const slugify = (text: any) => {
 export const meta: MetaFunction = ({ data }) => {
 
   if (!data.data) return {
-    title: 'blotion',
+    title: 'Blotion',
     description: 'Turn your notion Database into Blog',
     "og:type": "website",
     "og:url": `https://www.blotion.com`,
@@ -44,7 +44,19 @@ export const meta: MetaFunction = ({ data }) => {
 
   return {
     title: `${data.data.site_name} ~ Blotion`,
-    description: `${data.data.site_name} ~ Blotion`,
+    description: `${data.data.site_name} a minimalist blog built with Blotion.`,
+    author: `${data.data.site_name}`,
+    "og:type": "website",
+    "og:url": `https://${data.data.site_name}.blotion.com`,
+    "og:title": `${data.data.site_name}`,
+    "og:description": `${data.data.site_name} a minimalist blog built with Blotion.`,
+    "og:image": `${data.data.cover}`,
+    "twitter:image": `${data.data.cover}`,
+    "twitter:card": "summary_large_image",
+    "twitter:creator": "@blotion_",
+    "twitter:site": "@blotion_",
+    "twitter:title": data.data.site_name,
+    "twitter:description": `${data.data.site_name} a minimalist blog built with Blotion.`,
   };
 };
 
@@ -104,6 +116,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   //Site Exisits
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
+  console.log(content)
 
   const html = marked(content.markdown);
   const pageObject = content.pageObject

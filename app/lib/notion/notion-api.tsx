@@ -62,6 +62,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 </figure>`;
     });
 
+
     const { results } = await notion.blocks.children.list({
         block_id: pageID
     });
@@ -79,6 +80,8 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 
         return { dbResults, markdown }
     }
+
+    //console.log(results)
 
     results.map(async (block: any) => {
         //loop through the blocks and find the blog post database id
