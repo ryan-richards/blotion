@@ -62,7 +62,6 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 </figure>`;
     });
 
-
     const { results } = await notion.blocks.children.list({
         block_id: pageID
     });
@@ -95,27 +94,46 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 
     //const mdBlocks = await n2m.pageToMarkdown(pageID)
     let parentBlockOnly: any[] | undefined = [];
-    let nav: any[] | undefined = [];
 
     //console.log(mdBlocks)
-
     mdBlocks.map((block: any) => {
         if (block.parent.charAt(0) != '[') {
             let newBlock = {
                 parent: block.parent,
             }
             parentBlockOnly?.push(newBlock)
-        } else if (block.parent.includes('[')) {
-            nav?.push(block)
         }
     })
 
     let markdown = n2m.toMarkdownString(parentBlockOnly);
 
     return {
-        nav,
         pageObject,
         markdown,
+    }
+}
+
+export const getNotionNav = async (pageID: string, token: string) => {
+
+    const notion = new Client({ auth: token });
+    const n2m = new NotionToMarkdown({ notionClient: notion });
+
+    const { results } = await notion.blocks.children.list({
+        block_id: pageID
+    });
+
+    const mdBlocks = await n2m.blocksToMarkdown(results);
+
+    let nav: any[] | undefined = [];
+
+    mdBlocks.map((block: any) => {
+        if (block.parent.includes('[')) {
+            nav?.push(block)
+        }
+    })
+
+    return {
+        nav
     }
 }
 

@@ -17,11 +17,13 @@ import ServerStyleContext from "~/lib/styles/context.server";
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;
-  env?: any
+  env?: any;
+  navItems?: any;
+  siteData?: any;
 };
 
 const Document = withEmotionCache(
-  ({ children, title, env }: DocumentProps, emotionCache) => {
+  ({ children, title, env, navItems, siteData }: DocumentProps, emotionCache) => {
     const serverStyles = React.useContext(ServerStyleContext);
     const clientStyles = React.useContext(ClientStyleContext);
 
@@ -60,7 +62,7 @@ const Document = withEmotionCache(
         </head>
         <body>
           <Providers>
-            <Layout>
+            <Layout navItems={navItems} siteData={siteData}>
               {children}
             </Layout>
           </Providers>

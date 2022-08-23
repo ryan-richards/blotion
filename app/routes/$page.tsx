@@ -114,14 +114,8 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 export default function Page() {
     const { data, pageLinks, html, pageTitle } = useLoaderData();
 
-
-
     return (
-        <Stack mt={{ base: 2, md: 10 }}>
-            <Link as={RemixLink} to={'/'}>
-                <Heading size={'lg'}>{data.site_name}</Heading>
-            </Link>
-
+        <Stack mt={{ base: 2, md: 5 }}>
             <Stack pt={5} display={pageLinks ? 'flex' : 'none'}>
                 <Heading as={'h1'} mb={{ base: 3, md: 4 }}>{pageTitle}</Heading>
                 {pageLinks && pageLinks.length > 0 ? pageLinks.map((page: any) =>

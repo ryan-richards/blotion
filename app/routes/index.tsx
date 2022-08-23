@@ -13,6 +13,10 @@ import { SiNotion } from "react-icons/si";
 import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 import ThemeToggle from '~/lib/layout/ThemeToggle';
+import navData from '~/lib/notion/load-nav';
+import getPageLinks from '~/lib/notion/load-pageLinks';
+import CheckIndex from '~/lib/notion/check-index';
+import checkIndex from '~/lib/notion/check-index';
 
 //regex function to remove special characters from string and replace spaces with hyphens
 const slugify = (text: any) => {
@@ -64,41 +68,13 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const session = await oAuthStrategy.checkSession(request);
 
-  const url = new URL(request.url);
-  const preview = url.searchParams.get('preview');
-
-  const host = new URL(request.url)
-  if (!host) throw new Error('Missing host')
-
-  let subdomain = null
-  let customDomain = null
-
-  if (host) {
-    subdomain = host.hostname.split('.')[0]
-
-    if (host.hostname === 'localhost' && !session) {
-      return json({ status: 'home' })
-    }
-
-    if (subdomain === 'www' || subdomain === 'blotion' || subdomain === 'localhost') {
-      if (session) {
-        return redirect('/account')
-      }
-      return json({ status: 'home' })
-    }
-
-    if (!host.host.includes('blotion.com')) {
-      customDomain = host.host
-    }
-  }
-
-  const { data, error } = await supabaseAdmin
-    .from('sites')
-    .select('*, users(notion_token,plan)')
-    .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
-    .single()
+  const { data, status, preview, subdomain }: any = await checkIndex(request, session);
 
   if (!data) {
+    return json({ status: 'home' })
+  }
+
+  if (status === 'home') {
     return json({ status: 'home' })
   }
 
@@ -116,50 +92,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   //Site Exisits
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
-  console.log(content)
 
   const html = marked(content.markdown);
   const pageObject = content.pageObject
-  const nav = content.nav
-  let pageLinks: { title: any; slug: string; }[] = []
-
-  if (pageObject && pageObject.posts != '') {
-    const posts = await getPublishedBlogPosts(pageObject.posts, decryptedToken)
-    posts.map((page: any) => {
-      //console.log(page.properties.Status)
-      let pageLink = {
-        title: page.properties.Name.title[0].plain_text,
-        slug: page.properties.Slug.formula.string,
-        date: page.properties.Updated.last_edited_time,
-      }
-      pageLinks.push(pageLink)
-    })
-  }
-
-  let navItems: { title: any, slug: any }[] = []
-
-  //Check if nav is empty
-  if (nav && nav.length > 0) {
-    nav.map((item: any) => {
-
-      let page = item.parent
-
-      let id = page.substring(
-        page.indexOf("(") + 1,
-        page.lastIndexOf(")")
-      )
-
-      let pageName = page.substring(
-        page.indexOf("[") + 1,
-        page.lastIndexOf(']'))
-
-      let pageLink = {
-        title: pageName,
-        slug: id,
-      }
-      navItems.push(pageLink)
-    })
-  }
+  const pageLinks = await getPageLinks(pageObject, decryptedToken)
 
   if (!data.db_page && pageObject?.posts) {
     const { data } = await supabaseAdmin
@@ -170,7 +106,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const previewMode = preview ? true : false
 
-  return json({ data, html, pageObject, pageLinks, navItems, previewMode }, {
+  return json({ data, html, pageObject, pageLinks, previewMode }, {
     headers: {
       "Cache-Control":
         "s-maxage=60, stale-while-revalidate=3600",
@@ -188,6 +124,7 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 export default function Home() {
 
   const { data, status, html, pageObject, pageLinks, navItems, previewMode } = useLoaderData()
+  console.log(navItems)
 
   if (status === 'home') {
     return (
@@ -208,7 +145,7 @@ export default function Home() {
 
 
               <Flex direction={'column'} justify={'center'} align={'center'} gap={4}>
-                <Text>Blotion currently only works with the template below</Text>
+                <Text textAlign={'center'}>Blotion works with the template below</Text>
                 <Flex w={'full'} align={'center'} direction={'column'} justify={'center'} gap={2}>
                   <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
                     <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
@@ -235,52 +172,8 @@ export default function Home() {
     )
   }
 
-  const buttonIconMargin = useBreakpointValue({ base: '0', md: '1', lg: '2' })
-  const buttonMargin = useBreakpointValue({ base: '0', md: '0', lg: '0' })
-  const isMobile = useBreakpointValue({ base: 'none', lg: 'flex' })
-  const isMobileMode = useBreakpointValue({ base: true, lg: false })
-
   return (
-    <Stack mt={{ base: 2, md: 10 }}>
-      <Flex direction={'row'} justify={'space-between'}>
-        <Heading size={'lg'}>{data.site_name}</Heading>
-        <HStack gap={1} display={navItems ? 'flex' : 'none'}>
-          {navItems.length > 3 || isMobileMode ?
-            <Menu>
-              <MenuButton as={Button} variant={'link'} mr={buttonMargin}>
-                <Flex>
-                  <Icon fontSize={'xl'} mt={0} mr={buttonIconMargin} as={FiMenu} />
-                  <Text display={isMobile}>Menu</Text>
-                </Flex>
-              </MenuButton>
-              <MenuList zIndex={10}>
-                {navItems.map((val: any) =>
-                  <Link
-                    as={RemixLink}
-                    _hover={{ textDecor: 'none', textColor: "gray.400" }}
-                    w={"100%"}
-                    prefetch='intent'
-                    to={slugify(val.title)}
-                    key={val.slug}
-                  >
-                    <MenuItem w="100%">
-                      {val.title}
-                    </MenuItem>
-                  </Link>
-                )}
-              </MenuList>
-            </Menu> :
-            <>
-              {navItems.map((item: any) =>
-                <Link key={item.slug} as={RemixLink} to={slugify(item.title)}>{item.title}</Link>
-              )}
-            </>
-          }
-          {data.users.plan === 'free' ? null :
-            <ThemeToggle />}
-        </HStack>
-      </Flex>
-
+    <Stack mt={{ base: 2, md: 5 }}>
       <Prose>
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
@@ -289,8 +182,8 @@ export default function Home() {
       <Stack>
         {pageLinks && pageLinks.map((page: any, index: number) =>
           <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
-            <Flex justify={'space-between'} direction={{ base: 'column', md: 'row' }}>
-              <Text>
+            <Flex justify={'space-between'}>
+              <Text maxW={{base:'250px',md:'full'}}>
                 {page.title}
               </Text>
               <TimeAgo style={{ fontSize: '14px' }} datetime={page.date} />

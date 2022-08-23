@@ -111,12 +111,7 @@ export default function Slug() {
     //console.log(post)
 
     return (
-        <Stack mt={{ base: 2, md: 10 }}>
-            <Flex style={{ marginBottom: 0 }}>
-                <Link as={RemixLink} to={'/'}>
-                    <Heading size={'lg'}>{data.site_name}</Heading>
-                </Link>
-            </Flex>
+        <Stack mt={{ base: 2, md: 5 }}>
             <Flex>
                 <Prose>
                     <Heading as={'h2'}>{post.title}</Heading>
