@@ -127,7 +127,7 @@ export const getNotionNav = async (pageID: string, token: string) => {
     let nav: any[] | undefined = [];
 
     mdBlocks.map((block: any) => {
-        console.log(block)
+        //console.log(block)
         if (block.parent.includes('[') && !block.parent.includes('http')) {
             nav?.push(block)
         }
@@ -156,7 +156,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         block_id: pageID
     });
 
-    console.log(results)
+    //console.log(results)
 
     const pageObject = {
         index: '',
@@ -258,7 +258,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 
 const pageToPostTransformer = (page: any) => {
 
-    console.log(page)
+    //console.log(page)
 
     let cover = page.cover;
 

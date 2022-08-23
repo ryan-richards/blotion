@@ -79,7 +79,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   }
 
   if (data.published === false && !preview) {
-    console.log('site not published')
+    //console.log('site not published')
     return redirect(process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com')
   }
 
@@ -124,7 +124,7 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 export default function Home() {
 
   const { data, status, html, pageObject, pageLinks, navItems, previewMode } = useLoaderData()
-  console.log(navItems)
+  //console.log(navItems)
 
   if (status === 'home') {
     return (

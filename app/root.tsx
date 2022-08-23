@@ -18,7 +18,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
     const { nav } = await getNotionNav(data.index_page, decryptedToken)
     navItems = await navData(nav)
-    console.log('nav items fetched from root')
+    //console.log('nav items fetched from root')
   }
 
   return {
