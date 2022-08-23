@@ -79,12 +79,8 @@ const objectIsEmpty = (obj: any) => Object.keys(obj).length === 0;
 
 export const meta: MetaFunction = ({ params, data, location }) => {
 
-    if (objectIsEmpty(data.post)) {
-        return {
-            title: "Missing Blog Meta",
-            description: `No Meta found for this blog post`,
-        };
-    }
+    if (!data) return { title: 'Blotion' }
+
     const { post } = data as MetaLoaderData
 
     return {
@@ -94,7 +90,7 @@ export const meta: MetaFunction = ({ params, data, location }) => {
         "og:type": "website",
         "og:url": `https://${data.data.site_name}.blotion.com/blog/${post?.slug}`,
         "og:title": `${post.title}`,
-        "og:description": post.title,
+        "og:description": post.description,
         "og:image": `${post.cover}`,
         "twitter:image": `${post.cover}`,
         "twitter:card": "summary_large_image",

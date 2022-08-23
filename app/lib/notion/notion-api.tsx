@@ -183,8 +183,6 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
     })
 
 
-
-
     const mdBlocks = await n2m.blocksToMarkdown(results);
 
     //const mdBlocks = await n2m.pageToMarkdown(pageID)
@@ -258,21 +256,32 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 
 const pageToPostTransformer = (page: any) => {
 
-    //console.log(page)
-
     let cover = page.cover;
+    let description = page.properties.Description
 
     if (cover) {
-        cover = cover.external.url;
+        if (cover.type === 'file') {
+            cover = cover.file.url
+        } else {
+            cover = cover.external.url;
+        }
+
     } else {
         // default cover
         cover = 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80';
+    }
+
+    if (description.rich_text.length > 0) {
+        description = description.rich_text[0].plain_text
+    } else {
+        description = page.properties.Name.title[0].plain_text
     }
 
     return {
         id: page.id,
         cover: cover,
         title: page.properties.Name.title[0].plain_text,
+        description: description,
         date: page.properties.Updated.last_edited_time,
         slug: page.properties.Slug.formula.string,
     }

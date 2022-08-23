@@ -3,8 +3,8 @@ import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { marked } from 'marked';
-import { FiBook, FiCheck, FiCopy, FiMenu } from 'react-icons/fi';
-import { getDBid, getNotionPagebyID, getPublishedBlogPosts } from '~/lib/notion/notion-api';
+import { FiCopy } from 'react-icons/fi';
+import { getNotionPagebyID } from '~/lib/notion/notion-api';
 import { signInWithNotion } from '~/lib/storage/supabase.client';
 import { supabaseAdmin } from '~/lib/storage/supabase.server';
 import TimeAgo from 'timeago-react';
@@ -12,10 +12,7 @@ import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { SiNotion } from "react-icons/si";
 import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
-import ThemeToggle from '~/lib/layout/ThemeToggle';
-import navData from '~/lib/notion/load-nav';
 import getPageLinks from '~/lib/notion/load-pageLinks';
-import CheckIndex from '~/lib/notion/check-index';
 import checkIndex from '~/lib/notion/check-index';
 
 //regex function to remove special characters from string and replace spaces with hyphens
@@ -183,7 +180,7 @@ export default function Home() {
         {pageLinks && pageLinks.map((page: any, index: number) =>
           <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
             <Flex justify={'space-between'}>
-              <Text maxW={{base:'250px',md:'full'}}>
+              <Text maxW={{ base: '250px', md: 'full' }}>
                 {page.title}
               </Text>
               <TimeAgo style={{ fontSize: '14px' }} datetime={page.date} />
