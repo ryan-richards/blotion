@@ -127,7 +127,8 @@ export const getNotionNav = async (pageID: string, token: string) => {
     let nav: any[] | undefined = [];
 
     mdBlocks.map((block: any) => {
-        if (block.parent.includes('[')) {
+        console.log(block)
+        if (block.parent.includes('[') && !block.parent.includes('http')) {
             nav?.push(block)
         }
     })
