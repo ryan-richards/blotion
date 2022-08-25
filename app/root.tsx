@@ -46,23 +46,21 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: globalStylesUrl },
-    {
-      rel: "stylesheet",
-      href: "https://fonts.googleapis.com/css?family=Outfit",
-      as: 'font',
-    },
+    { rel: "stylesheet", href: globalStylesUrl},
   ];
 };
+
 
 const App = () => {
 
   const { env, navItems, data, loggedIn } = useLoaderData();
 
   return (
+
     <Document env={env} navItems={navItems} siteData={data} session={loggedIn}>
       <Outlet />
     </Document>
+
   );
 };
 

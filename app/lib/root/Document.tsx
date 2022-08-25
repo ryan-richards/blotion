@@ -16,6 +16,8 @@ import ServerStyleContext from "~/lib/styles/context.server";
 import Header from "../layout/Header";
 import HomeFooter from "../layout/HomeFooter";
 
+
+
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;

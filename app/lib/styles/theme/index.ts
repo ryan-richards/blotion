@@ -2,10 +2,12 @@ import { extendTheme } from "@chakra-ui/react";
 import { withProse } from '@nikolovlazar/chakra-ui-prose';
 import colors from "./colors";
 import Button from "./components/button";
-import fonts from "./fonts";
 
 const customTheme = extendTheme({
-  fonts,
+  fonts: {
+    body: "Outfit, sans-serif",
+    heading: "Outfit, sans-serif",
+  },
   colors,
   components: {
     Button,
@@ -36,9 +38,9 @@ const customTheme = extendTheme({
       mt: { base: 2, md: 3 },
       mb: { base: 3, md: 4 }
     },
-    iframe:{
-      width:'full',
-      minHeight:'400px'
+    iframe: {
+      width: 'full',
+      minHeight: '400px'
     }
   }
 }));

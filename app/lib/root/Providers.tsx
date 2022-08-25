@@ -1,5 +1,4 @@
 import { ChakraProvider } from "@chakra-ui/react";
-
 import customTheme from "~/lib/styles/theme";
 
 type ProvidersProps = {

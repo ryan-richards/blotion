@@ -20,7 +20,7 @@ export default function Header({ session }: any) {
       <Flex as="header" width="full" align="center" justify={'space-between'} maxW={'container.lg'}>
         <RemixLink to="/">
           <Flex gap={2} align={'center'}>
-            <Heading as="h2" size="md" fontWeight={'Bold'}>
+            <Heading size="md" fontWeight={'semibold'}>
               Blotion
             </Heading>
           </Flex>
