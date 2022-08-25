@@ -237,7 +237,7 @@ export default function LandingPage() {
                                     )}
                                 </Stack>
                                 <Stack width={'50%'}>
-                                    <Image src={activeFeature?.image} rounded={'lg'}></Image>
+                                    <Image src={activeFeature?.image} rounded={'lg'} width={'380px'}></Image>
                                     <Text fontSize={'xl'}>{activeFeature.info}</Text>
                                 </Stack>
                             </Flex>
@@ -247,7 +247,7 @@ export default function LandingPage() {
                                 <Stack spacing={10}>
                                     {features.map((feature) =>
                                         <Flex key={feature.id} direction={'column'} align={'center'} gap={4} pb={10}>
-                                            <Image src={feature?.image} rounded={'lg'}></Image>
+                                            <Image src={feature?.image} rounded={'lg'} width={'full'} h={'full'}></Image>
                                             <Heading size={'lg'}>{feature.title}</Heading>
                                             <Text textAlign={'left'} fontSize={'md'}>{feature.info}</Text>
                                         </Flex>
@@ -260,7 +260,7 @@ export default function LandingPage() {
                             whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'} gap={4} mt={20} width={'full'}>
 
                             <Flex w='full' mb={5}>
-                                <Image src={darkmode} loading={'lazy'} objectFit={'contain'} rounded={'2xl'} ></Image>
+                                <Image src={darkmode} loading={'lazy'} objectFit={'contain'} rounded={'2xl'} width={'800px'} h={'full'} ></Image>
                             </Flex>
                             <Flex direction={'column'} as={motion.div} initial={offscreen}
                                 whileInView={onscreen} viewport={{ once: true }}>
