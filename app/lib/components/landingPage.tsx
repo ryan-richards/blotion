@@ -1,26 +1,24 @@
 import { Text, Stack, Center, Heading, Flex, Menu, chakra, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image, AspectRatio, useBreakpointValue, MenuButton, MenuList, MenuItem, MenuDivider, IconButton, Tooltip, Divider, Grid, Highlight, textDecoration } from '@chakra-ui/react';
 import { FiCopy, FiEdit, FiLoader } from 'react-icons/fi';
 import { SiNotion } from "react-icons/si";
-import blotionImage from '../../../public/blotion_header.webp';
 import { signInWithNotion } from '../storage/supabase.client';
-import header from '../../../public/header1.png'
+import header from '../../../public/header1.webp'
 import { useRef, useState } from 'react';
-import guide1 from '../../../public/guide1.png'
-import guide2 from '../../../public/guide2.png'
-import guide3 from '../../../public/guide3.png'
-import guide4 from '../../../public/guide4.png'
-import feature1 from '../../../public/feature1.png'
-import feature2 from '../../../public/feature2.png'
-import feature3 from '../../../public/feature3.png'
-import feature4 from '../../../public/feature4.png'
-import darkmode from '../../../public/darkmode.png'
+import guide1 from '../../../public/guide1.webp'
+import guide2 from '../../../public/guide2.webp'
+import guide3 from '../../../public/guide3.webp'
+import guide4 from '../../../public/guide4.webp'
+import feature1 from '../../../public/feature1.webp'
+import feature2 from '../../../public/feature2.webp'
+import feature3 from '../../../public/feature3.webp'
+import feature4 from '../../../public/feature4.webp'
+import darkmode from '../../../public/darkmode.webp'
 import { useNavigate } from '@remix-run/react';
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
 
 export default function LandingPage() {
-
-    const [isExploding, setIsExploding] = useState(false);
+    
     const nav = useNavigate()
     const scrollRef = useRef(null)
 
@@ -122,7 +120,7 @@ export default function LandingPage() {
             type: "spring",
             bounce: 0.2,
             duration: 0.9,
-            opacity: {duration: 3.2}
+            opacity: { duration: 3.2 }
         }
     }
 
