@@ -13,6 +13,8 @@ import Providers from "./Providers";
 import Layout from "~/lib/layout";
 import ClientStyleContext from "~/lib/styles/context.client";
 import ServerStyleContext from "~/lib/styles/context.server";
+import Header from "../layout/Header";
+import HomeFooter from "../layout/HomeFooter";
 
 type DocumentProps = {
   children: React.ReactNode;
@@ -20,10 +22,11 @@ type DocumentProps = {
   env?: any;
   navItems?: any;
   siteData?: any;
+  session?: any;
 };
 
 const Document = withEmotionCache(
-  ({ children, title, env, navItems, siteData }: DocumentProps, emotionCache) => {
+  ({ children, title, env, navItems, siteData, session }: DocumentProps, emotionCache) => {
     const serverStyles = React.useContext(ServerStyleContext);
     const clientStyles = React.useContext(ClientStyleContext);
 
@@ -58,13 +61,16 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: style.css }}
             />
           ))}
-          <script async defer data-website-id="efc7fae6-1355-438a-8795-907f1bd3c7ef" src="https://umami-one-tan.vercel.app/umami.js"></script>
+          {process.env.NODE_ENV === "development" ? null :
+            <script async defer data-website-id="efc7fae6-1355-438a-8795-907f1bd3c7ef" src="https://umami-one-tan.vercel.app/umami.js"></script>}
         </head>
         <body>
           <Providers>
+            {!navItems ? <Header session={session} /> : null}
             <Layout navItems={navItems} siteData={siteData}>
               {children}
             </Layout>
+            {!siteData ? <HomeFooter /> : null}
           </Providers>
           <ScrollRestoration />
           <script

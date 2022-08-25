@@ -2,6 +2,7 @@ import { Box, Container, Flex, VStack } from "@chakra-ui/react";
 
 import Footer from "./Footer";
 import Header from "./Header";
+import HomeFooter from "./HomeFooter";
 import Nav from "./Nav";
 
 type LayoutProps = {
@@ -10,7 +11,8 @@ type LayoutProps = {
   siteData?: any;
 };
 
-const Layout = ({ children, navItems,siteData }: LayoutProps) => {
+const Layout = ({ children, navItems, siteData }: LayoutProps) => {
+
   return (
     <Container maxWidth={'container.md'} mt={5}>
       {navItems ? <Nav data={siteData} navItems={navItems} /> : null}
@@ -18,7 +20,7 @@ const Layout = ({ children, navItems,siteData }: LayoutProps) => {
         <Box minH={'80vh'}>
           {children}
         </Box>
-        <Footer />
+        {siteData && siteData.users.plan !== 'pro' ? <Footer /> : null}
       </VStack>
     </Container>
   );

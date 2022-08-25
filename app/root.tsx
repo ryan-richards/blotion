@@ -21,7 +21,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     //console.log('nav items fetched from root')
   }
 
+  let loggedIn = session ? true : false;
+
   return {
+    loggedIn,
     navItems,
     data,
     env: {
@@ -54,10 +57,10 @@ export const links: LinksFunction = () => {
 
 const App = () => {
 
-  const { env, navItems, data } = useLoaderData();
+  const { env, navItems, data, loggedIn } = useLoaderData();
 
   return (
-    <Document env={env} navItems={navItems} siteData={data}>
+    <Document env={env} navItems={navItems} siteData={data} session={loggedIn}>
       <Outlet />
     </Document>
   );

@@ -1,11 +1,11 @@
-import { getPublishedBlogPosts } from "./notion-api";
+import { getFeaturedBlogPosts, getPublishedBlogPosts } from "./notion-api";
 
 export default async function getPageLinks(pageObject: any, decryptedToken: string) {
 
     let pageLinks: { title: any; slug: string; }[] = []
 
     if (pageObject && pageObject.posts != '') {
-        const posts = await getPublishedBlogPosts(pageObject.posts, decryptedToken)
+        const posts = await getFeaturedBlogPosts(pageObject.posts, decryptedToken)
         posts.map((page: any) => {
             //console.log(page.properties.Status)
             let pageLink = {
@@ -18,5 +18,4 @@ export default async function getPageLinks(pageObject: any, decryptedToken: stri
     }
 
     return pageLinks
-
 }

@@ -80,8 +80,7 @@ export default function Pricing() {
 
     return (
         <Box
-            mt={{base:0, md:10}}
-            py={{base:"34px",md:'64px'}}
+            py={{ base: "34px", md: '54px' }}
             px="10"
         >
             <Flex justify={'flex-start'} mb={3} display={status != 'not-logged-in' ? 'flex' : 'none'}>
@@ -224,6 +223,8 @@ export default function Pricing() {
                             <Feature>1 Published Blog</Feature>
                             <Feature>Add a Custom Domain</Feature>
                             <Feature>Dark / Light Toggle</Feature>
+                            <Feature>Custom Logo (Coming Soon)</Feature>
+                            <Feature>Newsletter Integration (Coming Soon)</Feature>
                         </Stack>
                     </Box>
 
@@ -316,6 +317,10 @@ export default function Pricing() {
                             <Feature>50 Published Blogs</Feature>
                             <Feature>Add Custom Domains</Feature>
                             <Feature>Dark / Light Toggle</Feature>
+                            <Feature>Remove Blotion Branding</Feature>
+                            <Feature>Site Metrics (Coming Soon)</Feature>
+                            <Feature>Custom Logo (Coming Soon)</Feature>
+                            <Feature>Newsletter Integration (Coming Soon)</Feature>
                         </Stack>
                     </Box>
                 </SimpleGrid>

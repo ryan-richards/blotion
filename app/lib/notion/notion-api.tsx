@@ -1,5 +1,114 @@
 import { NotionToMarkdown } from "notion-to-md";
 import { Client } from "@notionhq/client";
+import { capitalize } from "../utils/slugify";
+
+//first letter upper case
+
+
+
+export const getTagBlogPosts = async (pageID: string, token: string, tag: string) => {
+    const notion = new Client({ auth: token })
+    // list blog posts
+    const response = await notion.databases.query({
+        database_id: pageID,
+        filter: {
+            and: [
+                {
+                    property: 'Status',
+                    select: {
+                        equals: 'Live',
+                    }
+                },
+                {
+                    or: [
+                        {
+                            property: 'Tags',
+                            multi_select: {
+                                contains: capitalize(tag),
+                            }
+                        },
+                        {
+                            property: 'Tags',
+                            multi_select: {
+                                contains: tag,
+                            }
+                        },
+                    ]
+                }
+            ]
+        },
+        sorts: [
+            {
+                property: 'Updated',
+                direction: 'descending',
+            }
+        ]
+    });
+
+    let dbResults = null
+
+    dbResults = response.results;
+
+    return dbResults
+}
+
+export const getFeaturedBlogPosts = async (pageID: string, token: string) => {
+    const notion = new Client({ auth: token })
+    // list blog posts
+    const response = await notion.databases.query({
+        database_id: pageID,
+        filter: {
+            and: [
+                {
+                    property: 'Status',
+                    select: {
+                        equals: 'Live',
+                    }
+                },
+                {
+                    property: 'Tags',
+                    multi_select: {
+                        contains: 'Featured',
+                    }
+                },
+            ]
+        },
+        sorts: [
+            {
+                property: 'Updated',
+                direction: 'descending',
+            }
+        ],
+        page_size: 5,
+    });
+
+    let dbResults = null
+    //If there are no featured posts, list 3 recent posts
+    if (response.results.length < 1) {
+        const response = await notion.databases.query({
+            database_id: pageID,
+            filter: {
+                property: 'Status',
+                select: {
+                    equals: 'Live',
+                }
+            },
+            sorts: [
+                {
+                    property: 'Updated',
+                    direction: 'descending',
+                }
+            ],
+            page_size: 3,
+        });
+
+        return dbResults = response.results
+    }
+
+    dbResults = response.results;
+
+    return dbResults
+}
 
 
 export const getPublishedBlogPosts = async (pageID: string, token: string) => {
@@ -45,7 +154,6 @@ export const getDBid = async (pageID: string, token: string) => {
     return {
         response
     }
-
 }
 
 export const getNotionPagebyID = async (pageID: string, token: string) => {
@@ -76,7 +184,6 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
         //console.log('maybe its a database?')
         const dbResults = await getPublishedBlogPosts(pageID, token);
         let markdown = 'none'
-
         return { dbResults, markdown }
     }
 
@@ -132,7 +239,6 @@ export const getNotionNav = async (pageID: string, token: string) => {
             nav?.push(block)
         }
     })
-
     return {
         nav
     }
@@ -258,6 +364,9 @@ const pageToPostTransformer = (page: any) => {
 
     let cover = page.cover;
     let description = page.properties.Description
+    let tags = page.properties.Tags
+
+    //console.log(page)
 
     if (cover) {
         if (cover.type === 'file') {
@@ -277,9 +386,17 @@ const pageToPostTransformer = (page: any) => {
         description = page.properties.Name.title[0].plain_text
     }
 
+    if (tags.multi_select.length > 0) {
+        tags = tags.multi_select
+        console.log(tags)
+    } else {
+        tags = []
+    }
+
     return {
         id: page.id,
         cover: cover,
+        tags: tags,
         title: page.properties.Name.title[0].plain_text,
         description: description,
         date: page.properties.Updated.last_edited_time,

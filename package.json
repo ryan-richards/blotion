@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@benborgers/notion-api": "^1.2.2",
-    "@chakra-ui/react": "^2.2.1",
+    "@chakra-ui/react": "^2.2.9",
     "@emotion/cache": "^11.7.1",
     "@emotion/react": "^11.9.0",
     "@emotion/server": "^11.4.0",

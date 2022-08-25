@@ -14,6 +14,7 @@ import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 import getPageLinks from '~/lib/notion/load-pageLinks';
 import checkIndex from '~/lib/notion/check-index';
+import LandingPage from '~/lib/components/landingPage';
 
 //regex function to remove special characters from string and replace spaces with hyphens
 const slugify = (text: any) => {
@@ -44,7 +45,7 @@ export const meta: MetaFunction = ({ data }) => {
   }
 
   return {
-    title: `${data.data.site_name} ~ Blotion`,
+    title: `${data.data.site_name} - Blotion`,
     description: `${data.data.site_name} a minimalist blog built with Blotion.`,
     author: `${data.data.site_name}`,
     "og:type": "website",
@@ -125,47 +126,7 @@ export default function Home() {
 
   if (status === 'home') {
     return (
-      <Stack gap={10} mt={{ base: 2, md: 10 }}>
-        <Center width={'full'} h={{ base: 'full', md: '55vh' }}>
-          <Stack>
-            <Flex direction={'column'} align={'center'} gap={5}>
-              <Flex mb={3}>
-                <AspectRatio w='250px' p={10} ratio={5 / 4}>
-                  <Image src={blotionImage} objectFit={'contain'}></Image>
-                </AspectRatio>
-              </Flex>
-
-              <Flex direction={'column'} align={'center'}>
-                <Heading>blotion</Heading>
-                <Heading fontWeight={'normal'} size={'md'}>Create a blog with Notion</Heading>
-              </Flex>
-
-
-              <Flex direction={'column'} justify={'center'} align={'center'} gap={4}>
-                <Text textAlign={'center'}>Blotion works with the template below</Text>
-                <Flex w={'full'} align={'center'} direction={'column'} justify={'center'} gap={2}>
-                  <Button minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
-                    <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
-                    Copy Template
-                  </Button>
-                  <Center>
-                    <Text align={'center'}>and then...</Text>
-                  </Center>
-                  <Button
-                    minW={200}
-                    colorScheme='gray'
-                    className={'button block'}
-                    onClick={() => signInWithNotion()}
-                  >
-                    <Icon as={SiNotion} fontSize='xl' mr={2}></Icon>
-                    <span>Login with Notion</span>
-                  </Button>
-                </Flex>
-              </Flex>
-            </Flex>
-          </Stack>
-        </Center>
-      </Stack>
+      <LandingPage />
     )
   }
 
