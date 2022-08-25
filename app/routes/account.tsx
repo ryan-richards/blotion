@@ -317,7 +317,7 @@ export default function Account() {
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
                         <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
                             <Flex gap={3}>
-                                <Avatar name={userData.name ? userData.name : userData.email} src={userData.avatar_url}></Avatar>
+                                <Avatar name={userData.name ? userData.name : userData.email} src={userData.avatar_url} bg={'none'}></Avatar>
                                 <Flex direction={'column'}>
                                     <Flex gap={2} align={'center'}>
                                         <Text>{userData.name}</Text>

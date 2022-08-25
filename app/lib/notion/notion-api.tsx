@@ -363,7 +363,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 const pageToPostTransformer = (page: any) => {
 
     let cover = page.cover;
-    let description = page.properties.Description
+    let description = page.properties.Description ? page.properties.Description : null
     let tags = page.properties.Tags
 
     //console.log(page)
@@ -380,7 +380,7 @@ const pageToPostTransformer = (page: any) => {
         cover = 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80';
     }
 
-    if (description.rich_text.length > 0) {
+    if (description && description.rich_text.length > 0) {
         description = description.rich_text[0].plain_text
     } else {
         description = page.properties.Name.title[0].plain_text

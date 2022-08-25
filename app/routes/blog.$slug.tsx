@@ -117,7 +117,7 @@ export default function Slug() {
             <Flex>
                 <Prose>
                     <Flex direction={'row'} justify={'space-between'} align={{ base: 'center', md: 'center' }} mt={8}>
-                        <Flex direction={'column'} align={'flex-start'} gap={2} maxW={{ base: 250, md: 600 }}>
+                        <Flex direction={'column'} align={'flex-start'} gap={2} maxW={{ base: 250, md: 500 }}>
                             <Heading as={'h2'} style={{ marginBottom: `${isMobile ? 0 : 0}`, marginTop: `${isMobile ? 0 : 0}` }}>{post.title}</Heading>
                             <Flex gap={2} maxH={'20px'}>
                                 {tags.map((tag: any) =>
