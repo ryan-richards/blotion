@@ -163,7 +163,7 @@ export default function LandingPage() {
 
                         <Flex as={motion.div} initial={offscreen}
                             whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'} gap={2} mt={20}>
-                            <Heading>How does Blotion Work?</Heading>
+                            <Heading textAlign={'center'} >How does Blotion Work?</Heading>
                             <Heading fontSize={'lg'} fontWeight={'normal'}>It's pretty simple.</Heading>
                             <HStack mt={{ base: 5, md: 8 }} spacing={{ base: 5, md: 20 }}>
                                 <Tooltip label={'Copy the Blotion Template'} hasArrow placement='top'>
