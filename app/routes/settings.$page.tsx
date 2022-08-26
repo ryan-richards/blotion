@@ -244,7 +244,7 @@ export default function Settings() {
             </Flex>
 
             <Flex mt={5} direction={'column'}>
-                <Form>
+                <Form method={'post'}>
                     <FormLabel>Revue Newsletter</FormLabel>
                     <InputGroup gap={2}>
                         <Input placeholder="revue profile name" name={'revue_profile'} value={revueProfile} isDisabled={userData.plan === 'free' || !page.published} onChange={(e: any) => setRevueProfile(e.target.value)} />
