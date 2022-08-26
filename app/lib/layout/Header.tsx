@@ -16,7 +16,7 @@ export default function Header({ session }: any) {
   const isMobile = useBreakpointValue({ base: 'none', lg: 'flex' })
 
   return (
-    <Flex justify={'center'} mt={8} pl={5} pr={5}>
+    <Flex justify={'center'} mt={{base:5,md:10}} pl={5} pr={5}>
       <Flex as="header" width="full" align="center" justify={'space-between'} maxW={'container.lg'}>
         <RemixLink to="/">
           <Flex gap={2} align={'center'}>

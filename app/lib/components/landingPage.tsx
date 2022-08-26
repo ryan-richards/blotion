@@ -132,7 +132,7 @@ export default function LandingPage() {
                     <Flex as={motion.div} initial={offscreen}
                         whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'}>
                         <Flex direction={'column'} align={'center'} gap={2}>
-                            <Heading fontWeight={'bold'} textAlign={'center'} size={'2xl'}>Generate a blog with Notion.</Heading>
+                            <Heading fontWeight={'semibold'} textAlign={'center'} size={'2xl'}>Generate a blog with Notion.</Heading>
                             <Heading fontWeight={'normal'} mt={2} maxW={'88%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a hosted blog. Allowing you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
                             <Flex w={'full'} align={'center'} direction={{ base: 'column', md: 'row' }} justify={'center'} gap={2} mt={10}>
                                 <Button size={'lg'} style={{ textDecoration: 'none' }} minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
