@@ -15,9 +15,9 @@ const customTheme = extendTheme({
     normal: 400,
     medium: 500,
     semibold: 600,
-    bold: 700,
-    extrabold: 800,
-    black: 900,
+    bold: 600,
+    extrabold: 700,
+    black: 700,
   },
   colors,
   components: {
