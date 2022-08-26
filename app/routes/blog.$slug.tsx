@@ -4,6 +4,7 @@ import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData, Link as RemixLink, useLocation } from "@remix-run/react";
 import { marked } from "marked";
 import TimeAgo from "timeago-react";
+import RevueForm from "~/lib/components/revueForm";
 import { getSingleBlogPost } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
@@ -105,7 +106,6 @@ export const meta: MetaFunction = ({ params, data, location }) => {
 export default function Slug() {
 
     const { data, html, post } = useLoaderData()
-    console.log(post)
 
     const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -128,22 +128,22 @@ export default function Slug() {
                                     </Tag>
                                 )}
                                 {isMobile ?
-                                
-                                <Menu>
-                                <MenuButton size={'md'} as={Tag} colorScheme={'gray'} cursor={'pointer'}>
-                                    <TagLabel>
-                                        ...
-                                    </TagLabel>
-                                </MenuButton>
-                                <MenuList>
-                                    {post.tags.map((tag:any) =>
-                                        <MenuItem as={RemixLink} to={`/blog/category/${tag.name.toLowerCase()}`}>{tag.name}</MenuItem>
-                                    )}
-                                </MenuList>
-                            </Menu>
-                                
-                                
-                                : null }
+
+                                    <Menu>
+                                        <MenuButton size={'md'} as={Tag} colorScheme={'gray'} cursor={'pointer'}>
+                                            <TagLabel>
+                                                ...
+                                            </TagLabel>
+                                        </MenuButton>
+                                        <MenuList>
+                                            {post.tags.map((tag: any) =>
+                                                <MenuItem as={RemixLink} to={`/blog/category/${tag.name.toLowerCase()}`}>{tag.name}</MenuItem>
+                                            )}
+                                        </MenuList>
+                                    </Menu>
+
+
+                                    : null}
                             </Flex>
                         </Flex>
                         <Flex gap={4}>
@@ -163,6 +163,9 @@ export default function Slug() {
                         </Flex>
                     </Flex>
                 </Prose>
+            </Flex>
+            <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
+                <RevueForm revue_profile={data.revue_profile} />
             </Flex>
         </Stack>
     )

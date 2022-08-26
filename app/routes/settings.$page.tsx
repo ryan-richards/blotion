@@ -53,6 +53,7 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const formData = await request.formData();
     const siteName = formData.get('site_name');
+    const revue_profile = formData.get('revue_profile');
     const action = formData.get('action');
 
     if (action) {
@@ -64,6 +65,26 @@ export const action: ActionFunction = async ({ request, params }) => {
                 .eq('owner', session.user?.id)
 
             return redirect('/account')
+        }
+        if (action === 'add_revue' && revue_profile) {
+            await supabaseAdmin
+                .from('sites')
+                .update({
+                    revue_profile: revue_profile
+                })
+                .eq('id', params.page)
+                .eq('owner', session.user?.id)
+            return json({ status: 'success' })
+        }
+        if (action === 'remove_revue') {
+            await supabaseAdmin
+                .from('sites')
+                .update({
+                    revue_profile: null
+                })
+                .eq('id', params.page)
+                .eq('owner', session.user?.id)
+            return json({ status: 'success' })
         }
     }
 
@@ -105,6 +126,7 @@ export default function Settings() {
     let [nameCheckCount, setNameCheckCount] = useState(0)
     let [input, setInput] = useState(page.site_name)
     let [customDomain, setCustomDomain] = useState(page.custom_domain ? page.custom_domain : '')
+    let [revueProfile, setRevueProfile] = useState(page.revue_profile ? page.revue_profile : '')
     let [inputError, setInputError] = useState('')
     const transition = useTransition();
 
@@ -178,7 +200,6 @@ export default function Settings() {
         const formData = new FormData();
         formData.append("site", page.id);
         formData.append("domain", value);
-
         customDomainAction.submit(
             formData,
             { method: "post", action: "/api/domain" }
@@ -186,7 +207,6 @@ export default function Settings() {
     }
 
     const removeCustomDomain = async (value: any) => {
-
         const formData = new FormData();
         formData.append("site", page.id);
         formData.append("domain", value);
@@ -222,6 +242,20 @@ export default function Settings() {
                     </Stack>
                 </Box>
             </Flex>
+
+            <Flex mt={5} direction={'column'}>
+                <Form>
+                    <FormLabel>Revue Newsletter</FormLabel>
+                    <InputGroup gap={2}>
+                        <Input placeholder="revue profile name" name={'revue_profile'} value={revueProfile} isDisabled={userData.plan === 'free' || !page.published} onChange={(e: any) => setRevueProfile(e.target.value)} />
+                        {!page.revue_profile ?
+                            <Button type={'submit'} name={'action'} value={'add_revue'} colorScheme={'blue'} isDisabled={!revueProfile} isLoading={isSubmitting}>Add</Button> :
+                            <Button type={'submit'} name={'action'} value={'remove_revue'} colorScheme={'red'} isDisabled={!revueProfile} isLoading={isSubmitting}>Remove</Button>}
+                    </InputGroup>
+                </Form>
+            </Flex>
+
+
             <Flex mt={5} direction={'column'}>
                 <Form method='post' autoComplete="false">
                     <FormLabel>Subdomain</FormLabel>
@@ -272,6 +306,9 @@ export default function Settings() {
                     </TableContainer>
                 </Flex>
                 : null}
+
+
+
 
             <Flex justify={'flex-end'} mt={10}>
                 <Button size={'sm'} colorScheme={'red'} onClick={onOpen}>Delete Site</Button>

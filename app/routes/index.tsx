@@ -15,6 +15,7 @@ import { oAuthStrategy } from '~/lib/storage/auth.server';
 import getPageLinks from '~/lib/notion/load-pageLinks';
 import checkIndex from '~/lib/notion/check-index';
 import LandingPage from '~/lib/components/landingPage';
+import RevueForm from '~/lib/components/revueForm';
 
 //regex function to remove special characters from string and replace spaces with hyphens
 const slugify = (text: any) => {
@@ -136,6 +137,8 @@ export default function Home() {
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
 
+
+
       <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
       <Stack>
         {pageLinks && pageLinks.map((page: any, index: number) =>
@@ -149,6 +152,10 @@ export default function Home() {
           </Link>
         )}
       </Stack>
+
+      <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
+        <RevueForm revue_profile={data.revue_profile} />
+      </Flex>
 
       <Flex justify={'center'} display={previewMode ? 'flex' : 'none'} opacity={'50%'}>
         <Heading pt={10}>Site in Preview Mode</Heading>

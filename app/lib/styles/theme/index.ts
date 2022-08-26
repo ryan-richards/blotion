@@ -52,6 +52,9 @@ const customTheme = extendTheme({
     iframe: {
       width: 'full',
       minHeight: '400px'
+    },
+    img: {
+      borderRadius: 'md'
     }
   }
 }));
