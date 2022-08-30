@@ -30,18 +30,18 @@ const slugify = (text: any) => {
 export const meta: MetaFunction = ({ data }) => {
 
   if (!data.data) return {
-    title: 'Blotion',
-    description: 'Turn your notion Database into Blog',
+    title: 'Blotion - Generate a Blog with Notion',
+    description: 'Blotion allows you to generate and manage a free hosted blog with Notion. Start your blog in minutes and use the power of Notion as a CMS.',
     "og:type": "website",
     "og:url": `https://www.blotion.com`,
-    "og:title": `Blotion - Turn a Notion Database into a Blog`,
-    "og:description": `Blotion is a Notion Database to Blog converter. Turn your notion Database into a Blog.`,
-    "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/Desktop%20-%201%20(4).png`,
-    "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/Desktop%20-%201%20(4).png`,
+    "og:title": `Blotion - Generate a Blog with Notion`,
+    "og:description": `Blotion allows you to generate and manage a free hosted blog with Notion. Start your blog in minutes.`,
+    "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
+    "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
     "twitter:card": "summary_large_image",
     "twitter:creator": "@blotion_",
     "twitter:site": "@blotion_",
-    "twitter:title": `Blotion - Turn a Notion Database into a Blog`,
+    "twitter:title": `Blotion - Generate a Blog with Notion`,
     "twitter:description": 'Blotion is a minimalist website builder for converting Notion templates into a hosted blog website.',
   }
 
