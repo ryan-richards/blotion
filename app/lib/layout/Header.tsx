@@ -58,7 +58,7 @@ export default function Header({ session }: any) {
                   <Text display={isMobile}>Menu</Text>
                 </Flex>
               </MenuButton>
-              <MenuList zIndex={10}>
+              <MenuList zIndex={200}>
                 {navItems.map((val, index) =>
                   <Link
                     as={RemixLink}

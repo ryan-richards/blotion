@@ -3,29 +3,15 @@ import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { marked } from 'marked';
-import { FiCopy } from 'react-icons/fi';
 import { getNotionPagebyID } from '~/lib/notion/notion-api';
-import { signInWithNotion } from '~/lib/storage/supabase.client';
 import { supabaseAdmin } from '~/lib/storage/supabase.server';
 import TimeAgo from 'timeago-react';
 import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
-import { SiNotion } from "react-icons/si";
-import blotionImage from '../../public/blotion_header.webp';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 import getPageLinks from '~/lib/notion/load-pageLinks';
 import checkIndex from '~/lib/notion/check-index';
 import LandingPage from '~/lib/components/landingPage';
 import RevueForm from '~/lib/components/revueForm';
-
-//regex function to remove special characters from string and replace spaces with hyphens
-const slugify = (text: any) => {
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')           // Replace spaces with -
-    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
-    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
-    .replace(/^-+/, '')             // Trim - from start of text
-    .replace(/-+$/, '');            // Trim - from end of text
-}
 
 export const meta: MetaFunction = ({ data }) => {
 
@@ -146,9 +132,6 @@ export default function Home() {
       <Prose>
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
-
-
-
       <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
       <Stack>
         {pageLinks && pageLinks.map((page: any, index: number) =>
@@ -170,7 +153,6 @@ export default function Home() {
       <Flex justify={'center'} display={previewMode ? 'flex' : 'none'} opacity={'50%'}>
         <Heading pt={10}>Site in Preview Mode</Heading>
       </Flex>
-
     </Stack>
   );
 

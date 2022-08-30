@@ -21,7 +21,7 @@ export default function Nav({ navItems, data }: any) {
             <HStack gap={1} display={navItems ? 'flex' : 'none'}>
                 {navItems.length > 3 || isMobileMode ?
                     <Menu>
-                        <MenuButton as={Button} variant={'link'} mr={buttonMargin}>
+                        <MenuButton as={Button} variant={{base:'ghost', md:'link'}} mr={buttonMargin}>
                             <Flex>
                                 <Icon fontSize={'xl'} mt={0} mr={buttonIconMargin} as={FiMenu} />
                                 <Text display={isMobile}>Menu</Text>

@@ -126,7 +126,7 @@ export default function Page() {
                 {pageLinks && pageLinks.length > 0 ? pageLinks.map((page: any) =>
                     <Link key={page.title} as={RemixLink} to={`/blog/${page.slug}`}>
                         <Flex justify={'space-between'}>
-                            <Text>
+                            <Text maxW={{ base: '250px', md: 'full' }}>
                                 {page.title}
                             </Text>
                             <TimeAgo datetime={page.date} style={{ fontSize: '14px' }} />
