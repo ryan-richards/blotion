@@ -70,11 +70,21 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { data, status, preview, subdomain }: any = await checkIndex(request, session);
 
   if (!data) {
-    return json({ status: 'home' })
+    return json({ status: 'home' }, {
+      headers: {
+        "Cache-Control":
+          "s-maxage=3600, stale-while-revalidate=86400",
+      },
+    })
   }
 
   if (status === 'home') {
-    return json({ status: 'home' })
+    return json({ status: 'home' }, {
+      headers: {
+        "Cache-Control":
+          "s-maxage=3600, stale-while-revalidate=86400",
+      },
+    })
   }
 
   if (data.published === false && !preview) {
@@ -108,7 +118,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json({ data, html, pageObject, pageLinks, previewMode }, {
     headers: {
       "Cache-Control":
-        "s-maxage=3600, stale-while-revalidate=86400",
+        "s-maxage=60, stale-while-revalidate=3600",
     },
   });
 };
