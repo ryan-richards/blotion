@@ -12,13 +12,14 @@ import feature1 from '../../../public/feature1.webp'
 import feature2 from '../../../public/feature2.webp'
 import feature3 from '../../../public/feature3.webp'
 import feature4 from '../../../public/feature4.webp'
+import feature5 from '../../../public/feature5.webp'
 import darkmode from '../../../public/darkmode.webp'
 import { useNavigate } from '@remix-run/react';
 import { motion } from "framer-motion";
 
 
 export default function LandingPage() {
-    
+
     const nav = useNavigate()
     const scrollRef = useRef(null)
 
@@ -48,24 +49,30 @@ export default function LandingPage() {
     const features = [
         {
             id: 1,
+            title: 'Free Account',
+            info: 'Get started with a free account and upgrade to Creative or Pro at any time to unlock more features. Like Custom Domains, Dark Mode, and more.',
+            image: feature5
+        },
+        {
+            id: 2,
             title: 'SEO + Meta Tags',
             info: 'Blotion optimises every blog post for SEO by automatically generating the correct meta tag infomation that helps google find your writing',
             image: feature1
         },
         {
-            id: 2,
+            id: 3,
             title: 'Categories',
             info: 'As you manage your blog posts in Notion, you can easily categorise to each post by adding a tag in Notion page properties',
             image: feature2
         },
         {
-            id: 3,
+            id: 4,
             title: "It's fast",
             info: 'Every page is cached on using the Vercel Edge Network. Meaning pages load quickly, no matter where your readers are in the world',
             image: feature3
         },
         {
-            id: 4,
+            id: 5,
             title: "Notion as CMS",
             info: 'No need to learn a new CMS tool. All of your site content is fetched from Notion. So simply edit your content in Notion and it will be automatically updated in the Blotion site',
             image: feature4
@@ -133,7 +140,7 @@ export default function LandingPage() {
                         whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'}>
                         <Flex direction={'column'} align={'center'} gap={2}>
                             <Heading fontWeight={'semibold'} textAlign={'center'} size={'2xl'}>Generate a blog with Notion.</Heading>
-                            <Heading fontWeight={'normal'} mt={2} maxW={'88%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a hosted blog. Allowing you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
+                            <Heading fontWeight={'normal'} mt={2} maxW={'88%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a free hosted blog. Allowing you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
                             <Flex w={'full'} align={'center'} direction={{ base: 'column', md: 'row' }} justify={'center'} gap={2} mt={10}>
                                 <Button size={'lg'} style={{ textDecoration: 'none' }} minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
                                     <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>

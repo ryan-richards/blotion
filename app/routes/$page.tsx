@@ -89,7 +89,12 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
         //console.log(content.databaseName)
 
-        return json({ data, pageLinks, pageTitle: content.databaseName })
+        return json({ data, pageLinks, pageTitle: content.databaseName }, {
+            headers: {
+                "Cache-Control":
+                    "s-maxage=3600, stale-while-revalidate=86400",
+            },
+        })
     }
 
 

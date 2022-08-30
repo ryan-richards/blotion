@@ -11,7 +11,12 @@ export const loader: LoaderFunction = async ({ request }) => {
     const session = await oAuthStrategy.checkSession(request);
 
     if (!session) {
-        return json({ status: 'not-logged-in' });
+        return json({ status: 'not-logged-in' },{
+            headers: {
+              "Cache-Control":
+                "s-maxage=3600, stale-while-revalidate=86400",
+            },
+          });
     }
 
     const { data: userData } = await supabaseDB
@@ -21,12 +26,27 @@ export const loader: LoaderFunction = async ({ request }) => {
         .single()
 
     if (userData.plan === 'free') {
-        return json({ status: 'free' });
+        return json({ status: 'free' },{
+            headers: {
+              "Cache-Control":
+                "s-maxage=3600, stale-while-revalidate=86400",
+            },
+          });
     } else {
-        return json({ status: userData.plan });
+        return json({ status: userData.plan },{
+            headers: {
+              "Cache-Control":
+                "s-maxage=3600, stale-while-revalidate=86400",
+            },
+          });
     }
 };
 
+export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
+    return {
+      "cache-control": loaderHeaders.get("cache-control"),
+    };
+  }
 
 export default function Pricing() {
 

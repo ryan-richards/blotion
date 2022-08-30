@@ -108,7 +108,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   return json({ data, html, pageObject, pageLinks, previewMode }, {
     headers: {
       "Cache-Control":
-        "s-maxage=60, stale-while-revalidate=3600",
+        "s-maxage=3600, stale-while-revalidate=86400",
     },
   });
 };

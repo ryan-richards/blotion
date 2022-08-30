@@ -6,6 +6,7 @@ import checkIndex from "./lib/notion/check-index";
 import navData from "./lib/notion/load-nav";
 import { getNotionNav } from "./lib/notion/notion-api";
 import { oAuthStrategy } from "./lib/storage/auth.server";
+import { supabaseAdmin } from "./lib/storage/supabase.server";
 import { decryptAPIKey } from "./lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -14,6 +15,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const { data, status, preview, subdomain }: any = await checkIndex(request, session);
 
   let navItems = null
+  
   if (data) {
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
     const { nav } = await getNotionNav(data.index_page, decryptedToken)
@@ -30,19 +32,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
-    },
-    headers: {
-      "Cache-Control":
-        "s-maxage=60, stale-while-revalidate=3600",
     }
   };
 };
-
-export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
-  return {
-    "cache-control": loaderHeaders.get("cache-control"),
-  };
-}
 
 export const links: LinksFunction = () => {
   return [
@@ -50,17 +42,14 @@ export const links: LinksFunction = () => {
   ];
 };
 
-
 const App = () => {
 
   const { env, navItems, data, loggedIn } = useLoaderData();
 
   return (
-
     <Document env={env} navItems={navItems} siteData={data} session={loggedIn}>
       <Outlet />
     </Document>
-
   );
 };
 

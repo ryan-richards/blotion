@@ -11,7 +11,7 @@ export const action: ActionFunction = async ({ request }) => {
     const upgrade = url.searchParams.get('upgrade');
 
     const supaSession = await oAuthStrategy.checkSession(request, {
-        failureRedirect: "/",
+        failureRedirect: "/login",
     });
 
     //console.log(supaSession.user?.id)
