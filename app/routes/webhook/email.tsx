@@ -11,6 +11,9 @@ export const action: ActionFunction = async ({ request }) => {
     if (!data) return json({ status: 'no data' });
 
     switch (data.RecordType) {
+        case 'Delivery':
+            console.log('Delivery')
+            break;
         case 'Bounce':
             console.log('Bounce');
             break;
