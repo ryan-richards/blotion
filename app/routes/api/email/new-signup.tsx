@@ -12,7 +12,7 @@ export const action: ActionFunction = async ({ request }) => {
   // Send an email:
   var client = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
-  client.sendEmail({
+  await client.sendEmail({
     "From": "hello@blotion.com",
     "To": "ryan@ryanrichards.dev",
     "Subject": "Get started with Blotion",
