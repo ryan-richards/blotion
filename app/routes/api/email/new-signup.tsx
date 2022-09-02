@@ -19,5 +19,5 @@ export const action: ActionFunction = async ({ request }) => {
     "MessageStream": "outbound"
   });
 
-  return json({ status: 'error' });
+  return json({ status: 'success' });
 };
