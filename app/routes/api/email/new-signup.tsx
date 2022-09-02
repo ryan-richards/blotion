@@ -4,6 +4,8 @@ export const action: ActionFunction = async ({ request }) => {
 
   const data = await request.json();
 
+  console.log(data.record.email)
+
   //data.record.email
   var postmark = require("postmark");
 
