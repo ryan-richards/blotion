@@ -13,6 +13,19 @@ export const action: ActionFunction = async ({ request }) => {
     switch (data.RecordType) {
         case 'Delivery':
             console.log('Delivery')
+
+            switch (data.Tag) {
+                case 'welcome':
+                    console.log('Welcome email was delivered to ' + data.Recipient)
+                    // insert user to the email drip table
+                    // cron job runs every 2 hours and sends the next email in the drip
+                    break;
+                default:
+                    console.log('Unknown tag')
+                    break;
+            }
+
+
             break;
         case 'Bounce':
             console.log('Bounce');
