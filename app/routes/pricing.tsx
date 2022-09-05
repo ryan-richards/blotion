@@ -5,12 +5,15 @@ import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseDB } from "~/lib/storage/db.access";
+import { getClientIPAddress } from 'remix-utils'
 
 export const loader: LoaderFunction = async ({ request }) => {
 
     const session = await oAuthStrategy.checkSession(request);
+    let ipAddress = null
+    ipAddress = getClientIPAddress(request);
 
-    const countryCode = request.headers.get('x-vercel-ip-country');
+    console.log(ipAddress)
 
     if (!session) {
         return json({ status: 'not-logged-in' }, {
@@ -35,7 +38,7 @@ export const loader: LoaderFunction = async ({ request }) => {
             },
         });
     } else {
-        return json({ status: userData.plan, countryCode }, {
+        return json({ status: userData.plan, ipAddress }, {
             headers: {
                 "Cache-Control":
                     "s-maxage=3600, stale-while-revalidate=86400",
@@ -52,12 +55,12 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 
 export default function Pricing() {
 
-    const { status,countryCode } = useLoaderData()
+    const { status, ipAddress } = useLoaderData()
 
     const [frequency, setFrequency] = useState("month");
     const nav = useNavigate()
 
-    console.log(countryCode)
+    console.log(ipAddress)
 
     const canPurchase = status === "free" || status === "not-logged-in"
     const canManage = status === "creative" || status === 'pro'

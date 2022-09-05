@@ -1,4 +1,4 @@
-import { getFeaturedBlogPosts, getPublishedBlogPosts } from "./notion-api";
+import { getFeaturedBlogPosts, getPublishedBlogPosts, pageToPostTransformer } from "./notion-api";
 
 export default async function getPageLinks(pageObject: any, decryptedToken: string) {
 
@@ -7,13 +7,8 @@ export default async function getPageLinks(pageObject: any, decryptedToken: stri
     if (pageObject && pageObject.posts != '') {
         const posts = await getFeaturedBlogPosts(pageObject.posts, decryptedToken)
         posts.map((page: any) => {
-            //console.log(page.properties.Status)
-            let pageLink = {
-                title: page.properties.Name.title[0].plain_text,
-                slug: page.properties.Slug.formula.string,
-                date: page.properties.Updated.last_edited_time,
-            }
-            pageLinks.push(pageLink)
+            const post = pageToPostTransformer(page);
+            pageLinks.push(post)
         })
     }
 

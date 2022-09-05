@@ -12,6 +12,8 @@ import getPageLinks from '~/lib/notion/load-pageLinks';
 import checkIndex from '~/lib/notion/check-index';
 import LandingPage from '~/lib/components/landingPage';
 import RevueForm from '~/lib/components/revueForm';
+import BlogCard from '~/lib/components/blogCard';
+import BlogTextLink from '~/lib/components/blogTextLink';
 
 export const meta: MetaFunction = ({ data }) => {
 
@@ -135,16 +137,15 @@ export default function Home() {
       <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
       <Stack>
         {pageLinks && pageLinks.map((page: any, index: number) =>
-          <Link as={RemixLink} key={index} to={`/blog/${page.slug}`}>
-            <Flex justify={'space-between'}>
-              <Text maxW={{ base: '250px', md: 'full' }}>
-                {page.title}
-              </Text>
-              <TimeAgo style={{ fontSize: '14px' }} datetime={page.date} />
-            </Flex>
-          </Link>
+          <BlogTextLink key={index} page={page} />
         )}
       </Stack>
+
+      {/*<Stack mt={2}>
+        {pageLinks && pageLinks.map((page: any, index: number) =>
+          <BlogCard key={index} post={page} />
+        )}
+        </Stack>*/}
 
       <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
         <RevueForm revue_profile={data.revue_profile} />

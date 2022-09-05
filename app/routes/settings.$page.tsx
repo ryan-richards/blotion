@@ -308,8 +308,6 @@ export default function Settings() {
                 : null}
 
 
-
-
             <Flex justify={'flex-end'} mt={10}>
                 <Button size={'sm'} colorScheme={'red'} onClick={onOpen}>Delete Site</Button>
             </Flex>

@@ -360,7 +360,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
     }
 }
 
-const pageToPostTransformer = (page: any) => {
+export const pageToPostTransformer = (page: any) => {
 
     let cover = page.cover;
     let description = page.properties.Description ? page.properties.Description : null
