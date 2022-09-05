@@ -10,9 +10,8 @@ import { getClientIPAddress } from 'remix-utils'
 export const loader: LoaderFunction = async ({ request }) => {
 
     const session = await oAuthStrategy.checkSession(request);
-    let ipAddress = null
-    ipAddress = getClientIPAddress(request);
 
+    let ipAddress = getClientIPAddress(request.headers) || '';
     console.log(ipAddress)
 
     if (!session) {
