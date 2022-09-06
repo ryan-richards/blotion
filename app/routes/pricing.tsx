@@ -5,7 +5,7 @@ import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseDB } from "~/lib/storage/db.access";
-import { getClientIPAddress } from 'remix-utils'
+import { getClientIPAddress, getClientLocales } from "remix-utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
 
@@ -54,12 +54,10 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 
 export default function Pricing() {
 
-    const { status, ipAddress } = useLoaderData()
+    const { status } = useLoaderData()
 
     const [frequency, setFrequency] = useState("month");
     const nav = useNavigate()
-
-    console.log(ipAddress)
 
     const canPurchase = status === "free" || status === "not-logged-in"
     const canManage = status === "creative" || status === 'pro'

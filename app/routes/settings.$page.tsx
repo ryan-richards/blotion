@@ -1,6 +1,6 @@
-import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react";
+import { Box, Flex, Image, Stack, Tag, Text, Link, FormLabel, Input, InputGroup, Button, TableContainer, Table, TableCaption, Thead, Tr, Th, Tbody, Td, Tfoot, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, FormControl, Switch, Heading, Divider } from "@chakra-ui/react";
 import { ActionFunction, json, LoaderFunction, redirect } from "@remix-run/node";
-import { Form, useActionData, useFetcher, useLoaderData, useTransition, useNavigate } from "@remix-run/react";
+import { Form, useActionData, useFetcher, useLoaderData, useTransition, useNavigate, useSubmit } from "@remix-run/react";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { useEffect, useState, } from "react";
@@ -55,6 +55,30 @@ export const action: ActionFunction = async ({ request, params }) => {
     const siteName = formData.get('site_name');
     const revue_profile = formData.get('revue_profile');
     const action = formData.get('action');
+    let showThumbnails = formData.get('show-thumbnails');
+
+    console.log(showThumbnails);
+
+    if (!action && !siteName) {
+
+        if (showThumbnails == 'show-thumbnails') {
+            await supabaseAdmin
+                .from('sites')
+                .update({ show_thumbnails: true })
+                .eq('id', params.page)
+                .eq('owner', session.user?.id)
+            return json({ status: 'success', message: 'Settings updated' });
+        }
+
+        if (!showThumbnails) {
+            await supabaseAdmin
+                .from('sites')
+                .update({ show_thumbnails: false })
+                .eq('id', params.page)
+                .eq('owner', session.user?.id)
+            return json({ status: 'success', message: 'Settings updated' });
+        }
+    }
 
     if (action) {
         if (action === 'delete_site') {
@@ -117,6 +141,7 @@ export default function Settings() {
     const { siteData: page, userData } = useLoaderData()
     const [subdomain, setSubdomain] = useState(page.site_name)
     const nav = useNavigate();
+    const submit = useSubmit();
 
     const actionData = useActionData();
     const siteNameAvailable = useFetcher()
@@ -133,6 +158,9 @@ export default function Settings() {
     //State for confirming site deletion
     const [deleteInput, setDeleteInput] = useState('')
     const deleteConfirm = `delete-${page.site_name}`
+
+    //State for thumbanail display switch
+    const [showThumbnails, setShowThumbnails] = useState(page.show_thumbnails)
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -217,11 +245,16 @@ export default function Settings() {
         );
     }
 
+    const handleChange = (event: any) => {
+        setShowThumbnails(!showThumbnails)
+        submit(event.currentTarget, { replace: true });
+    }
+
 
     return (
         <Box bg={'box'} width={'full'} mt={10} p={{ base: 2, md: 10 }} rounded={'lg'}>
             <Flex mb={5}>
-                <Button onClick={() => nav(`/account`)} >Back</Button>
+                <Button onClick={() => nav(`/account`)}>Back</Button>
             </Flex>
             <Flex>
                 <Box position={'relative'} border={'1px'} borderColor={'gray.300'} rounded={'lg'} p={4} maxH={'full'} maxWidth={'full'} cursor={'pointer'}>
@@ -242,6 +275,22 @@ export default function Settings() {
                     </Stack>
                 </Box>
             </Flex>
+
+            <Divider mt={5}></Divider>
+
+            <Flex mt={5} direction={'column'} gap={2}>
+                <Heading fontSize={'xl'}>Apperance Settings</Heading>
+                <Form method={'post'} onChange={handleChange}>
+                    <FormControl display='flex' alignItems='center'>
+                        <FormLabel htmlFor='show-thumbnails' mb='0'>
+                            Show blog post thumbnails?
+                        </FormLabel>
+                        <Switch id='show-thumbnails' name={'show-thumbnails'} value="show-thumbnails" isChecked={showThumbnails} />
+                    </FormControl>
+                </Form>
+            </Flex>
+
+            <Divider mt={5}></Divider>
 
             <Flex mt={5} direction={'column'}>
                 <Form method={'post'}>

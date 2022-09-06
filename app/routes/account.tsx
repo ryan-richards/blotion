@@ -45,6 +45,7 @@ async function subdomainCheck(str: string) {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
+
     const session = await oAuthStrategy.checkSession(request, {
         failureRedirect: "/",
     });

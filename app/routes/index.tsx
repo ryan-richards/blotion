@@ -121,7 +121,6 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 export default function Home() {
 
   const { data, status, html, pageObject, pageLinks, navItems, previewMode } = useLoaderData()
-  //console.log(navItems)
 
   if (status === 'home') {
     return (
@@ -134,18 +133,22 @@ export default function Home() {
       <Prose>
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
-      <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
-      <Stack>
-        {pageLinks && pageLinks.map((page: any, index: number) =>
-          <BlogTextLink key={index} page={page} />
-        )}
-      </Stack>
 
-      {/*<Stack mt={2}>
-        {pageLinks && pageLinks.map((page: any, index: number) =>
-          <BlogCard key={index} post={page} />
-        )}
-        </Stack>*/}
+      <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
+
+      {data.show_thumbnails ?
+        <Stack>
+          {pageLinks && pageLinks.map((page: any, index: number) =>
+            <BlogCard key={index} post={page} />
+          )}
+        </Stack>
+        :
+        <Stack>
+          {pageLinks && pageLinks.map((page: any, index: number) =>
+            <BlogTextLink key={index} page={page} />
+          )}
+        </Stack>
+      }
 
       <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
         <RevueForm revue_profile={data.revue_profile} />
