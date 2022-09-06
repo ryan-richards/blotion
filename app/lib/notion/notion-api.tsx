@@ -388,7 +388,7 @@ export const pageToPostTransformer = (page: any) => {
 
     if (tags.multi_select.length > 0) {
         tags = tags.multi_select
-        console.log(tags)
+        //console.log(tags)
     } else {
         tags = []
     }

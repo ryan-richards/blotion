@@ -109,12 +109,10 @@ export const loader: LoaderFunction = async ({ request }) => {
             const workspaceIds = workspaces.map((workspace: any) => workspace.id);
             //extract all index_page from the userData.sites array
             const indexPages = userData.sites.map((site: any) => site.index_page);
-
             // check if workspaces array is the same as the indexPages array
             let result = workspaceIds.every(function (element: any) {
                 return indexPages.includes(element);
             });
-
             //get all workspaces that are not in the indexPages array
             const newWorkspaces = workspaces.filter((workspace: any) => !indexPages.includes(workspace.id));
 
@@ -292,7 +290,6 @@ export default function Account() {
     const transition = useTransition();
     const nav = useNavigate();
     const [hover, setHover] = useState('')
-
 
     const pagePublishLimit = userData.plan === "free" || userData.plan === "creative" ? 1 : 10
     const pagesPublished = userData.sites.filter((page: { published: any; }) => page.published).length
