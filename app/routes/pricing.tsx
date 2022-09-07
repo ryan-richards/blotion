@@ -1,11 +1,30 @@
 import { Box, Flex, Icon, chakra, useColorModeValue, useToken, Badge, Stack, Text, Link, SimpleGrid, Button } from "@chakra-ui/react";
-import { json, LoaderFunction } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { FiArrowLeft } from "react-icons/fi";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseDB } from "~/lib/storage/db.access";
 import { getClientIPAddress, getClientLocales } from "remix-utils";
+
+export const meta: MetaFunction = ({ data }) => {
+
+    return {
+        title: 'Blotion - Pricing',
+        description: 'Pricing for Blotion. Start your blog in minutes and use the power of Notion as a CMS.',
+        "og:type": "website",
+        "og:url": `https://www.blotion.com`,
+        "og:title": `Blotion - Pricing`,
+        "og:description": `Pricing for Blotion. Start your blog in minutes and use the power of Notion as a CMS.`,
+        "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
+        "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
+        "twitter:card": "summary_large_image",
+        "twitter:creator": "@blotion_",
+        "twitter:site": "@blotion_",
+        "twitter:title": `Blotion - Pricing`,
+        "twitter:description": 'Blotion pricing page. Start your blog in minutes and use the power of Notion as a CMS.',
+    }
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
 
