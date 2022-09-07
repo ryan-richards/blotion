@@ -174,11 +174,11 @@ export default function Settings() {
         value = value.toLowerCase()
 
         if (value.length < 3) {
-            return setInputError('Subdomain must be at least 3 characters')
+            return setInputError('Subdomain must be at least 3 lowercase characters')
         }
 
         function regTest(str: string) {
-            return /^[A-Za-z0-9]*$/.test(str)
+            return /^[a-z0-9]*$/.test(str)
         }
 
         if (regTest(value) && value != '') {
@@ -190,7 +190,7 @@ export default function Settings() {
         } else {
             setNameCheckCount(nameCheckCount + 1)
             setSiteNameValid(false)
-            setInputError('Subdomain name invalid a-z 0-9 only! (no spaces)')
+            setInputError('Subdomain name invalid lowercase a-z 0-9 only! (no spaces)')
         }
 
     }

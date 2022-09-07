@@ -147,7 +147,7 @@ export default function Slug() {
                             </Flex>
                         </Flex>
                         <Flex gap={4}>
-                            <Avatar name={data.users.name} bg={'none'} src={data.users?.avatar_url}> </Avatar>
+                            <Avatar name={data.users.name} src={data.users?.avatar_url}> </Avatar>
                             <Flex direction={'column'} display={{ base: 'none', md: 'flex' }}>
                                 <TimeAgo style={{ fontSize: '15px' }} datetime={post.date} />
                                 <Text style={{ margin: 0 }}>by {data.users.name}</Text>
@@ -156,7 +156,7 @@ export default function Slug() {
                     </Flex>
                     <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
                     <Flex gap={4} justify={'center'} align={'center'} pt={10}>
-                        <Avatar name={data.users.name} bg={'none'} src={data.users?.avatar_url}> </Avatar>
+                        <Avatar name={data.users.name} src={data.users?.avatar_url}> </Avatar>
                         <Flex direction={'column'}>
                             <TimeAgo style={{ fontSize: '15px' }} datetime={post.date} />
                             <Text style={{ margin: 0 }}>by {data.users.name}</Text>

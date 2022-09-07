@@ -16,7 +16,7 @@ export default function Nav({ navItems, data }: any) {
     return (
         <Flex direction={'row'} justify={'space-between'} mt={{ base: 2, md: 10 }}>
             <Link as={RemixLink} to={'/'}>
-                <Heading size={'lg'} fontWeight={'semibold'}>{data.site_name}</Heading>
+                <Heading size={'lg'} fontWeight={'semibold'}>{data.siteName ? data.siteName : data.site_name}</Heading>
             </Link>
             <HStack gap={1} display={navItems ? 'flex' : 'none'}>
                 {navItems.length > 3 || isMobileMode ?
