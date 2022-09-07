@@ -111,11 +111,12 @@ export default function Slug() {
 
     //if isMobile is true then onlt return first tag
     const tags = isMobile ? post.tags.slice(0, 1) : post.tags
+    console.log(tags)
 
     return (
-        <Stack mt={{ base: 2, md: 5 }}>
+        <Stack mt={{ base: 2, md: 5 }} >
             <Flex>
-                <Prose>
+                <Prose width={'full'}>
                     <Flex direction={'row'} justify={'space-between'} align={{ base: 'center', md: 'center' }} mt={8}>
                         <Flex direction={'column'} align={'flex-start'} gap={2} maxW={{ base: 250, md: 500 }}>
                             <Heading as={'h2'} style={{ marginBottom: `${isMobile ? 0 : 0}`, marginTop: `${isMobile ? 0 : 0}` }}>{post.title}</Heading>
@@ -127,8 +128,7 @@ export default function Slug() {
                                         </TagLabel>
                                     </Tag>
                                 )}
-                                {isMobile ?
-
+                                {isMobile && tags.length > 1 ?
                                     <Menu>
                                         <MenuButton size={'md'} as={Tag} colorScheme={'gray'} cursor={'pointer'}>
                                             <TagLabel>

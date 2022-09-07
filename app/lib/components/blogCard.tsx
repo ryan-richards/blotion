@@ -66,7 +66,7 @@ export default function BlogCard({ post }: any) {
                         </Box>
                     </Flex>
                     <Flex justify={'flex-end'} align={'end'} mt={{ base: 5 }} mr={2} mb={2}>
-                        <Button onClick={() => nav(`./blog/${post.slug}`)} variant={'link'} p={5}>Read More</Button>
+                        <Button onClick={() => nav(`/blog/${post.slug}`)} variant={'link'} p={5}>Read More</Button>
                     </Flex>
                 </Flex>
             </Box>
