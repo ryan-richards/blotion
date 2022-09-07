@@ -34,20 +34,20 @@ export const meta: MetaFunction = ({ data }) => {
   }
 
   return {
-    title: `${data.data.site_name} - Blotion`,
-    description: `${data.data.site_name} a minimalist blog built with Blotion.`,
-    author: `${data.data.site_name}`,
+    title: `${data.data.siteName ? data.data.siteName : data.data.site_name} - Blotion`,
+    description: `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
+    author: `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
     "og:type": "website",
     "og:url": `https://${data.data.site_name}.blotion.com`,
-    "og:title": `${data.data.site_name}`,
-    "og:description": `${data.data.site_name} a minimalist blog built with Blotion.`,
+    "og:title": `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
+    "og:description": `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
     "og:image": `${data.data.cover}`,
     "twitter:image": `${data.data.cover}`,
     "twitter:card": "summary_large_image",
     "twitter:creator": "@blotion_",
     "twitter:site": "@blotion_",
-    "twitter:title": data.data.site_name,
-    "twitter:description": `${data.data.site_name} a minimalist blog built with Blotion.`,
+    "twitter:title": data.data.siteName ? data.data.siteName : data.data.site_name,
+    "twitter:description": `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
   };
 };
 

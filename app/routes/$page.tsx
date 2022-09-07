@@ -1,6 +1,6 @@
 import { Box, Heading, Stack, Link, Text, Flex } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import { json, LoaderFunction, redirect } from "@remix-run/node";
+import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData, Link as RemixLink, useParams } from "@remix-run/react";
 import { marked } from "marked";
 import TimeAgo from "timeago-react";
@@ -9,6 +9,48 @@ import BlogTextLink from "~/lib/components/blogTextLink";
 import { getNotionPagebyID, getNotionSubPagebyID, pageToPostTransformer } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
+import { capitalize } from "~/lib/utils/slugify";
+
+
+export const meta: MetaFunction = ({ data, params }) => {
+    
+    let page = params.page?.toString()
+    let pageTitle = page ? capitalize(page) : page
+
+
+    if (!data.data) return {
+        title: 'Blotion - Generate a Blog with Notion',
+        description: 'Blotion allows you to generate and manage a free hosted blog with Notion. Start your blog in minutes and use the power of Notion as a CMS.',
+        "og:type": "website",
+        "og:url": `https://www.blotion.com`,
+        "og:title": `Blotion - Generate a Blog with Notion`,
+        "og:description": `Blotion allows you to generate and manage a free hosted blog with Notion. Start your blog in minutes.`,
+        "og:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
+        "twitter:image": `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/ogimageheader.png`,
+        "twitter:card": "summary_large_image",
+        "twitter:creator": "@blotion_",
+        "twitter:site": "@blotion_",
+        "twitter:title": `Blotion - Generate a Blog with Notion`,
+        "twitter:description": 'Blotion is a minimalist website builder for converting Notion templates into a hosted blog website.',
+    }
+
+    return {
+        title: `${data.data.siteName ? data.data.siteName : data.data.site_name} - ${pageTitle}`,
+        description: `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
+        author: `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
+        "og:type": "website",
+        "og:url": `https://${data.data.site_name}.blotion.com`,
+        "og:title": `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
+        "og:description": `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
+        "og:image": `${data.data.cover}`,
+        "twitter:image": `${data.data.cover}`,
+        "twitter:card": "summary_large_image",
+        "twitter:creator": "@blotion_",
+        "twitter:site": "@blotion_",
+        "twitter:title": data.data.siteName ? data.data.siteName : data.data.site_name,
+        "twitter:description": `${data.data.siteName ? data.data.siteName : data.data.site_name} a minimalist blog built with Blotion.`,
+    };
+};
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 

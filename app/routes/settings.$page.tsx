@@ -273,7 +273,7 @@ export default function Settings() {
                         </Stack>
                         <Flex justify={'center'} bg={'gray.200'} rounded={'md'} pb={1} pt={1}>
                             <Link href={`https://${page.site_name}.blotion.com`} isExternal>
-                                <Text key={page.id}>https://{input}.blotion.com</Text>
+                                <Text key={page.id}>https://{input.toLowerCase()}.blotion.com</Text>
                             </Link>
                         </Flex>
                     </Stack>
