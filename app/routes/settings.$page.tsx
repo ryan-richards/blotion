@@ -52,10 +52,12 @@ export const action: ActionFunction = async ({ request, params }) => {
     });
 
     const formData = await request.formData();
-    const siteName = formData.get('site_name');
+    let siteName = formData.get('site_name');
     const revue_profile = formData.get('revue_profile');
     const action = formData.get('action');
     let showThumbnails = formData.get('show-thumbnails');
+
+   
 
     console.log(showThumbnails);
 
@@ -118,6 +120,8 @@ export const action: ActionFunction = async ({ request, params }) => {
             message: 'No site name specified',
         });
     }
+
+    siteName = siteName.toString().toLowerCase()
 
     const { data, error } = await supabaseAdmin
         .from('sites')
@@ -310,7 +314,7 @@ export default function Settings() {
                     <FormLabel>Subdomain</FormLabel>
                     <InputGroup gap={2}>
                         <Input value={input} name={'site_name'} isInvalid={nameCheckCount > 0} errorBorderColor={!siteNameValid ? "red.500" : "green.400"}
-                            onChange={(e: any) => setInput(e.target.value)} pattern={"[0-9a-zA-Z_.-]*"} onBlur={(e: any) => handleNameCheck(e.target.value)} />
+                            onChange={(e: any) => setInput(e.target.value)} pattern={"[0-9a-z_.-]*"} onBlur={(e: any) => handleNameCheck(e.target.value)} />
                         <Button type={'submit'} isDisabled={!siteNameValid} isLoading={isSubmitting}>Save</Button>
                     </InputGroup>
                 </Form>
