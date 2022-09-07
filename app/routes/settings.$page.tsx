@@ -311,7 +311,7 @@ export default function Settings() {
 
             <Flex mt={5} direction={'column'}>
                 <Form method='post' autoComplete="false">
-                    <FormLabel>Subdomain</FormLabel>
+                    <FormLabel>Subdomain (lowercase)</FormLabel>
                     <InputGroup gap={2}>
                         <Input value={input} name={'site_name'} isInvalid={nameCheckCount > 0} errorBorderColor={!siteNameValid ? "red.500" : "green.400"}
                             onChange={(e: any) => setInput(e.target.value)} pattern={"[0-9a-z_.-]*"} onBlur={(e: any) => handleNameCheck(e.target.value)} />
