@@ -128,7 +128,7 @@ export default function Slug() {
                                         </TagLabel>
                                     </Tag>
                                 )}
-                                {isMobile && tags.length > 1 ?
+                                {isMobile && post.tags.length > 1 ?
                                     <Menu>
                                         <MenuButton size={'md'} as={Tag} colorScheme={'gray'} cursor={'pointer'}>
                                             <TagLabel>
