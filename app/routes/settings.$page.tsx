@@ -8,15 +8,9 @@ import { useEffect, useState, } from "react";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 
-    //const session = await oAuthStrategy.checkSession(request, {
-    //    failureRedirect: "/",
-    //});
-
-    let session = {
-        user: {
-            id: 'fe8dcc15-c50c-4d8f-be6c-1d44d1099ab7',
-        }
-    }
+    const session = await oAuthStrategy.checkSession(request, {
+        failureRedirect: "/",
+    });
 
     const page = params.page;
 

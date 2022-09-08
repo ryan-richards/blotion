@@ -46,15 +46,9 @@ async function subdomainCheck(str: string) {
 
 export const loader: LoaderFunction = async ({ request }) => {
 
-    //const session = await oAuthStrategy.checkSession(request, {
-    //    failureRedirect: "/",
-    //});
-
-    let session = {
-        user: {
-            id: 'fe8dcc15-c50c-4d8f-be6c-1d44d1099ab7',
-        }
-    }
+    const session = await oAuthStrategy.checkSession(request, {
+        failureRedirect: "/",
+    });
 
     const url = new URL(request.url);
     const token = url.searchParams.get("token");
