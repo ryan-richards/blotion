@@ -46,9 +46,15 @@ async function subdomainCheck(str: string) {
 
 export const loader: LoaderFunction = async ({ request }) => {
 
-    const session = await oAuthStrategy.checkSession(request, {
-        failureRedirect: "/",
-    });
+    //const session = await oAuthStrategy.checkSession(request, {
+    //    failureRedirect: "/",
+    //});
+
+    let session = {
+        user: {
+            id: 'fe8dcc15-c50c-4d8f-be6c-1d44d1099ab7',
+        }
+    }
 
     const url = new URL(request.url);
     const token = url.searchParams.get("token");
@@ -367,11 +373,12 @@ export default function Account() {
                                     </Flex>
                                     {hover == page.id ?
                                         <Stack direction={{ base: 'row', md: 'column' }} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
-                                            <Button variant={'outline'} size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
+                                            <Button size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
+                                            <Button size={'sm'} colorScheme={'purple'} onClick={() => nav(`/metrics/${page.id}`)} isDisabled={userData.plan ==='free'}>Metrics</Button>
                                             <Form method='post'>
                                                 <Input hidden name='page' value={page.id} readOnly></Input>
                                                 <Tooltip display={page.published || pagesPublished < pagePublishLimit ? 'none' : 'flex'} placement="top" hasArrow label='Upgrade to Pro to publish more pages' shouldWrapChildren mb='3'>
-                                                    <Button size={'sm'} type={'submit'} name='action' isLoading={isSubmitting} isDisabled={page.published == false && pagesPublished >= pagePublishLimit} value={page.published ? 'unpub' : 'pub'} variant={'outline'} colorScheme={page.published ? 'orange' : 'green'}>{page.published ? 'Unpublish' : 'Publish'}</Button>
+                                                    <Button size={'sm'} type={'submit'} name='action' isLoading={isSubmitting} isDisabled={page.published == false && pagesPublished >= pagePublishLimit} value={page.published ? 'unpub' : 'pub'} colorScheme={page.published ? 'orange' : 'green'}>{page.published ? 'Unpublish' : 'Publish'}</Button>
                                                 </Tooltip>
                                             </Form>
                                         </Stack> : null}
