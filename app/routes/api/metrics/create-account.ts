@@ -28,7 +28,7 @@ export const action: ActionFunction = async ({ request }) => {
         redirect: 'follow'
     };
 
-    fetch("https://umami-one-tan.vercel.app/api/account", requestOptions)
+    await fetch("https://umami-one-tan.vercel.app/api/account", requestOptions)
         .then(response => response.text())
         .then(async (result) => {
             console.log(result)
