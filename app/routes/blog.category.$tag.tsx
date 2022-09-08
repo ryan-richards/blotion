@@ -58,7 +58,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     const tag = params.tag?.toString();
     if (!tag) throw new Error('Missing pageID')
-
+    
+    //replace dashes with spaces
+    const tagFormatted = tag.replace(/-/g, ' ')
 
     let subdomain = null
     let customDomain = null
@@ -93,7 +95,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const { Client } = require('@notionhq/client');
     const notion = new Client({ auth: decryptedToken.toString() });
 
-    const posts = await getTagBlogPosts(data.db_page, decryptedToken, tag)
+    const posts = await getTagBlogPosts(data.db_page, decryptedToken, tagFormatted)
 
     let pageLinks: { title: any; slug: string; }[] = []
 
@@ -103,7 +105,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     })
 
     if (pageLinks.length > 0) {
-        return json({ data, pageLinks, pageTitle: tag }, {
+        return json({ data, pageLinks, pageTitle: tagFormatted }, {
             headers: {
                 "Cache-Control":
                     "s-maxage=60, stale-while-revalidate=3600",
@@ -112,7 +114,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     }
 
 
-    return json({ pageTitle: tag }, {
+    return json({ pageTitle: tagFormatted }, {
         headers: {
             "Cache-Control":
                 "s-maxage=60, stale-while-revalidate=3600",

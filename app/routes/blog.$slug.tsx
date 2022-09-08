@@ -103,6 +103,19 @@ export const meta: MetaFunction = ({ params, data, location }) => {
     }
 };
 
+//add replace all spaces in string with dash
+export function slugify(string: string) {
+    return string
+        .toString()
+        .toLowerCase()
+        .replace(/\s+/g, "-") // Replace spaces with -
+        .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+        .replace(/\-\-+/g, "-") // Replace multiple - with single -
+        .replace(/^-+/, "") // Trim - from start of text
+        .replace(/-+$/, ""); // Trim - from end of text
+}
+
+
 export default function Slug() {
 
     const { data, html, post } = useLoaderData()
@@ -111,7 +124,7 @@ export default function Slug() {
 
     //if isMobile is true then onlt return first tag
     const tags = isMobile ? post.tags.slice(0, 1) : post.tags
-    console.log(tags)
+    
 
     return (
         <Stack mt={{ base: 2, md: 5 }} >
@@ -122,7 +135,7 @@ export default function Slug() {
                             <Heading as={'h2'} style={{ marginBottom: `${isMobile ? 0 : 0}`, marginTop: `${isMobile ? 0 : 0}` }}>{post.title}</Heading>
                             <Flex gap={2} maxH={'20px'}>
                                 {tags.map((tag: any) =>
-                                    <Tag key={tag.id} colorScheme={tag.color != 'default' ? tag.color : 'gray'} as={RemixLink} to={`/blog/category/${tag.name.toLowerCase()}`}>
+                                    <Tag key={tag.id} colorScheme={tag.color != 'default' ? tag.color : 'gray'} as={RemixLink} to={`/blog/category/${slugify(tag.name)}`}>
                                         <TagLabel>
                                             {tag.name}
                                         </TagLabel>

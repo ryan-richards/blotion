@@ -1,6 +1,6 @@
 import { NotionToMarkdown } from "notion-to-md";
 import { Client } from "@notionhq/client";
-import { capitalize } from "../utils/slugify";
+import { capitalize, capitalizeEachWord } from "../utils/slugify";
 
 //first letter upper case
 
@@ -24,7 +24,7 @@ export const getTagBlogPosts = async (pageID: string, token: string, tag: string
                         {
                             property: 'Tags',
                             multi_select: {
-                                contains: capitalize(tag),
+                                contains: capitalizeEachWord(tag),
                             }
                         },
                         {
