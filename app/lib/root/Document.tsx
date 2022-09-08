@@ -64,7 +64,7 @@ const Document = withEmotionCache(
             />
           ))}
           {process.env.NODE_ENV === "development" ? null :
-            <script async defer data-website-id={siteData.umami_website_id ? siteData.umami_website_id : "94eeb490-1526-4b23-be1c-c0b3d2dcd69d"} src="https://umami-one-tan.vercel.app/umami.js"></script>}
+            <script async defer data-website-id="94eeb490-1526-4b23-be1c-c0b3d2dcd69d" src="https://umami-one-tan.vercel.app/umami.js"></script>}
         </head>
         <body>
           <Providers>
