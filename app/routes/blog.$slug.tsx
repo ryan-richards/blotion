@@ -155,7 +155,7 @@ export default function Slug() {
                         </Flex>
                     </Flex>
                     <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
-                    <Flex gap={4} justify={'center'} align={'center'} pt={10}>
+                    <Flex gap={4} justify={'center'} align={'center'} pt={10} mb={10}>
                         <Avatar name={data.users.name} src={data.users?.avatar_url}> </Avatar>
                         <Flex direction={'column'}>
                             <TimeAgo style={{ fontSize: '15px' }} datetime={post.date} />
@@ -164,7 +164,7 @@ export default function Slug() {
                     </Flex>
                 </Prose>
             </Flex>
-            <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
+            <Flex justify={'center'} pt={10} pb={10} display={data.revue_profile ? 'flex' : 'none'}>
                 <RevueForm revue_profile={data.revue_profile} />
             </Flex>
         </Stack>
