@@ -1,6 +1,6 @@
 import { Avatar, Box, Flex, Heading, Link, Menu, MenuButton, MenuItem, MenuList, Stack, Tag, TagLabel, TagRightIcon, Text, useBreakpointValue, Wrap, WrapItem } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
+import { json, LinksFunction, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData, Link as RemixLink, useLocation } from "@remix-run/react";
 import { marked } from "marked";
 import TimeAgo from "timeago-react";
@@ -58,6 +58,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const html = marked(content.markdown)
     const post = content.post
 
+
     return json({ data, html, post },
         {
             headers: {
@@ -66,6 +67,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             }
         });
 };
+
 
 export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
     return {
@@ -124,8 +126,8 @@ export default function Slug() {
 
     //if isMobile is true then onlt return first tag
     const tags = isMobile ? post.tags.slice(0, 1) : post.tags
-    
 
+    
     return (
         <Stack mt={{ base: 2, md: 5 }} >
             <Flex>

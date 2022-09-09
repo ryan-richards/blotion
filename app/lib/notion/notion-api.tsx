@@ -1,6 +1,9 @@
 import { NotionToMarkdown } from "notion-to-md";
 import { Client } from "@notionhq/client";
 import { capitalize, capitalizeEachWord } from "../utils/slugify";
+import React from "react";
+import { LiteYouTubeEmbed } from "../components/lite-youtube-embed";
+import { getYoutubeId } from "../utils/video";
 
 //first letter upper case
 
@@ -313,18 +316,29 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
 export const getSingleBlogPost = async (pageID: string, token: string, slug: string) => {
     let post, markdown
 
-    //console.log(slug)
+
+    const assetStyle: React.CSSProperties = {}
 
     const notion = new Client({ auth: token });
     const n2m = new NotionToMarkdown({ notionClient: notion });
 
     n2m.setCustomTransformer('embed', async (block) => {
         const { embed } = block as any;
+        console.log(embed.url)
         if (!embed?.url) return '';
         return `<figure>
   <iframe src="${embed?.url}"></iframe>
   <figcaption>${await n2m.blockToMarkdown(embed?.caption)}</figcaption>
 </figure>`;
+    });
+
+    n2m.setCustomTransformer('video', async (block) => {
+        const { video } = block as any;
+        if (!video?.external.url) return '';
+        let src = video?.external.url
+        return `<figure>
+        <iframe src=${src} frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></figure>
+        `;
     });
 
     // list of blog posts
