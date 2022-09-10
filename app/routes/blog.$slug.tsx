@@ -9,7 +9,6 @@ import { getSingleBlogPost } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
-
 export const loader: LoaderFunction = async ({ request, params }) => {
 
     const host = new URL(request.url)
@@ -58,12 +57,32 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const html = marked(content.markdown)
     const post = content.post
 
+    const postDate = post.date
+    console.log(post.date)
+
+    //is post date longer than 1 day ago?
+    const isOlderThanOneDay = (postDate: any) => {
+        const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+        const firstDate = new Date();
+        const secondDate = new Date(postDate);
+        const diffDays = Math.round(Math.abs((firstDate.getTime() - secondDate.getTime()) / (oneDay)));
+        if (diffDays > 1) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const sMaxAge = isOlderThanOneDay(postDate) ? 60 * 60 * 24 : 60
+    const staleWhileRevalidate = isOlderThanOneDay(postDate) ? 60 * 60 * 24 * 2 : 60
+    console.log(sMaxAge)
+    console.log(staleWhileRevalidate)
 
     return json({ data, html, post },
         {
             headers: {
                 "Cache-Control":
-                    "s-maxage=60, stale-while-revalidate=3600",
+                    `s-maxage=${sMaxAge}, stale-while-revalidate=${staleWhileRevalidate}`,
             }
         });
 };
@@ -127,7 +146,7 @@ export default function Slug() {
     //if isMobile is true then onlt return first tag
     const tags = isMobile ? post.tags.slice(0, 1) : post.tags
 
-    
+
     return (
         <Stack mt={{ base: 2, md: 5 }} >
             <Flex>

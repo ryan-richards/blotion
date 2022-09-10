@@ -61,7 +61,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json({ status: 'home' }, {
       headers: {
         "Cache-Control":
-          "s-maxage=3600, stale-while-revalidate=86400",
+          "s-maxage=86400, stale-while-revalidate=172800",
       },
     })
   }
@@ -70,7 +70,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return json({ status: 'home' }, {
       headers: {
         "Cache-Control":
-          "s-maxage=3600, stale-while-revalidate=86400",
+          "s-maxage=86400, stale-while-revalidate=172800",
       },
     })
   }

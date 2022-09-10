@@ -2,11 +2,7 @@ import { NotionToMarkdown } from "notion-to-md";
 import { Client } from "@notionhq/client";
 import { capitalize, capitalizeEachWord } from "../utils/slugify";
 import React from "react";
-import { LiteYouTubeEmbed } from "../components/lite-youtube-embed";
-import { getYoutubeId } from "../utils/video";
-
-//first letter upper case
-
+import * as md from "../utils/md"
 
 
 export const getTagBlogPosts = async (pageID: string, token: string, tag: string) => {
@@ -324,7 +320,6 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 
     n2m.setCustomTransformer('embed', async (block) => {
         const { embed } = block as any;
-        console.log(embed.url)
         if (!embed?.url) return '';
         return `<figure>
   <iframe src="${embed?.url}"></iframe>
@@ -332,12 +327,34 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
 </figure>`;
     });
 
+    const codeBlock = (text: string, language?: string) => {
+        if (language === "plain text") language = "text";
+        return `\`\`\`${language || ""}\n${text}\n\`\`\``;
+    };
+
+    n2m.setCustomTransformer('code', async (block) => {
+        const { code } = block as any;
+        if (!code?.rich_text[0].plain_text) return '';
+        if (code?.rich_text[0].plain_text.includes('### EMBED')) {
+            let codeText = code?.rich_text[0].plain_text
+            let codeTextTrimmed = codeText?.replace('### EMBED', '')
+            let codeTextTrimmed2 = codeTextTrimmed?.replace('### EMBED', '')
+            return codeTextTrimmed2
+        }
+        console.log(code.language)
+        if (!code.rich_text[0].plain_text.includes('### EMBED')) {
+            let codeText = code?.rich_text[0].plain_text
+            return codeBlock(codeText, code?.language);
+        }
+        return ''
+    });
+
     n2m.setCustomTransformer('video', async (block) => {
         const { video } = block as any;
         if (!video?.external.url) return '';
         let src = video?.external.url
         return `<figure>
-        <iframe src=${src} frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></figure>
+        <iframe width="640" height="360"  style="--aspect-ratio: 640 / 360" src=${src} frameborder="0" title="embeded_video" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe></figure>
         `;
     });
 
@@ -365,6 +382,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
     const page = response.results[0];
 
     const mdBlocks = await n2m.pageToMarkdown(page.id)
+
     markdown = n2m.toMarkdownString(mdBlocks);
     post = pageToPostTransformer(page);
 
