@@ -3,6 +3,7 @@ import { Client } from "@notionhq/client";
 import { capitalize, capitalizeEachWord } from "../utils/slugify";
 import React from "react";
 import * as md from "../utils/md"
+import { marked } from "marked";
 
 
 export const getTagBlogPosts = async (pageID: string, token: string, tag: string) => {
@@ -203,15 +204,56 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 
     //console.log(mdBlocks)
     mdBlocks.map((block: any) => {
+
+      
+
         if (block.parent.charAt(0) != '[') {
-            let newBlock = {
-                parent: block.parent,
+
+            let newBlock
+
+            if (block.type === 'column_list') {
+                //loop through text and split into array using \n\n as split point
+                let textArray = block.parent.split('\n\n')
+
+                let html = ''
+
+                textArray.map((text: any) => {
+                    //if text starts with a ![] then is an image
+                    if (text.startsWith('![')) {
+                        //extract link from between ()
+                        let link = text.split('(')[1].split(')')[0]
+                        html = html + `<div><img src="${link}" /></div>`
+                    } else {
+                        let parsedHTML = marked(text)
+                        html = html + `<div>${parsedHTML}</div>`
+                    }
+                })
+
+               
+
+                newBlock = {
+                    parent: `<div class='grid-container'>
+                       ${html}
+                    </div>
+                    `,
+                }
+
+            } else {
+                newBlock = {
+                    parent: block.parent,
+                }
+
             }
+
+
+
             parentBlockOnly?.push(newBlock)
         }
+
     })
 
     let markdown = n2m.toMarkdownString(parentBlockOnly);
+
 
     return {
         pageObject,
@@ -287,20 +329,53 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         }
     })
 
-
     const mdBlocks = await n2m.blocksToMarkdown(results);
 
     //const mdBlocks = await n2m.pageToMarkdown(pageID)
     let parentBlockOnly: any[] | undefined = [];
 
     mdBlocks.map((block: any) => {
-        let newBlock = {
-            parent: block.parent,
+
+        let newBlock
+
+        if (block.type === 'column_list') {
+         
+            //loop through text and split into array using \n\n as split point
+            let textArray = block.parent.split('\n\n')
+
+            let html = ''
+
+            textArray.map((text: any) => {
+                //if text starts with a ![] then is an image
+                if (text.startsWith('![')) {
+                    //extract link from between ()
+                    let link = text.split('(')[1].split(')')[0]
+                    html = html + `<div><img src="${link}" /></div>`
+                } else {
+                    let parsedHTML = marked(text)
+                    html = html + `<div>${parsedHTML}</div>`
+                }
+            })
+
+            newBlock = {
+                parent: `<div class='grid-container'>
+                   ${html}
+                </div>
+                `,
+            }
+
+        } else {
+            newBlock = {
+                parent: block.parent,
+            }
         }
         parentBlockOnly?.push(newBlock)
     })
 
+
     let markdown = n2m.toMarkdownString(parentBlockOnly);
+
+
 
     return {
         pageTitle,
@@ -341,7 +416,7 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
             let codeTextTrimmed2 = codeTextTrimmed?.replace('### EMBED', '')
             return codeTextTrimmed2
         }
-        console.log(code.language)
+
         if (!code.rich_text[0].plain_text.includes('### EMBED')) {
             let codeText = code?.rich_text[0].plain_text
             return codeBlock(codeText, code?.language);

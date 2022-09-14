@@ -89,7 +89,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   //Site Exisits
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
-
   const html = marked(content.markdown);
   const pageObject = content.pageObject
   const pageLinks = await getPageLinks(pageObject, decryptedToken)

@@ -51,6 +51,10 @@ const customTheme = extendTheme({
     },
     img: {
       borderRadius: 'md'
+    },
+    li:{
+      marginTop:1,
+      marginBottom:1
     }
   }
 }));

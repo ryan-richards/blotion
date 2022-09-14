@@ -12,7 +12,7 @@ export default function Login() {
                     <Flex direction={'column'} justify={'center'} align={'center'}>
                         <Flex direction={'column'} align={'center'} gap={2}>
                             <Heading fontWeight={'semibold'} textAlign={'center'} size={'2xl'}>Create a Free Account</Heading>
-                            <Heading fontWeight={'normal'} mt={2} maxW={'88%'} textAlign={'center'} size={'md'}>You can get started with Blotion by creating a free account! All you need to do is Login with Notion.</Heading>
+                            <Heading fontWeight={'normal'} mt={2} maxW={'62%'} textAlign={'center'} size={'md'}>You can get started with Blotion by creating a free account! All you need to do is Login with Notion.</Heading>
                             <Flex w={'full'} align={'center'} direction={{ base: 'column', md: 'row' }} justify={'center'} gap={2} mt={10}>
                                 <Button
                                     size={'lg'}

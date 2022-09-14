@@ -134,13 +134,12 @@ export default function LandingPage() {
     return (
         <Stack gap={10} mt={20}>
             <Stack>
-                <Flex direction={'column'} align={'center'} gap={3}>
-
+                <Flex direction={'column'} justify={'center'} align={'center'} gap={3}>
                     <Flex as={motion.div} initial={offscreen}
                         whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'}>
                         <Flex direction={'column'} align={'center'} gap={2}>
                             <Heading fontWeight={'semibold'} textAlign={'center'} size={'2xl'}>Generate a blog with Notion.</Heading>
-                            <Heading fontWeight={'normal'} mt={2} maxW={'88%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a free hosted blog. Allowing you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
+                            <Heading fontWeight={'normal'} mt={2} maxW={'70%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a free hosted blog. Blotion allows you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
                             <Flex w={'full'} align={'center'} direction={{ base: 'column', md: 'row' }} justify={'center'} gap={2} mt={10}>
                                 <Button size={'lg'} style={{ textDecoration: 'none' }} minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
                                     <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
@@ -266,7 +265,7 @@ export default function LandingPage() {
                         <Flex as={motion.div} initial={offscreen}
                             whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'} gap={4} mt={20} width={'full'}>
 
-                            <Flex w='full' mb={5}>
+                            <Flex w='full' mb={5} justify={'center'}>
                                 <Image src={darkmode} loading={'lazy'} objectFit={'contain'} rounded={'2xl'} width={'800px'} h={'full'} ></Image>
                             </Flex>
                             <Flex direction={'column'} as={motion.div} initial={offscreen}

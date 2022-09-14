@@ -8,7 +8,6 @@ import { supabaseDB } from "~/lib/storage/db.access";
 import { getClientIPAddress, getClientLocales } from "remix-utils";
 
 export const meta: MetaFunction = ({ data }) => {
-
     return {
         title: 'Blotion - Pricing',
         description: 'Pricing for Blotion. Start your blog in minutes and use the power of Notion as a CMS.',
@@ -122,252 +121,342 @@ export default function Pricing() {
     };
 
     return (
-        <Box
-            py={{ base: "34px", md: '54px' }}
-            px="10"
-        >
-            <Flex justify={'flex-start'} mb={3} display={status != 'not-logged-in' ? 'flex' : 'none'}>
-                <Button onClick={() => nav('/account')}>
-                    <Icon as={FiArrowLeft} mr={3}></Icon>
-                    Account
-                </Button>
-            </Flex>
-            <Box w="full" px={{ base: 10, md: 4 }} mx="auto" textAlign="center">
-                <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
-                    Plans + Pricing
-                </Text>
-                <chakra.p
-                    mb={6}
-                    fontSize={{ base: 'lg', md: 'xl' }}
-                    color="gray.600"
-                    _dark={{
-                        color: "gray.400",
-                    }}
-                >
-                    Ready to build more sites and connect custom domains?
-                </chakra.p>
-                <Flex justify="center" mx={{ base: 'auto', md: 0 }} mb={-2}>
-                    <Stack
-                        direction="row"
-                        justify="space-between"
-                        p="2"
-                        textAlign="center"
-                        rounded="md"
-                        border={'2px solid'}
-                        borderColor="gray.200"
-                    >
-                        <Button
-                            rounded={'lg'}
-                            colorScheme="gray"
-                            variant={frequency === "month" ? "solid" : "ghost"}
-                            onClick={() => setFrequency("month")}
-                            px={6}
-                        >
-                            Bill Monthly
-                        </Button>
-                        <Button
-                            rounded={'lg'}
-                            colorScheme="gray"
-                            variant={frequency === "year" ? "solid" : "ghost"}
-                            onClick={() => setFrequency("year")}
-                            px={6}
-                        >
-                            Bill Yearly
-                        </Button>
-                    </Stack>
+        <Flex>
+            <Box
+                py={{ base: "34px", md: '54px' }}
+                px="10"
+            >
+                <Flex justify={'flex-start'} mb={3} display={status != 'not-logged-in' ? 'flex' : 'none'}>
+                    <Button onClick={() => nav('/account')}>
+                        <Icon as={FiArrowLeft} mr={3}></Icon>
+                        Account
+                    </Button>
                 </Flex>
-            </Box>
-            <Box maxW="7xl" py="20" mx="auto">
-                <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 16, md: 8 }}>
-                    <Box
-                        rounded={{ base: 'none', md: 'lg' }}
-                        shadow={'shadow'}
-                        bg="white"
+                <Box w="full" px={{ base: 10, md: 4 }} mx="auto" textAlign="center">
+                    <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
+                        Plans + Pricing
+                    </Text>
+                    <chakra.p
+                        mb={6}
+                        fontSize={{ base: 'lg', md: 'xl' }}
+                        color="gray.600"
                         _dark={{
-                            bg: "gray.800",
+                            color: "gray.400",
                         }}
                     >
-                        <Flex
-                            direction="column"
+                        Ready to build more sites and connect custom domains?
+                    </chakra.p>
+                    <Flex justify="center" mx={{ base: 'auto', md: 0 }} mb={-2}>
+                        <Stack
+                            direction="row"
                             justify="space-between"
-                            p="6"
-                            borderBottomWidth="1px"
-                            color="gray.200"
-                            _dark={{
-                                color: "gray.600",
-                            }}
+                            p="2"
+                            textAlign="center"
+                            rounded="md"
+                            border={'2px solid'}
+                            borderColor="gray.200"
                         >
-                            <chakra.p
-                                mb={1}
-                                fontSize="lg"
-                                fontWeight="semibold"
-                                color="gray.700"
-                                _dark={{
-                                    color: "gray.400",
-                                }}
+                            <Button
+                                rounded={'lg'}
+                                colorScheme="gray"
+                                variant={frequency === "month" ? "solid" : "ghost"}
+                                onClick={() => setFrequency("month")}
+                                px={6}
                             >
-                                Creative
-                            </chakra.p>
-                            <Text
-                                mb={2}
-                                fontSize="5xl"
-                                fontWeight={{ base: 'bold', md: 'extrabold' }}
-                                color="gray.900"
-                                _dark={{
-                                    color: "gray.50",
-                                }}
-                                lineHeight="tight"
+                                Bill Monthly
+                            </Button>
+                            <Button
+                                rounded={'lg'}
+                                colorScheme="gray"
+                                variant={frequency === "year" ? "solid" : "ghost"}
+                                onClick={() => setFrequency("year")}
+                                px={6}
                             >
-                                £{frequency === "month" ? 5 : 50}
-                                <chakra.span
-                                    fontSize="2xl"
-                                    fontWeight="medium"
-                                    color="gray.600"
-                                    _dark={{
-                                        color: "gray.400",
-                                    }}
-                                >
-                                    {" "}
-                                    /{frequency}
-                                </chakra.span>
-                            </Text>
-                            <Form action={canPurchase ? `/api/create-checkout-session?plan=creative_${frequency}` : '/api/create-customer-portal-session'} method="post">
-                                <Button
-                                    type={'submit'}
-                                    w={{ base: 'full', md: 'full' }}
-                                    display="inline-flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    border="solid transparent"
-                                    fontWeight="bold"
-                                    rounded="md"
-                                    shadow="shadow"
-                                    _light={{
-                                        color: "gray.800",
-                                    }}
-                                    bg="gray.100"
-                                    _dark={{
-                                        bg: "gray.500",
-                                    }}
-                                    _hover={{
-                                        bg: "gray.200",
-                                        _dark: {
-                                            bg: "gray.100",
-                                        },
-                                    }}
-                                >
-                                    {canPurchase ? 'Purchase' : null}
-                                    {canDowngrade ? 'Manage Plan' : null}
-                                    {canManage && status === 'creative' ? 'Current Plan' : null}
-                                </Button>
-                            </Form>
-                        </Flex>
-                        <Stack direction="column" p="6" spacing="3" flexGrow="1">
-                            <Feature>1 Published Blog</Feature>
-                            <Feature>Add a Custom Domain</Feature>
-                            <Feature>Dark / Light Toggle</Feature>
-                            <Feature>Custom Logo (Coming Soon)</Feature>
-                            <Feature>Newsletter Integration (Coming Soon)</Feature>
+                                Bill Yearly
+                            </Button>
                         </Stack>
-                    </Box>
+                    </Flex>
+                </Box>
 
-                    <Box
-                        rounded={{ base: 'none', md: 'lg' }}
-                        shadow={'shadow'}
-                        bg="white"
-                        _dark={{
-                            bg: "gray.800",
-                        }}
-                    >
-                        <Flex
-                            direction="column"
-                            justify="space-between"
-                            p="6"
-                            borderBottomWidth="1px"
-                            color="gray.200"
+                <Box py="20">
+                    <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: 16, md: 8 }}>
+
+
+                        <Box
+                            rounded={{ base: 'none', md: 'lg' }}
+                            shadow={'shadow'}
+                            bg="white"
                             _dark={{
-                                color: "gray.600",
+                                bg: "gray.800",
                             }}
                         >
-                            <chakra.p
-                                mb={1}
-                                fontSize="lg"
-                                fontWeight="semibold"
-                                color="gray.700"
+                            <Flex
+                                direction="column"
+                                justify="space-between"
+                                p="6"
+                                borderBottomWidth="1px"
+                                color="gray.200"
                                 _dark={{
-                                    color: "gray.400",
+                                    color: "gray.600",
                                 }}
                             >
-                                Pro
-                            </chakra.p>
-                            <Text
-                                mb={2}
-                                fontSize="5xl"
-                                fontWeight={{ base: 'bold', md: 'extrabold' }}
-                                color="gray.900"
-                                _dark={{
-                                    color: "gray.50",
-                                }}
-                                lineHeight="tight"
-                            >
-                                £{frequency === "month" ? 10 : 100}
-                                <chakra.span
-                                    fontSize="2xl"
-                                    fontWeight="medium"
-                                    color="gray.600"
+                                <chakra.p
+                                    mb={1}
+                                    fontSize="lg"
+                                    fontWeight="semibold"
+                                    color="gray.700"
                                     _dark={{
                                         color: "gray.400",
                                     }}
                                 >
-                                    {" "}
-                                    /{frequency}
-                                </chakra.span>
-                            </Text>
-                            <Form action={redirectURL} method="post">
-                                <Button
-                                    type={'submit'}
-                                    w={{ base: 'full', md: 'full' }}
-                                    display="inline-flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    px={5}
-                                    py={3}
-                                    border="solid transparent"
-                                    fontWeight="bold"
-                                    rounded="md"
-                                    shadow="shadow"
-                                    _light={{
-                                        color: "white",
-                                    }}
-                                    bg="gray.600"
+                                    Free
+                                </chakra.p>
+                                <Text
+                                    mb={2}
+                                    fontSize="5xl"
+                                    fontWeight={{ base: 'bold', md: 'extrabold' }}
+                                    color="gray.900"
                                     _dark={{
-                                        bg: "gray.600",
+                                        color: "gray.50",
                                     }}
-                                    _hover={{
-                                        bg: "gray.700",
-                                        _dark: {
-                                            bg: "gray.700",
-                                        },
+                                    lineHeight="tight"
+                                >
+                                    £{frequency === "month" ? 0 : 0}
+                                    <chakra.span
+                                        fontSize="2xl"
+                                        fontWeight="medium"
+                                        color="gray.600"
+                                        _dark={{
+                                            color: "gray.400",
+                                        }}
+                                    >
+                                        {" "}
+                                        /{frequency}
+                                    </chakra.span>
+                                </Text>
+                               
+                                    <Button
+                                        w={{ base: 'full', md: 'full' }}
+                                        display="inline-flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        border="solid transparent"
+                                        fontWeight="bold"
+                                        rounded="md"
+                                        shadow="shadow"
+                                        _light={{
+                                            color: "gray.800",
+                                        }}
+                                        bg="gray.100"
+                                        _dark={{
+                                            bg: "gray.500",
+                                        }}
+                                        _hover={{
+                                            bg: "gray.200",
+                                            _dark: {
+                                                bg: "gray.100",
+                                            },
+                                        }}
+                                        onClick={() => nav('/login')}
+                                    >
+                                        Get Started
+                                    </Button>
+                            </Flex>
+                            <Stack direction="column" p="6" spacing="3" flexGrow="1">
+                                <Feature>1 Published Blog</Feature>
+                                <Feature>Custom .blotion.com subdomain</Feature>
+                            </Stack>
+                        </Box>
+                        <Box
+                            rounded={{ base: 'none', md: 'lg' }}
+                            shadow={'shadow'}
+                            bg="white"
+                            _dark={{
+                                bg: "gray.800",
+                            }}
+                        >
+                            <Flex
+                                direction="column"
+                                justify="space-between"
+                                p="6"
+                                borderBottomWidth="1px"
+                                color="gray.200"
+                                _dark={{
+                                    color: "gray.600",
+                                }}
+                            >
+                                <chakra.p
+                                    mb={1}
+                                    fontSize="lg"
+                                    fontWeight="semibold"
+                                    color="gray.700"
+                                    _dark={{
+                                        color: "gray.400",
                                     }}
                                 >
-                                    {canPurchase ? 'Purchase' : null}
-                                    {canManage && !canDowngrade ? 'Upgrade' : null}
-                                    {canDowngrade ? 'Manage Plan' : null}
-                                </Button>
-                            </Form>
-                        </Flex>
-                        <Stack direction="column" p="6" spacing="3" flexGrow="1">
-                            <Feature>50 Published Blogs</Feature>
-                            <Feature>Add Custom Domains</Feature>
-                            <Feature>Dark / Light Toggle</Feature>
-                            <Feature>Remove Blotion Branding</Feature>
-                            <Feature>Site Metrics (Coming Soon)</Feature>
-                            <Feature>Custom Logo (Coming Soon)</Feature>
-                            <Feature>Newsletter Integration (Coming Soon)</Feature>
-                        </Stack>
-                    </Box>
-                </SimpleGrid>
+                                    Creative
+                                </chakra.p>
+                                <Text
+                                    mb={2}
+                                    fontSize="5xl"
+                                    fontWeight={{ base: 'bold', md: 'extrabold' }}
+                                    color="gray.900"
+                                    _dark={{
+                                        color: "gray.50",
+                                    }}
+                                    lineHeight="tight"
+                                >
+                                    £{frequency === "month" ? 5 : 50}
+                                    <chakra.span
+                                        fontSize="2xl"
+                                        fontWeight="medium"
+                                        color="gray.600"
+                                        _dark={{
+                                            color: "gray.400",
+                                        }}
+                                    >
+                                        {" "}
+                                        /{frequency}
+                                    </chakra.span>
+                                </Text>
+                                <Form action={canPurchase ? `/api/create-checkout-session?plan=creative_${frequency}` : '/api/create-customer-portal-session'} method="post">
+                                    <Button
+                                        type={'submit'}
+                                        w={{ base: 'full', md: 'full' }}
+                                        display="inline-flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        border="solid transparent"
+                                        fontWeight="bold"
+                                        rounded="md"
+                                        shadow="shadow"
+                                        _light={{
+                                            color: "gray.800",
+                                        }}
+                                        bg="gray.100"
+                                        _dark={{
+                                            bg: "gray.500",
+                                        }}
+                                        _hover={{
+                                            bg: "gray.200",
+                                            _dark: {
+                                                bg: "gray.100",
+                                            },
+                                        }}
+                                    >
+                                        {canPurchase ? 'Purchase' : null}
+                                        {canDowngrade ? 'Manage Plan' : null}
+                                        {canManage && status === 'creative' ? 'Current Plan' : null}
+                                    </Button>
+                                </Form>
+                            </Flex>
+                            <Stack direction="column" p="6" spacing="3" flexGrow="1">
+                                <Feature>1 Published Blog</Feature>
+                                <Feature>Add a Custom Domain</Feature>
+                                <Feature>Dark / Light Toggle</Feature>
+                                <Feature>Custom Logo (Coming Soon)</Feature>
+                                <Feature>Newsletter Integration (Coming Soon)</Feature>
+                            </Stack>
+                        </Box>
+
+                        <Box
+                            rounded={{ base: 'none', md: 'lg' }}
+                            shadow={'shadow'}
+                            bg="white"
+                            _dark={{
+                                bg: "gray.800",
+                            }}
+                        >
+                            <Flex
+                                direction="column"
+                                justify="space-between"
+                                p="6"
+                                borderBottomWidth="1px"
+                                color="gray.200"
+                                _dark={{
+                                    color: "gray.600",
+                                }}
+                            >
+                                <chakra.p
+                                    mb={1}
+                                    fontSize="lg"
+                                    fontWeight="semibold"
+                                    color="gray.700"
+                                    _dark={{
+                                        color: "gray.400",
+                                    }}
+                                >
+                                    Pro
+                                </chakra.p>
+                                <Text
+                                    mb={2}
+                                    fontSize="5xl"
+                                    fontWeight={{ base: 'bold', md: 'extrabold' }}
+                                    color="gray.900"
+                                    _dark={{
+                                        color: "gray.50",
+                                    }}
+                                    lineHeight="tight"
+                                >
+                                    £{frequency === "month" ? 10 : 100}
+                                    <chakra.span
+                                        fontSize="2xl"
+                                        fontWeight="medium"
+                                        color="gray.600"
+                                        _dark={{
+                                            color: "gray.400",
+                                        }}
+                                    >
+                                        {" "}
+                                        /{frequency}
+                                    </chakra.span>
+                                </Text>
+                                <Form action={redirectURL} method="post">
+                                    <Button
+                                        type={'submit'}
+                                        w={{ base: 'full', md: 'full' }}
+                                        display="inline-flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        px={5}
+                                        py={3}
+                                        border="solid transparent"
+                                        fontWeight="bold"
+                                        rounded="md"
+                                        shadow="shadow"
+                                        _light={{
+                                            color: "white",
+                                        }}
+                                        bg="gray.600"
+                                        _dark={{
+                                            bg: "gray.600",
+                                        }}
+                                        _hover={{
+                                            bg: "gray.700",
+                                            _dark: {
+                                                bg: "gray.700",
+                                            },
+                                        }}
+                                    >
+                                        {canPurchase ? 'Purchase' : null}
+                                        {canManage && !canDowngrade ? 'Upgrade' : null}
+                                        {canDowngrade ? 'Manage Plan' : null}
+                                    </Button>
+                                </Form>
+                            </Flex>
+                            <Stack direction="column" p="6" spacing="3" flexGrow="1">
+                                <Feature>50 Published Blogs</Feature>
+                                <Feature>Add Custom Domains</Feature>
+                                <Feature>Dark / Light Toggle</Feature>
+                                <Feature>Remove Blotion Branding</Feature>
+                                <Feature>Site Metrics (Coming Soon)</Feature>
+                                <Feature>Custom Logo (Coming Soon)</Feature>
+                                <Feature>Newsletter Integration (Coming Soon)</Feature>
+                            </Stack>
+                        </Box>
+                    </SimpleGrid>
+                </Box>
             </Box>
-        </Box>
+        </Flex>
     );
 };

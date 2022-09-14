@@ -48,17 +48,34 @@
 }
 
 iframe {
-     aspect-ratio: var(--aspect-ratio); /* Use the CSS Variable defined aspect ratio */
+     aspect-ratio: var(--aspect-ratio);
+     /* Use the CSS Variable defined aspect ratio */
      width: 100%;
      height: auto;
-   }
-   
-   /**
+}
+
+/**
     * If supported, derive the aspect ratio from the height/width attributes.
     * This way iframes will behave like images (which have an intrinsic aspect ratio)
     */
-   @supports (aspect-ratio: attr(width number) / 1) {
+@supports (aspect-ratio: attr(width number) / 1) {
      iframe[width][height] {
-       aspect-ratio: attr(width number) / attr(height number);
+          aspect-ratio: attr(width number) / attr(height number);
      }
-   }
+}
+
+.grid-container {
+     margin-top: 10px;
+     margin-bottom: 10px;
+     display: grid;
+     grid-template-columns: auto auto;
+     grid-gap: 12px;
+     padding-top: 10px;
+}
+
+@media screen and (max-width: 600px) {
+     .grid-container {
+          grid-template-columns: auto;
+     }
+}
+
