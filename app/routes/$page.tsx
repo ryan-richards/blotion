@@ -66,13 +66,18 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     let subdomain = null
     let customDomain = null
 
+    
     if (host) {
         if (host.hostname === 'localhost') {
             return redirect('/')
         }
         subdomain = host.hostname.split('.')[0]
+        
+        if (subdomain === 'www') {
+            subdomain = host.hostname.split('.')[1]
+        }
 
-        if (subdomain === 'www' || subdomain === 'blotion') {
+        if (subdomain === 'blotion') {
             return redirect('/')
         }
 
