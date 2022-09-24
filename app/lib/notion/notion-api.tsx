@@ -205,17 +205,14 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     //console.log(mdBlocks)
     mdBlocks.map((block: any) => {
 
-        let blockCopy = block
-        //remove any ! from parent block text
-        if (blockCopy.parent.includes('\n')) {
-            blockCopy.parent = blockCopy.parent.replace('\n', '')
-        }
-
-        if (block.parent.charAt(0) != '[' || blockCopy.parent.charAt(0) != '[') {
+        if (block.parent.charAt(0) != '[') {
 
             let newBlock
 
             if (block.type === 'column_list') {
+
+                //console.log(block)
+
                 //loop through text and split into array using \n\n as split point
                 let textArray = block.parent.split('\n\n')
 
@@ -253,7 +250,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
 
     })
 
-    console.log(parentBlockOnly)
+    //console.log(parentBlockOnly)
 
     let markdown = n2m.toMarkdownString(parentBlockOnly);
 
@@ -323,6 +320,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
 
     const response = await notion.pages.properties.retrieve({ page_id: pageID, property_id: 'title' });
     //const response = await notion.pages.retrieve({ page_id: pageID });
+    
     let pageTitle = response.results[0].title.plain_text
 
     results.map((block: any) => {

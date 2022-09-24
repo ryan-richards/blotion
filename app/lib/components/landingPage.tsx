@@ -3,6 +3,8 @@ import { FiCopy, FiEdit, FiLoader } from 'react-icons/fi';
 import { SiNotion } from "react-icons/si";
 import { signInWithNotion } from '../storage/supabase.client';
 import header from '../../../public/header1.webp'
+import header2 from '../../../public/header2.png'
+import header3 from '../../../public/header3.png'
 import { useRef, useState } from 'react';
 import guide1 from '../../../public/guide1.webp'
 import guide2 from '../../../public/guide2.webp'
@@ -156,10 +158,11 @@ export default function LandingPage() {
                                     <span>Login with Notion</span>
                                 </Button>
                             </Flex>
+                            <Text mt={4} opacity={'60%'}>No credit card required</Text>
                         </Flex>
 
-                        <Flex w='full'>
-                            <Image src={header} objectFit={'contain'} ></Image>
+                        <Flex w='full' justify={'center'} pt={{base:10,md:20}} align={'center'}>
+                            <Image src={header2} objectFit={'contain'} rounded={'2xl'}></Image>
                         </Flex>
                     </Flex>
 

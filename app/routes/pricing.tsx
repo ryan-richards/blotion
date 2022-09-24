@@ -30,7 +30,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const session = await oAuthStrategy.checkSession(request);
 
     let ipAddress = getClientIPAddress(request.headers) || '';
-    console.log(ipAddress)
+    //console.log(ipAddress)
 
     if (!session) {
         return json({ status: 'not-logged-in' }, {
@@ -121,7 +121,7 @@ export default function Pricing() {
     };
 
     return (
-        <Flex>
+        <Flex justify={'center'} align={'center'}>
             <Box
                 py={{ base: "34px", md: '54px' }}
                 px="10"
@@ -354,8 +354,8 @@ export default function Pricing() {
                                 <Feature>1 Published Blog</Feature>
                                 <Feature>Add a Custom Domain</Feature>
                                 <Feature>Dark / Light Toggle</Feature>
+                                <Feature>Newsletter Integration</Feature>
                                 <Feature>Custom Logo (Coming Soon)</Feature>
-                                <Feature>Newsletter Integration (Coming Soon)</Feature>
                             </Stack>
                         </Box>
 
@@ -449,9 +449,9 @@ export default function Pricing() {
                                 <Feature>Add Custom Domains</Feature>
                                 <Feature>Dark / Light Toggle</Feature>
                                 <Feature>Remove Blotion Branding</Feature>
-                                <Feature>Site Metrics (Coming Soon)</Feature>
+                                <Feature>Site Metrics</Feature>
+                                <Feature>Newsletter Integration</Feature>
                                 <Feature>Custom Logo (Coming Soon)</Feature>
-                                <Feature>Newsletter Integration (Coming Soon)</Feature>
                             </Stack>
                         </Box>
                     </SimpleGrid>

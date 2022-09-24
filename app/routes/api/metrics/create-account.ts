@@ -31,7 +31,7 @@ export const action: ActionFunction = async ({ request }) => {
     await fetch("https://umami-one-tan.vercel.app/api/account", requestOptions)
         .then(response => response.text())
         .then(async (result) => {
-            console.log(result)
+            //console.log(result)
             //save the user_id to user table in supabase
             let obj = JSON.parse(result)
 
@@ -41,7 +41,7 @@ export const action: ActionFunction = async ({ request }) => {
                 .eq('email', username)
         })
         .catch((error) => {
-            console.log('error', error)
+            //console.log('error', error)
             return json({ status: 'error creating account' });
         });
 
