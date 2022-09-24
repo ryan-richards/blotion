@@ -47,8 +47,9 @@ async function subdomainCheck(str: string) {
 export const loader: LoaderFunction = async ({ request }) => {
 
     const session = await oAuthStrategy.checkSession(request, {
-        failureRedirect: "/",
+      failureRedirect: "/",
     });
+
 
     const url = new URL(request.url);
     const token = url.searchParams.get("token");
@@ -314,7 +315,7 @@ export default function Account() {
                     <Flex gap={4} bg={'gray.100'} rounded={'md'} p={5} align={'center'} justify={'space-between'} direction={{ base: 'column', md: 'row' }} width={'full'} >
                         <Flex direction={{ base: 'column', md: 'row' }} justify={'space-between'} w={'full'} align={'center'}>
                             <Flex gap={3}>
-                                <Avatar name={userData.name ? userData.name : userData.email} src={userData.avatar_url} bg={'none'}></Avatar>
+                                <Avatar name={userData.name ? userData.name : userData.email} src={userData.avatar_url}></Avatar>
                                 <Flex direction={'column'}>
                                     <Flex gap={2} align={'center'}>
                                         <Text>{userData.name}</Text>
@@ -368,7 +369,7 @@ export default function Account() {
                                     {hover == page.id ?
                                         <Stack direction={{ base: 'row', md: 'column' }} position={'absolute'} top={'45%'} left={'50%'} transform={'translate(-50%, -50%)'} zIndex={100}>
                                             <Button size={'sm'} colorScheme={'blue'} onClick={() => nav(`/settings/${page.id}`)}>Settings</Button>
-                                            <Button size={'sm'} colorScheme={'purple'} onClick={() => nav(`/metrics/${page.id}`)} isDisabled={userData.plan ==='free'}>Metrics</Button>
+                                            <Button size={'sm'} colorScheme={'purple'} onClick={() => nav(`/metrics/${page.id}`)} isDisabled={userData.plan === 'free'}>Metrics</Button>
                                             <Form method='post'>
                                                 <Input hidden name='page' value={page.id} readOnly></Input>
                                                 <Tooltip display={page.published || pagesPublished < pagePublishLimit ? 'none' : 'flex'} placement="top" hasArrow label='Upgrade to Pro to publish more pages' shouldWrapChildren mb='3'>

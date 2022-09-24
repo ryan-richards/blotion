@@ -205,9 +205,13 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
     //console.log(mdBlocks)
     mdBlocks.map((block: any) => {
 
-      
+        let blockCopy = block
+        //remove any ! from parent block text
+        if (blockCopy.parent.includes('\n')) {
+            blockCopy.parent = blockCopy.parent.replace('\n', '')
+        }
 
-        if (block.parent.charAt(0) != '[') {
+        if (block.parent.charAt(0) != '[' || blockCopy.parent.charAt(0) != '[') {
 
             let newBlock
 
@@ -244,13 +248,12 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
                 }
 
             }
-
-
-
             parentBlockOnly?.push(newBlock)
         }
 
     })
+
+    console.log(parentBlockOnly)
 
     let markdown = n2m.toMarkdownString(parentBlockOnly);
 

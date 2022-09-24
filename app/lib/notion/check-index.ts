@@ -35,10 +35,12 @@ export default async function checkIndex(request: Request, session: any) {
         return status
     }
 
+    const customDomainWWW = `www.${customDomain}`
+
     const { data, error } = await supabaseAdmin
         .from('sites')
         .select('*, users(notion_token,plan)')
-        .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
+        .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain},custom_domain.eq.${customDomainWWW}`)
         .single()
 
     if (!data) {
