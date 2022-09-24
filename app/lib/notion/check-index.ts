@@ -15,14 +15,20 @@ export default async function checkIndex(request: Request, session: any) {
     if (host) {
         subdomain = host.hostname.split('.')[0]
 
+        if (subdomain === 'www') {
+            subdomain = host.hostname.split('.')[1]
+        }
+
         if (host.hostname === 'localhost' && !session) {
             status = 'home'
         }
 
-        if (subdomain === 'www' || subdomain === 'blotion' || subdomain === 'localhost') {
+        if (subdomain === 'blotion' || subdomain === 'localhost') {
+            
             if (session) {
                 return redirect('/account')
             }
+
             status = 'home'
         }
 
@@ -35,12 +41,10 @@ export default async function checkIndex(request: Request, session: any) {
         return status
     }
 
-    const customDomainWWW = `www.${customDomain}`
-
     const { data, error } = await supabaseAdmin
         .from('sites')
         .select('*, users(notion_token,plan)')
-        .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain},custom_domain.eq.${customDomainWWW}`)
+        .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
         .single()
 
     if (!data) {
