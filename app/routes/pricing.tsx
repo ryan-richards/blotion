@@ -132,7 +132,7 @@ export default function Pricing() {
                         Account
                     </Button>
                 </Flex>
-                <Box w="full" px={{ base: 10, md: 4 }} mx="auto" textAlign="center">
+                <Box w="full" px={{ base: 0, md: 4 }} mx="auto" textAlign="center">
                     <Text mb={2} fontSize="5xl" fontWeight="bold" lineHeight="tight">
                         Plans + Pricing
                     </Text>

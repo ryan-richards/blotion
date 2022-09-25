@@ -141,15 +141,15 @@ export default function LandingPage() {
                         whileInView={onscreen} viewport={{ once: true }} direction={'column'} justify={'center'} align={'center'}>
                         <Flex direction={'column'} align={'center'} gap={2}>
                             <Heading fontWeight={'semibold'} textAlign={'center'} size={'2xl'}>Generate a blog with Notion.</Heading>
-                            <Heading fontWeight={'normal'} mt={2} maxW={'70%'} textAlign={'center'} size={'md'}>Use a Notion template to generate a free hosted blog. Blotion allows you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
+                            <Heading fontWeight={'normal'} mt={2} maxW={{ base: '95%', md: '70%' }} textAlign={'center'} size={'md'}>Use a Notion template to generate a free hosted blog. Blotion allows you to edit and publish blog posts from the comfort of your Notion workspace.</Heading>
                             <Flex w={'full'} align={'center'} direction={{ base: 'column', md: 'row' }} justify={'center'} gap={2} mt={10}>
-                                <Button size={'lg'} style={{ textDecoration: 'none' }} minW={200} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
+                                <Button size={'lg'} style={{ textDecoration: 'none' }} minW={220} as={Link} href={'https://blotion-site.notion.site/Guide-949edbf9fc504b868ca3e701cf233655'} isExternal target={'_blank'}>
                                     <Icon as={FiCopy} fontSize='xl' mr={2}></Icon>
                                     Copy Template
                                 </Button>
                                 <Button
                                     size={'lg'}
-                                    minW={200}
+                                    minW={220}
                                     variant={'outline'}
                                     className={'button block'}
                                     onClick={() => signInWithNotion()}
@@ -161,9 +161,11 @@ export default function LandingPage() {
                             <Text mt={4} opacity={'60%'}>No credit card required</Text>
                         </Flex>
 
-                        <Flex w='full' justify={'center'} pt={{base:10,md:20}} align={'center'}>
+                        <Flex w='full' justify={'center'} pt={{ base: 10, md: 20 }} align={'center'}>
                             <Image src={header2} objectFit={'contain'} rounded={'2xl'}></Image>
                         </Flex>
+
+                        <Link mt={3} opacity={'80%'} textDecoration={'underline'} _hover={{textDecoration:'none'}} href={'https://amy.blotion.com'} isExternal>Check out a sample blog</Link>
                     </Flex>
 
                     <Flex ref={scrollRef} direction={'column'} justify={'center'} align={'center'}>
@@ -210,19 +212,17 @@ export default function LandingPage() {
                                     />
                                 </Tooltip>
                                 <Tooltip label={'Your site is live'} hasArrow placement='top'>
-                                    <>
-                                        <IconButton
-                                            id={'site_live'}
-                                            size={'lg'}
-                                            colorScheme={activeImage.id === 4 ? 'green' : 'gray'}
-                                            rounded={'full'}
-                                            variant={'outline'}
-                                            isActive={activeImage.id === 4}
-                                            aria-label="Live Icon Step"
-                                            onClick={() => setActiveImage(steps[3])}
-                                            icon={<Icon fontSize={'xl'} as={FiLoader} />}
-                                        />
-                                    </>
+                                    <IconButton
+                                        id={'site_live'}
+                                        size={'lg'}
+                                        colorScheme={activeImage.id === 4 ? 'green' : 'gray'}
+                                        rounded={'full'}
+                                        variant={'outline'}
+                                        isActive={activeImage.id === 4}
+                                        aria-label="Live Icon Step"
+                                        onClick={() => setActiveImage(steps[3])}
+                                        icon={<Icon fontSize={'xl'} as={FiLoader} />}
+                                    />
                                 </Tooltip>
                             </HStack>
                             <Flex mt={10} direction={'column'} gap={8}>
