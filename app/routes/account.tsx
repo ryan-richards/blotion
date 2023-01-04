@@ -47,9 +47,8 @@ async function subdomainCheck(str: string) {
 export const loader: LoaderFunction = async ({ request }) => {
 
     const session = await oAuthStrategy.checkSession(request, {
-      failureRedirect: "/",
+        failureRedirect: "/",
     });
-
 
     const url = new URL(request.url);
     const token = url.searchParams.get("token");
@@ -359,10 +358,10 @@ export default function Account() {
                         <Text>Need help getting started? <Link href={'https://guide.blotion.com'} isExternal fontWeight={'normal'} textDecoration={'underline'}>Check the guide</Link></Text>
                         <Text>Site not appearing yet? <Link as={RemixLink} to={'/account'} fontWeight={'bold'} textDecoration={'underline'}>Try Refreshing</Link></Text>
                     </Flex>
-                    <Wrap mt={5}>
+                    <Wrap mt={5} justify={'space-between'}>
                         {userData.sites.map((page: any) =>
-                            <WrapItem key={page.id}>
-                                <Box position={'relative'} border={'1px'} borderColor={'gray.300'} rounded={'lg'} p={4} maxH={{ base: 'full', md: 250 }} maxWidth={{ base: 'full', md: 322 }} cursor={'pointer'} onClick={() => setHover(page.id)} onMouseEnter={() => setHover(page.id)} onMouseLeave={() => setHover('')}>
+                            <WrapItem key={page.id} maxWidth={{ base: 'full', md: '49%' }}>
+                                <Box position={'relative'} border={'1px'} borderColor={'gray.300'} rounded={'lg'} p={4} maxH={{ base: 'full', md: 250 }} cursor={'pointer'} onClick={() => setHover(page.id)} onMouseEnter={() => setHover(page.id)} onMouseLeave={() => setHover('')}>
                                     <Flex justify={'flex-end'} display={page.published ? 'flex' : 'none'} >
                                         <Tag colorScheme={'green'} position={'absolute'} top={'2%'} right={'2%'} zIndex={100}>{page.published ? 'Live' : null}</Tag>
                                     </Flex>

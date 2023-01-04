@@ -4,7 +4,6 @@ const HomeFooter = () => {
   return (
     <Flex justify={'center'}>
       <Flex as="footer" width={'full'} maxW={'container.lg'} minH={200}>
-
         <Flex justify={'center'} width="full" direction={'column'}>
           <Divider></Divider>
           <Grid p={10} templateColumns={{base:'repeat(2,1fr)',md:'repeat(4, 1fr)'}} gap={6} display={'none'}>
@@ -39,7 +38,7 @@ const HomeFooter = () => {
           </Grid>
           <Divider></Divider>
           <Flex justify={'space-between'} p={10}>
-            <Text>© 2022 Blotion. All rights reserved.</Text>
+            <Text>© 2023 Blotion. All rights reserved.</Text>
             <HStack>
               <IconButton as={Link} href={'https://twitter.com/ryan_blotion'} isExternal aria-label={'Twitter Icon'} variant={'link'} icon={<Icon as={SiTwitter} />}></IconButton>
             </HStack>
@@ -47,7 +46,6 @@ const HomeFooter = () => {
         </Flex>
       </Flex>
     </Flex>
-
   );
 };
 

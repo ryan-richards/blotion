@@ -69,8 +69,13 @@ iframe {
      margin-bottom: 10px;
      display: grid;
      grid-template-columns: auto auto;
-     grid-gap: 12px;
+     grid-gap: 35px;
      padding-top: 10px;
+}
+
+.hero-text p {
+     margin-top: 0px !important;
+     margin-bottom: 0px !important;
 }
 
 @media screen and (max-width: 600px) {

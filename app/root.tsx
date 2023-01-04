@@ -6,16 +6,15 @@ import checkIndex from "./lib/notion/check-index";
 import navData from "./lib/notion/load-nav";
 import { getNotionNav } from "./lib/notion/notion-api";
 import { oAuthStrategy } from "./lib/storage/auth.server";
-import { supabaseAdmin } from "./lib/storage/supabase.server";
 import { decryptAPIKey } from "./lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
 
   const session = await oAuthStrategy.checkSession(request);
-  const { data, status, preview, subdomain }: any = await checkIndex(request, session);
+  const { data }: any = await checkIndex(request, session);
 
   let navItems = null
-  
+
   if (data) {
     const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
     const { nav } = await getNotionNav(data.index_page, decryptedToken)
@@ -38,7 +37,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: globalStylesUrl},
+    { rel: "stylesheet", href: globalStylesUrl },
   ];
 };
 

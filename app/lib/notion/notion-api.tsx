@@ -226,7 +226,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
                         html = html + `<div><img src="${link}" /></div>`
                     } else {
                         let parsedHTML = marked(text)
-                        html = html + `<div>${parsedHTML}</div>`
+                        html = html + `<div class='hero-text'>${parsedHTML}</div>`
                     }
                 })
 
@@ -354,7 +354,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
                     html = html + `<div><img src="${link}" /></div>`
                 } else {
                     let parsedHTML = marked(text)
-                    html = html + `<div>${parsedHTML}</div>`
+                    html = html + `<div class='hero-text'>${parsedHTML}</div>`
                 }
             })
 
