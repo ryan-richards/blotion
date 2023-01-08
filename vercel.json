@@ -2,20 +2,20 @@
   "build": {
     "env": {
       "ENABLE_FILE_SYSTEM_API": "1"
+    },
+    "images": {
+      "sizes": [
+        256,
+        384,
+        600,
+        1000
+      ],
+      "domains": [],
+      "minimumCacheTTL": 60,
+      "formats": [
+        "image/webp",
+        "image/avif"
+      ]
     }
-  },
-  "images": {
-    "sizes": [
-      256,
-      384,
-      600,
-      1000
-    ],
-    "domains": [],
-    "minimumCacheTTL": 60,
-    "formats": [
-      "image/webp",
-      "image/avif"
-    ]
   }
 }
