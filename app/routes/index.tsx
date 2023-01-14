@@ -135,24 +135,12 @@ export default function Home() {
 
       <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
 
-      {data.show_thumbnails ?
         <Stack>
           {pageLinks && pageLinks.map((page: any, index: number) =>
-            <BlogCard key={index} post={page} />
+            {data.show_thumbnails ? <BlogCard key={index} post={page} /> : <BlogTextLink key={index} page={page} />}
           )}
         </Stack>
-        :
-        <Stack>
-          {pageLinks && pageLinks.map((page: any, index: number) =>
-            <BlogTextLink key={index} page={page} />
-          )}
-        </Stack>
-      }
-
-      <Flex justify={'center'} pt={10} display={data.revue_profile ? 'flex' : 'none'}>
-        <RevueForm revue_profile={data.revue_profile} />
-      </Flex>
-
+        
       <Flex justify={'center'} display={previewMode ? 'flex' : 'none'} opacity={'50%'}>
         <Heading pt={10}>Site in Preview Mode</Heading>
       </Flex>
