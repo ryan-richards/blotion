@@ -1,19 +1,18 @@
-import { Text, Stack, Center, Heading, Flex, Menu, Icon, Button, Box, HStack, Link, List, ListItem, OrderedList, Image, AspectRatio, useBreakpointValue, MenuButton, MenuList, MenuItem, MenuDivider } from '@chakra-ui/react';
+import { Stack, Heading, Flex, Box } from '@chakra-ui/react';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { marked } from 'marked';
 import { getNotionPagebyID } from '~/lib/notion/notion-api';
 import { supabaseAdmin } from '~/lib/storage/supabase.server';
-import TimeAgo from 'timeago-react';
 import { decryptAPIKey } from '~/lib/utils/encrypt-api-key';
 import { oAuthStrategy } from '~/lib/storage/auth.server';
 import getPageLinks from '~/lib/notion/load-pageLinks';
 import checkIndex from '~/lib/notion/check-index';
 import LandingPage from '~/lib/components/landingPage';
-import RevueForm from '~/lib/components/revueForm';
 import BlogCard from '~/lib/components/blogCard';
 import BlogTextLink from '~/lib/components/blogTextLink';
+import { HttpMethod } from "~/lib/@types/http";
 
 export const meta: MetaFunction = ({ data }) => {
 
@@ -51,7 +50,7 @@ export const meta: MetaFunction = ({ data }) => {
   };
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }) => {
 
   const session = await oAuthStrategy.checkSession(request);
 
@@ -86,7 +85,33 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     }
   }
 
-  //Site Exisits
+  if (data.home_html) {
+    //time to revalidate I guess
+    const url = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com';
+    try {
+      fetch(
+        `${url}/api/refresh-blog?site=${data.site_name}`,
+        {
+          method: HttpMethod.POST,
+          headers: {
+            Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+            "Content-Type": "application/json",
+        },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+
+    return json({ data, html: data.home_html, pageObject: data.page_object, pageLinks: data.page_links, preview }, {
+      headers: {
+        "Cache-Control":
+          "s-maxage=60, stale-while-revalidate=3600",
+      },
+    });
+  }
+
+  //This should only happen on the first load of the site
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
   const content = await getNotionPagebyID(data.index_page, decryptedToken)
   const html = marked(content.markdown);
@@ -94,9 +119,16 @@ export const loader: LoaderFunction = async ({ request, params }) => {
   const pageLinks = await getPageLinks(pageObject, decryptedToken)
 
   if (!data.db_page && pageObject?.posts) {
-    const { data } = await supabaseAdmin
+    await supabaseAdmin
       .from('sites')
       .update({ db_page: pageObject?.posts })
+      .match({ site_name: subdomain })
+  }
+
+  if (!data.home_html && html) {
+    await supabaseAdmin
+      .from('sites')
+      .update({ home_html: html, page_links: pageLinks, page_object: pageObject })
       .match({ site_name: subdomain })
   }
 
@@ -119,7 +151,7 @@ export function headers({ loaderHeaders }: { loaderHeaders: Headers }) {
 
 export default function Home() {
 
-  const { data, status, html, pageObject, pageLinks, navItems, previewMode } = useLoaderData()
+  const { data, status, html, pageObject, pageLinks, previewMode } = useLoaderData()
 
   if (status === 'home') {
     return (
@@ -133,14 +165,14 @@ export default function Home() {
         <Box dangerouslySetInnerHTML={{ __html: html }}></Box>
       </Prose>
 
-      <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle ? pageObject.postsTitle : 'Posts'}</Heading>
+      <Heading size={'md'} display={pageLinks && pageLinks.length > 0 ? 'flex' : 'none'} >{pageObject.postsTitle || 'Posts'}</Heading>
 
-        <Stack>
-          {pageLinks && pageLinks.map((page: any, index: number) =>
-            {data.show_thumbnails ? <BlogCard key={index} post={page} /> : <BlogTextLink key={index} page={page} />}
-          )}
-        </Stack>
-        
+      <Stack>
+        {pageLinks && pageLinks.map((page: any, index: number) =>
+          data.show_thumbnails ? <BlogCard key={index} post={page} /> : <BlogTextLink key={index} page={page} />
+        )}
+      </Stack>
+
       <Flex justify={'center'} display={previewMode ? 'flex' : 'none'} opacity={'50%'}>
         <Heading pt={10}>Site in Preview Mode</Heading>
       </Flex>
