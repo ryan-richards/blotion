@@ -53,13 +53,8 @@ export const action: ActionFunction = async ({ request, params }) => {
 
     const formData = await request.formData();
     let siteName = formData.get('site_name');
-    const revue_profile = formData.get('revue_profile');
     const action = formData.get('action');
     let showThumbnails = formData.get('show-thumbnails');
-
-   
-
-    console.log(showThumbnails);
 
     if (!action && !siteName) {
 
@@ -91,26 +86,6 @@ export const action: ActionFunction = async ({ request, params }) => {
                 .eq('owner', session.user?.id)
 
             return redirect('/account')
-        }
-        if (action === 'add_revue' && revue_profile) {
-            await supabaseAdmin
-                .from('sites')
-                .update({
-                    revue_profile: revue_profile
-                })
-                .eq('id', params.page)
-                .eq('owner', session.user?.id)
-            return json({ status: 'success' })
-        }
-        if (action === 'remove_revue') {
-            await supabaseAdmin
-                .from('sites')
-                .update({
-                    revue_profile: null
-                })
-                .eq('id', params.page)
-                .eq('owner', session.user?.id)
-            return json({ status: 'success' })
         }
     }
 
@@ -155,7 +130,6 @@ export default function Settings() {
     let [nameCheckCount, setNameCheckCount] = useState(0)
     let [input, setInput] = useState(page.site_name)
     let [customDomain, setCustomDomain] = useState(page.custom_domain ? page.custom_domain : '')
-    let [revueProfile, setRevueProfile] = useState(page.revue_profile ? page.revue_profile : '')
     let [inputError, setInputError] = useState('')
     const transition = useTransition();
 
@@ -294,20 +268,7 @@ export default function Settings() {
                 </Form>
             </Flex>
 
-            <Divider mt={5}></Divider>
-
-            <Flex mt={5} direction={'column'}>
-                <Form method={'post'}>
-                    <FormLabel>Revue Newsletter</FormLabel>
-                    <InputGroup gap={2}>
-                        <Input placeholder="revue profile name" name={'revue_profile'} value={revueProfile} isDisabled={userData.plan === 'free' || !page.published} onChange={(e: any) => setRevueProfile(e.target.value)} />
-                        {!page.revue_profile ?
-                            <Button type={'submit'} name={'action'} value={'add_revue'} colorScheme={'blue'} isDisabled={!revueProfile} isLoading={isSubmitting}>Add</Button> :
-                            <Button type={'submit'} name={'action'} value={'remove_revue'} colorScheme={'red'} isDisabled={!revueProfile} isLoading={isSubmitting}>Remove</Button>}
-                    </InputGroup>
-                </Form>
-            </Flex>
-
+            <Divider mt={5} />
 
             <Flex mt={5} direction={'column'}>
                 <Form method='post' autoComplete="false">
