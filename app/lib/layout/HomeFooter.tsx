@@ -10,7 +10,6 @@ const HomeFooter = () => {
             <GridItem w='100%'>
               <Stack>
                 <Heading fontSize={'md'}>INTEGRATIONS</Heading>
-                <Link>Revue</Link>
               </Stack>
             </GridItem>
             <GridItem w='100%'>

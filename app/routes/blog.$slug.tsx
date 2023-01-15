@@ -4,7 +4,6 @@ import { json, LinksFunction, LoaderFunction, MetaFunction, redirect } from "@re
 import { useLoaderData, Link as RemixLink, useLocation } from "@remix-run/react";
 import { marked } from "marked";
 import TimeAgo from "timeago-react";
-import RevueForm from "~/lib/components/revueForm";
 import { getSingleBlogPost } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
@@ -201,9 +200,6 @@ export default function Slug() {
                         </Flex>
                     </Flex>
                 </Prose>
-            </Flex>
-            <Flex justify={'center'} pt={10} pb={10} display={data.revue_profile ? 'flex' : 'none'}>
-                <RevueForm revue_profile={data.revue_profile} />
             </Flex>
         </Stack>
     )
