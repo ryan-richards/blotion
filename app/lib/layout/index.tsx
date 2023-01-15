@@ -1,8 +1,6 @@
 import { Box, Center, Container, Flex, VStack } from "@chakra-ui/react";
 
 import Footer from "./Footer";
-import Header from "./Header";
-import HomeFooter from "./HomeFooter";
 import Nav from "./Nav";
 
 type LayoutProps = {

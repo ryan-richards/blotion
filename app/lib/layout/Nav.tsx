@@ -5,8 +5,17 @@ import { slugify } from "../utils/slugify";
 import ThemeToggle from "./ThemeToggle";
 
 
+interface NavProps {
+    navItems: NavItemProps[];
+    data: any;  
+}   
 
-export default function Nav({ navItems, data }: any) {
+interface NavItemProps {
+    slug: string;
+    title: string;
+}
+
+export default function Nav({ navItems, data }: NavProps) {
 
     const buttonIconMargin = useBreakpointValue({ base: '0', md: '1', lg: '2' })
     const buttonMargin = useBreakpointValue({ base: '0', md: '0', lg: '0' })
