@@ -108,12 +108,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             timestamp: 'last_edited_time',
         },
     });
-    //filter pagebyname where parent is equal to userdata.index_page
-    //console.log(pagebyname.results)
-    //console.log(pagebyname.results[0].parent)
+
     let pagebynamefilter
     pagebynamefilter = pagebyname.results.filter((page: any) => page.parent.page_id === data.index_page)
-    //console.log(pagebynamefilter)
 
     if (pagebynamefilter.length < 1) {
         return redirect('/')
@@ -129,8 +126,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             const post = pageToPostTransformer(page);
             pageLinks.push(post)
         })
-
-        //console.log(content.databaseName)
 
         return json({ data, pageLinks, pageTitle: content.databaseName }, {
             headers: {

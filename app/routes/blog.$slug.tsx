@@ -109,6 +109,8 @@ export const meta: MetaFunction = ({ params, data, location }) => {
 
     const { post } = data as MetaLoaderData
 
+    if (objectIsEmpty(post)) return { title: 'Blotion' }
+
     return {
         title: `${post.title}`,
         description: post.description,
