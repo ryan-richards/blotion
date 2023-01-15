@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     if (data) {
-        refresh(data, site)
+        await refresh(data, site)
     }
     
     return json({ status: 200, data: "refreshing blog" });
