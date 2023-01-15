@@ -89,7 +89,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     //time to revalidate I guess
     const url = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com';
     try {
-      fetch(
+      await fetch(
         `${url}/api/refresh-blog?site=${data.site_name}`,
         {
           method: HttpMethod.POST,
