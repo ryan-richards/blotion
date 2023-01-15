@@ -6,7 +6,7 @@ export default function BlogTextLink({ page }: any) {
 
 
     return (
-        <Link as={RemixLink} to={`/blog/${page.slug}`}>
+        <Link as={RemixLink} to={`/blog/${page.slug}`} prefetch='intent'>
             <Flex justify={'space-between'}>
                 <Text maxW={{ base: '250px', md: 'full' }}>
                     {page.title}

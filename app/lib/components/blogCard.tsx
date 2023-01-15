@@ -35,7 +35,8 @@ export default function BlogCard({ post }: any) {
                                 as={RemixLink}
                                 to={`/blog/${post.slug}`}
                                 fontSize={'xl'}
-                                fontWeight='medium'>
+                                fontWeight='medium'
+                                prefetch='intent'>
                                 {post.title}
                             </Link>
 
@@ -66,7 +67,7 @@ export default function BlogCard({ post }: any) {
                         </Box>
                     </Flex>
                     <Flex justify={'flex-end'} align={'end'} mt={{ base: 5 }} mr={2} mb={2}>
-                        <Button onClick={() => nav(`/blog/${post.slug}`)} variant={'link'} p={5}>Read More</Button>
+                        <Button as={RemixLink} to={`/blog/${post.slug}`} prefetch='intent' variant={'link'} p={5}>Read More</Button>
                     </Flex>
                 </Flex>
             </Box>
