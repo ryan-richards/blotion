@@ -85,31 +85,31 @@ export const loader: LoaderFunction = async ({ request }) => {
     }
   }
 
-  if (data.home_html) {
-    //time to revalidate I guess
-    const url = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com';
-    try {
-      await fetch(
-        `${url}/api/refresh-blog?site=${data.site_name}`,
-        {
-          method: HttpMethod.POST,
-          headers: {
-            Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
-            "Content-Type": "application/json",
-        },
-        }
-      );
-    } catch (error) {
-      console.error(error);
-    }
-
-    return json({ data, html: data.home_html, pageObject: data.page_object, pageLinks: data.page_links, preview }, {
-      headers: {
-        "Cache-Control":
-          "s-maxage=60, stale-while-revalidate=3600",
-      },
-    });
-  }
+  // if (data.home_html) {
+  //   //time to revalidate I guess
+  //   const url = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com';
+  //   try {
+  //     await fetch(
+  //       `${url}/api/refresh-blog?site=${data.site_name}`,
+  //       {
+  //         method: HttpMethod.POST,
+  //         headers: {
+  //           Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
+  //           "Content-Type": "application/json",
+  //       },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+// 
+  //   return json({ data, html: data.home_html, pageObject: data.page_object, pageLinks: data.page_links, preview }, {
+  //     headers: {
+  //       "Cache-Control":
+  //         "s-maxage=60, stale-while-revalidate=3600",
+  //     },
+  //   });
+  // }
 
   //This should only happen on the first load of the site
   const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
