@@ -3,12 +3,8 @@ import {
   Flex,
   Icon,
   chakra,
-  useColorModeValue,
-  useToken,
-  Badge,
   Stack,
   Text,
-  Link,
   SimpleGrid,
   Button,
 } from "@chakra-ui/react";

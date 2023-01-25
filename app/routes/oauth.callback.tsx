@@ -1,8 +1,7 @@
-import { ActionFunction, json, redirect } from "@remix-run/node";
+import { ActionFunction, json } from "@remix-run/node";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
 import { supabaseClient } from "~/lib/storage/supabase.client";
-import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { encryptAPIKey } from "~/lib/utils/encrypt-api-key";
 import { authenticator } from "../lib/storage/auth.server";
 

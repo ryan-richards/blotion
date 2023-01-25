@@ -3,7 +3,6 @@ import {
   Box,
   Flex,
   Heading,
-  Link,
   Menu,
   MenuButton,
   MenuItem,
@@ -11,24 +10,19 @@ import {
   Stack,
   Tag,
   TagLabel,
-  TagRightIcon,
   Text,
   useBreakpointValue,
-  Wrap,
-  WrapItem,
 } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import {
   json,
-  LinksFunction,
   LoaderFunction,
   MetaFunction,
   redirect,
 } from "@remix-run/node";
 import {
   useLoaderData,
-  Link as RemixLink,
-  useLocation,
+  Link as RemixLink
 } from "@remix-run/react";
 import { marked } from "marked";
 import TimeAgo from "timeago-react";

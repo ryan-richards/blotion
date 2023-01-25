@@ -1,34 +1,10 @@
 import {
-  Text,
   Stack,
-  Center,
   Heading,
   Flex,
-  Menu,
-  chakra,
   Icon,
   Button,
-  Box,
-  HStack,
-  Link,
-  List,
-  ListItem,
-  OrderedList,
-  Image,
-  AspectRatio,
-  useBreakpointValue,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
-  IconButton,
-  Tooltip,
-  Divider,
-  Grid,
-  Highlight,
-  textDecoration,
 } from "@chakra-ui/react";
-import { FiCopy, FiEdit, FiLoader } from "react-icons/fi";
 import { SiNotion } from "react-icons/si";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 

@@ -2,14 +2,9 @@ import { Box, Heading, Stack, Link, Text, Flex } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
 import { useLoaderData, Link as RemixLink, useParams } from "@remix-run/react";
-import { marked } from "marked";
-import TimeAgo from "timeago-react";
 import BlogCard from "~/lib/components/blogCard";
 import BlogTextLink from "~/lib/components/blogTextLink";
 import {
-  getFeaturedBlogPosts,
-  getNotionPagebyID,
-  getNotionSubPagebyID,
   getTagBlogPosts,
   pageToPostTransformer,
 } from "~/lib/notion/notion-api";
