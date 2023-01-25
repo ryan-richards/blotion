@@ -3,7 +3,9 @@ import { Client } from "@notionhq/client";
 import { capitalize, capitalizeEachWord } from "../utils/slugify";
 import React from "react";
 import * as md from "../utils/md"
+import { decode } from 'base64-arraybuffer'
 import { marked } from "marked";
+import { supabaseAdmin } from "../storage/supabase.server";
 
 
 export const getTagBlogPosts = async (pageID: string, token: string, tag: string) => {
@@ -230,7 +232,7 @@ export const getNotionPagebyID = async (pageID: string, token: string) => {
                     }
                 })
 
-               
+
 
                 newBlock = {
                     parent: `<div class='grid-container'>
@@ -320,7 +322,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
 
     const response = await notion.pages.properties.retrieve({ page_id: pageID, property_id: 'title' });
     //const response = await notion.pages.retrieve({ page_id: pageID });
-    
+
     let pageTitle = response.results[0].title.plain_text
 
     results.map((block: any) => {
@@ -340,7 +342,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
         let newBlock
 
         if (block.type === 'column_list') {
-         
+
             //loop through text and split into array using \n\n as split point
             let textArray = block.parent.split('\n\n')
 
@@ -351,6 +353,7 @@ export const getNotionSubPagebyID = async (pageID: string, token: string) => {
                 if (text.startsWith('![')) {
                     //extract link from between ()
                     let link = text.split('(')[1].split(')')[0]
+                    //add support for images stored in notion to be uploaded to supabase too just like the blog post cover images.
                     html = html + `<div><img src="${link}" /></div>`
                 } else {
                     let parsedHTML = marked(text)
@@ -468,17 +471,37 @@ export const getSingleBlogPost = async (pageID: string, token: string, slug: str
     }
 }
 
-export const pageToPostTransformer = (page: any) => {
+export const pageToPostTransformer = async (page: any) => {
 
     let cover = page.cover;
     let description = page.properties.Description ? page.properties.Description : null
     let tags = page.properties.Tags
 
-    //console.log(page)
-
     if (cover) {
         if (cover.type === 'file') {
-            cover = cover.file.url
+            // cover = cover.file.url
+
+            // file is from notion upload so will only be valid for 3600 seconds
+            // lets get the url and add it to supabase storage instead
+
+            // const base64Image: any = await getBase64FromUrl(cover.file.url)
+
+            fetch(cover.file.url)
+                .then((res) => res.blob())
+                .then(async (myBlob) => {
+                    debugger
+                    const myFile = new File([myBlob], 'image.jpeg', { type: myBlob.type });
+
+                    supabaseAdmin.storage
+                    .from('blotion-assets')
+                    .upload(`${page.id}.png`, myFile, {
+                        contentType: 'image/png',
+                        upsert: true,
+                    })
+                });
+
+            cover = `https://tvypnxilpffosyzymcfm.supabase.co/storage/v1/object/public/blotion-assets/${page.id}.png`
+
         } else {
             cover = cover.external.url;
         }
