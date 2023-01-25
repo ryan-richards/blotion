@@ -55,7 +55,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     if (!content) throw new Error('Missing pageID')
 
-    //console.log(content)
+    console.log(content)
 
     const html = marked(content.markdown)
     const post = content.post
