@@ -492,7 +492,7 @@ export const pageToPostTransformer = async (page: any) => {
                     debugger
                     const myFile = new File([myBlob], 'image.jpeg', { type: myBlob.type });
 
-                    supabaseAdmin.storage
+                    await supabaseAdmin.storage
                     .from('blotion-assets')
                     .upload(`${page.id}.png`, myFile, {
                         contentType: 'image/png',
