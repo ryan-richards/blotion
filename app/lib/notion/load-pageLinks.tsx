@@ -6,7 +6,7 @@ export default async function getPageLinks(pageObject: any, decryptedToken: stri
     let pageLinks: any[] = []
 
     if (pageObject && pageObject.posts != '') {
-        const posts = await getFeaturedBlogPosts(pageObject.posts, decryptedToken).then()
+        const posts = await getFeaturedBlogPosts(pageObject.posts, decryptedToken)
         posts.map(async (page: any) => {
             const post = await pageToPostTransformer(page);
             pageLinks.push(post)
