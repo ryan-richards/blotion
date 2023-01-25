@@ -3,15 +3,12 @@ import {
   Box,
   Button,
   Flex,
-  FormLabel,
-  Heading,
   Image,
   Input,
   Stack,
   Text,
   Link,
   Badge,
-  HStack,
   Icon,
   Wrap,
   WrapItem,
@@ -36,26 +33,17 @@ import {
 import { useEffect, useState } from "react";
 import {
   FiCopy,
-  FiEdit,
   FiPlus,
   FiRefreshCw,
-  FiSettings,
 } from "react-icons/fi";
-import { Stat } from "~/lib/components/Stat";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
-import { createSite } from "~/lib/storage/post.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey, encryptAPIKey } from "~/lib/utils/encrypt-api-key";
+import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 //function regex to remove special characters and convert to lowercase
 function tidyName(str: string) {
   return str.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-}
-
-//regex function remove special characters spaces and convert to lowercase
-function tidySlug(str: string) {
-  return str.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase();
 }
 
 async function subdomainCheck(str: string) {
@@ -67,11 +55,7 @@ async function subdomainCheck(str: string) {
     .match({ site_name: str })
     .single();
 
-  //console.log(data)
-  //console.log(error?.message)
-
   if (data) {
-    //console.log('match')
     return (nameFree = false);
   } else if (!data) {
     return (nameFree = true);
@@ -138,7 +122,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       const workspaces = pages.results.filter(
         (page: any) => page.parent.type === "workspace"
       );
-      //console.log(workspaces)
+  
       // extract the id's from the workspaces array
       const workspaceIds = workspaces.map((workspace: any) => workspace.id);
       //extract all index_page from the userData.sites array
@@ -167,17 +151,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
           while (!nameValid) {
             nameValid = await subdomainCheck(name);
-            //console.log(nameValid)
-            //console.log(name)
 
             if (!nameValid) {
               let word = randomWord();
               name = [name, word].join("-");
-              //console.log(name)
             }
           }
 
-          const { data, error } = await supabaseAdmin
+          await supabaseAdmin
             .from("connected_pages")
             .insert({
               user: session.user?.id,

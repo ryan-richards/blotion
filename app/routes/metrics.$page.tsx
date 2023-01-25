@@ -6,29 +6,8 @@ import {
   Tag,
   Text,
   Link,
-  FormLabel,
-  Input,
-  InputGroup,
   Button,
-  TableContainer,
-  Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Tfoot,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  FormControl,
-  Switch,
   Heading,
   Divider,
 } from "@chakra-ui/react";
@@ -36,20 +15,15 @@ import {
   ActionFunction,
   json,
   LoaderFunction,
-  redirect,
 } from "@remix-run/node";
 import {
-  Form,
-  useActionData,
   useFetcher,
   useLoaderData,
   useTransition,
   useNavigate,
-  useSubmit,
 } from "@remix-run/react";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { useEffect, useState } from "react";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const session = await oAuthStrategy.checkSession(request, {
@@ -103,12 +77,7 @@ export default function Settings() {
 
   const nav = useNavigate();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
   const enableMetrics = useFetcher();
-  const transition = useTransition();
-
-  console.log(enableMetrics.data);
 
   const isSubmitting = enableMetrics.state === "submitting";
 

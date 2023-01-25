@@ -5,8 +5,6 @@ import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.json();
 
-  //console.log(data)
-
   const decrypted = await decryptAPIKey(data.record.notion_token.toString());
 
   const { Client } = require("@notionhq/client");

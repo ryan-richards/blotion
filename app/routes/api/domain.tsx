@@ -1,4 +1,4 @@
-import { ActionFunction, json, redirect } from "@remix-run/node";
+import { ActionFunction, json } from "@remix-run/node";
 import { HttpMethod } from "~/lib/@types/http";
 import { createDomain, deleteDomain } from "~/lib/domains/domain";
 
