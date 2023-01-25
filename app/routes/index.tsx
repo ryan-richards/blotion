@@ -89,7 +89,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const url = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://blotion.com';
     const site = process.env.SERVERLESSQ_URL;
     try {
-      const response = await fetch(
+      await fetch(
         `${site}${url}/api/refresh-blog?site=${data.site_name}`,
         {
           method: HttpMethod.POST,
@@ -100,15 +100,13 @@ export const loader: LoaderFunction = async ({ request }) => {
           },
         }
       );
-      const json = await response.json();
-      console.log(json);
-    } catch (error) {
+       } catch (error) {
       console.error(error);
     }
     return json({ data, html: data.home_html, pageObject: data.page_object, pageLinks: data.page_links, preview }, {
       headers: {
         "Cache-Control":
-          "s-maxage=60, stale-while-revalidate=3600",
+          "s-maxage=240, stale-while-revalidate=3600",
       },
     });
   }
@@ -139,7 +137,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   return json({ data, html, pageObject, pageLinks, previewMode }, {
     headers: {
       "Cache-Control":
-        "s-maxage=60, stale-while-revalidate=3600",
+        "s-maxage=240, stale-while-revalidate=3600",
     },
   });
 };
