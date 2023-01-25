@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from "@supabase/supabase-js";
 
 declare global {
   interface Window {
@@ -9,9 +9,10 @@ declare global {
   }
 }
 
-if (!window.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required');
+if (!window.env.SUPABASE_URL) throw new Error("SUPABASE_URL is required");
 
-if (!window.env.SUPABASE_ANON_KEY) throw new Error('PUBLIC_SUPABASE_ANON_KEY is required');
+if (!window.env.SUPABASE_ANON_KEY)
+  throw new Error("PUBLIC_SUPABASE_ANON_KEY is required");
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
@@ -27,15 +28,23 @@ if (!window.env.SUPABASE_ANON_KEY) throw new Error('PUBLIC_SUPABASE_ANON_KEY is 
 
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
-export const supabaseClient = createClient(window.env.SUPABASE_URL, window.env.SUPABASE_ANON_KEY, {
-  autoRefreshToken: false,
-  persistSession: false
-});
+export const supabaseClient = createClient(
+  window.env.SUPABASE_URL,
+  window.env.SUPABASE_ANON_KEY,
+  {
+    autoRefreshToken: false,
+    persistSession: false,
+  }
+);
 
-export const signInWithNotion = (redirectTo = process.env.NODE_ENV != "development" ? 'https://www.blotion.com/oauth/callback' : 'http://localhost:3000/oauth/callback') =>
+export const signInWithNotion = (
+  redirectTo = process.env.NODE_ENV != "development"
+    ? "https://www.blotion.com/oauth/callback"
+    : "http://localhost:3000/oauth/callback"
+) =>
   supabaseClient.auth.signIn(
     {
-      provider: 'notion'
+      provider: "notion",
     },
     { redirectTo }
   );

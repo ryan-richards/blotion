@@ -1,57 +1,53 @@
 /* outfit-regular - latin */
 @font-face {
-     font-family: 'Outfit';
-     font-style: normal;
-     font-weight: 400;
-     src: local(''),
-          url('/fonts/outfit-v6-latin-regular.woff2') format('woff2'),
-          url('/fonts/outfit-v6-latin/outfit-v6-latin-regular.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-          url('/fonts/outfit-v6-latin-regular.woff') format('woff');
-     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 400;
+  src: local(""), url("/fonts/outfit-v6-latin-regular.woff2") format("woff2"),
+    url("/fonts/outfit-v6-latin/outfit-v6-latin-regular.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/outfit-v6-latin-regular.woff") format("woff");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* outfit-600 - latin */
 @font-face {
-     font-family: 'Outfit';
-     font-style: normal;
-     font-weight: 600;
-     src: local(''),
-          url('/fonts/outfit-v6-latin-600.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-          url('/fonts/outfit-v6-latin-600.woff') format('woff');
-     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 600;
+  src: local(""), url("/fonts/outfit-v6-latin-600.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/outfit-v6-latin-600.woff") format("woff");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* outfit-500 - latin */
 @font-face {
-     font-family: 'Outfit';
-     font-style: normal;
-     font-weight: 500;
-     src: local(''),
-          url('/fonts/outfit-v6-latin-500.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-          url('/fonts/outfit-v6-latin-500.woff') format('woff');
-     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 500;
+  src: local(""), url("/fonts/outfit-v6-latin-500.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/outfit-v6-latin-500.woff") format("woff");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 /* outfit-700 - latin */
 @font-face {
-     font-family: 'Outfit';
-     font-style: normal;
-     font-weight: 700;
-     src: local(''),
-          url('/fonts/outfit-v6-latin-700.woff2') format('woff2'),
-          /* Chrome 26+, Opera 23+, Firefox 39+ */
-          url('/fonts/outfit-v6-latin-700.woff') format('woff');
-     /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-family: "Outfit";
+  font-style: normal;
+  font-weight: 700;
+  src: local(""), url("/fonts/outfit-v6-latin-700.woff2") format("woff2"),
+    /* Chrome 26+, Opera 23+, Firefox 39+ */
+      url("/fonts/outfit-v6-latin-700.woff") format("woff");
+  /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
 iframe {
-     aspect-ratio: var(--aspect-ratio);
-     /* Use the CSS Variable defined aspect ratio */
-     width: 100%;
-     height: auto;
+  aspect-ratio: var(--aspect-ratio);
+  /* Use the CSS Variable defined aspect ratio */
+  width: 100%;
+  height: auto;
 }
 
 /**
@@ -59,28 +55,27 @@ iframe {
     * This way iframes will behave like images (which have an intrinsic aspect ratio)
     */
 @supports (aspect-ratio: attr(width number) / 1) {
-     iframe[width][height] {
-          aspect-ratio: attr(width number) / attr(height number);
-     }
+  iframe[width][height] {
+    aspect-ratio: attr(width number) / attr(height number);
+  }
 }
 
 .grid-container {
-     margin-top: 10px;
-     margin-bottom: 10px;
-     display: grid;
-     grid-template-columns: auto auto;
-     grid-gap: 35px;
-     padding-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 35px;
+  padding-top: 10px;
 }
 
 .hero-text p {
-     margin-top: 0px !important;
-     margin-bottom: 0px !important;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 @media screen and (max-width: 600px) {
-     .grid-container {
-          grid-template-columns: auto;
-     }
+  .grid-container {
+    grid-template-columns: auto;
+  }
 }
-

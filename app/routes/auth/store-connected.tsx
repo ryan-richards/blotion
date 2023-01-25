@@ -3,43 +3,42 @@ import { supabaseAdmin } from "~/lib/storage/supabase.server";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const action: ActionFunction = async ({ request }) => {
+  const data = await request.json();
 
-    const data = await request.json();
+  //console.log(data)
 
-    //console.log(data)
+  const decrypted = await decryptAPIKey(data.record.notion_token.toString());
 
-    const decrypted = await decryptAPIKey(data.record.notion_token.toString());
+  const { Client } = require("@notionhq/client");
 
-    const { Client } = require('@notionhq/client');
+  let pages;
 
-    let pages;
+  if (decrypted) {
+    const notion = new Client({ auth: decrypted.toString() });
 
-    if (decrypted) {
-        const notion = new Client({ auth: decrypted.toString() });
+    pages = await notion.search({
+      filter: {
+        property: "object",
+        value: "page",
+      },
+      sort: {
+        direction: "descending",
+        timestamp: "last_edited_time",
+      },
+    });
+  }
 
-        pages = await notion.search({
-            filter: {
-                property: 'object',
-                value: 'page',
-            },
-            sort: {
-                direction: 'descending',
-                timestamp: 'last_edited_time',
-            },
-        });
-    }
+  // find pages that have a parent type workspace
+  const workspaces = pages.filter(
+    (page: { parent: { type: string } }) => page.parent.type === "workspace"
+  );
 
-    // find pages that have a parent type workspace
-    const workspaces = pages.filter((page: { parent: { type: string; }; }) => page.parent.type === 'workspace');
+  workspaces.map((workspace: { id: string }) =>
+    supabaseAdmin.from("connected_pages").insert({
+      user: data.record.id,
+      page_id: workspace.id,
+    })
+  );
 
-    workspaces.map((workspace: { id: string; }) =>
-        supabaseAdmin
-            .from('connected_pages')
-            .insert({
-                user: data.record.id,
-                page_id: workspace.id
-            })
-    )
-
-    return json({status: 'connected pages stored'});
+  return json({ status: "connected pages stored" });
 };

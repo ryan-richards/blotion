@@ -10,11 +10,10 @@ import { supabaseAdmin } from "./lib/storage/supabase.server";
 import { decryptAPIKey } from "./lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
-
   const session = await oAuthStrategy.checkSession(request);
   const { data }: any = await checkIndex(request, session);
 
-  let navItems = data && data.nav_links || null;
+  let navItems = (data && data.nav_links) || null;
   let loggedIn = session ? true : false;
 
   if (navItems) {
@@ -24,21 +23,23 @@ export const loader: LoaderFunction = async ({ request }) => {
       data,
       env: {
         SUPABASE_URL: process.env.SUPABASE_URL,
-        SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
-      }
-    }
+        SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      },
+    };
   }
 
   if (data) {
-    const decryptedToken = await decryptAPIKey(data.users.notion_token.toString())
-    const { nav } = await getNotionNav(data.index_page, decryptedToken)
-    navItems = await navData(nav)
+    const decryptedToken = await decryptAPIKey(
+      data.users.notion_token.toString()
+    );
+    const { nav } = await getNotionNav(data.index_page, decryptedToken);
+    navItems = await navData(nav);
 
     if (!data.nav_links) {
       await supabaseAdmin
-        .from('sites')
+        .from("sites")
         .update({ nav_links: navItems })
-        .match({ site_name: data.site_name })
+        .match({ site_name: data.site_name });
     }
   }
 
@@ -48,19 +49,16 @@ export const loader: LoaderFunction = async ({ request }) => {
     data,
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
-      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
-    }
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    },
   };
 };
 
 export const links: LinksFunction = () => {
-  return [
-    { rel: "stylesheet", href: globalStylesUrl },
-  ];
+  return [{ rel: "stylesheet", href: globalStylesUrl }];
 };
 
 const App = () => {
-
   const { env, navItems, data, loggedIn } = useLoaderData();
 
   return (

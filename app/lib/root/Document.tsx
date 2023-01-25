@@ -16,8 +16,6 @@ import ServerStyleContext from "~/lib/styles/context.server";
 import Header from "../layout/Header";
 import HomeFooter from "../layout/HomeFooter";
 
-
-
 type DocumentProps = {
   children: React.ReactNode;
   title?: string;
@@ -28,7 +26,10 @@ type DocumentProps = {
 };
 
 const Document = withEmotionCache(
-  ({ children, title, env, navItems, siteData, session }: DocumentProps, emotionCache) => {
+  (
+    { children, title, env, navItems, siteData, session }: DocumentProps,
+    emotionCache
+  ) => {
     const serverStyles = React.useContext(ServerStyleContext);
     const clientStyles = React.useContext(ClientStyleContext);
 
@@ -63,8 +64,18 @@ const Document = withEmotionCache(
               dangerouslySetInnerHTML={{ __html: style.css }}
             />
           ))}
-          {process.env.NODE_ENV === "development" ? null :
-            <script async defer data-website-id={siteData ? siteData.umami_website_id : "94eeb490-1526-4b23-be1c-c0b3d2dcd69d"} src="https://umami-one-tan.vercel.app/umami.js"></script>}
+          {process.env.NODE_ENV === "development" ? null : (
+            <script
+              async
+              defer
+              data-website-id={
+                siteData
+                  ? siteData.umami_website_id
+                  : "94eeb490-1526-4b23-be1c-c0b3d2dcd69d"
+              }
+              src="https://umami-one-tan.vercel.app/umami.js"
+            ></script>
+          )}
         </head>
         <body>
           <Providers>
@@ -77,7 +88,7 @@ const Document = withEmotionCache(
           <ScrollRestoration />
           <script
             dangerouslySetInnerHTML={{
-              __html: `window.env = ${JSON.stringify(env)}`
+              __html: `window.env = ${JSON.stringify(env)}`,
             }}
           />
           <Scripts />

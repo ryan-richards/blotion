@@ -3,6 +3,7 @@
 Turn a Notion database into a blog.
 
 How it works
+
 1. Copy the template into your own Notion Workspace and edit as desired.
 2. Go back to blotion.com and Login with Notion. This installs an integration on your Notion workspace that allows blotion to access only the pages you allow.
 3. blotion generates a new site for you.
@@ -17,6 +18,7 @@ You can try blotion out here https://www.blotion.com
 Blotion was created by Ryan Richards - @ryan_blotion on Twitter
 
 Supabase Features used:
+
 - Auth
 - Storing user data and generated site data
 - Database Webhooks
