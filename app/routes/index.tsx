@@ -141,7 +141,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
       {
         headers: {
-          "Cache-Control": "s-maxage=240, stale-while-revalidate=3600",
+          "Cache-Control": "s-maxage=600, stale-while-revalidate=7200",
         },
       }
     );
@@ -180,7 +180,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     { data, html, pageObject, pageLinks, previewMode },
     {
       headers: {
-        "Cache-Control": "s-maxage=240, stale-while-revalidate=3600",
+        "Cache-Control": "s-maxage=600, stale-while-revalidate=7200",
       },
     }
   );
