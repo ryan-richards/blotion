@@ -42,6 +42,7 @@
     "remix-auth": "^3.2.2",
     "remix-auth-supabase": "^4.0.0",
     "remix-utils": "^3.3.0",
+    "resend": "^1.0.0",
     "stripe": "^10.2.0",
     "timeago-react": "^3.0.5",
     "tiny-invariant": "^1.2.0"
