@@ -45,15 +45,9 @@ import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  /* const session = await oAuthStrategy.checkSession(request, {
+  const session = await oAuthStrategy.checkSession(request, {
     failureRedirect: "/",
-  }); */
-
-  const session = {
-    user: {
-      id: "601fdd46-79e3-4797-98c8-a875b85edcbd"
-    }
-  }
+  });
 
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
