@@ -26,6 +26,7 @@ import {
   Form,
   Link as RemixLink,
   useActionData,
+  useFetcher,
   useLoaderData,
   useNavigate,
   useTransition,
@@ -36,6 +37,7 @@ import {
   FiPlus,
   FiRefreshCw,
 } from "react-icons/fi";
+import { HttpMethod } from "~/lib/@types/http";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
@@ -43,113 +45,35 @@ import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await oAuthStrategy.checkSession(request, {
+  /* const session = await oAuthStrategy.checkSession(request, {
     failureRedirect: "/",
-  });
+  }); */
+
+  const session = {
+    user: {
+      id: "601fdd46-79e3-4797-98c8-a875b85edcbd"
+    }
+  }
 
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
   const pageConnected = url.searchParams.get("pageConnected");
   const prompt = url.searchParams.get("prompt");
 
-  if (token) {
-    const { data, error } = await supabaseAdmin
-      .from("users")
-      .update({ notion_token: token })
-      .eq("id", session.user?.id);
-
-    if (data) {
-      return redirect(`/account?pageConnected=true`);
-    }
-
-    if (error) {
-      return json({
-        status: "error",
-        message: error.message,
-      });
-    }
-  }
-
-  if (pageConnected) {
-    const { data: userData } = await supabaseAdmin
-      .from("users")
-      .select("*, sites(*)")
-      .eq("id", session.user?.id)
-      .single();
-
-    const decrypted = await decryptAPIKey(userData.notion_token.toString());
-
-    const { Client } = require("@notionhq/client");
-
-    let pages;
-
-    if (decrypted) {
-      const notion = new Client({ auth: decrypted.toString() });
-
-      pages = await notion.search({
-        sort: {
-          direction: "descending",
-          timestamp: "last_edited_time",
+  if (token || pageConnected) {
+    const url =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://www.blotion.com";
+    try {
+      await fetch(`${url}/api/generate-site`, {
+        method: HttpMethod.POST,
+        headers: {
+          "Content-Type": "application/json",
         },
       });
-
-      //should fix first sign in but no conncected pages
-      if (pages.results.length < 1) {
-        return redirect(`/account`);
-      }
-
-      //put all pages.results id's into an array where page.parent.type is workspace
-      const workspaces = pages.results.filter(
-        (page: any) => page.parent.type === "workspace"
-      );
-
-      // extract the id's from the workspaces array
-      const workspaceIds = workspaces.map((workspace: any) => workspace.id);
-      //extract all index_page from the userData.sites array
-      const indexPages = userData.sites.map((site: any) => site.index_page);
-      // check if workspaces array is the same as the indexPages array
-      let result = workspaceIds.every(function (element: any) {
-        return indexPages.includes(element);
-      });
-      //get all workspaces that are not in the indexPages array
-      const newWorkspaces = workspaces.filter(
-        (workspace: any) => !indexPages.includes(workspace.id)
-      );
-
-      if (result) {
-        // if they are the same then redirect to the account page you dont need to add more connected pages
-        return redirect(`/account`);
-      }
-
-      var randomWord = require("random-words");
-
-      newWorkspaces.map(async (page: any) => {
-        if (page.parent.type === "workspace") {
-          //check if name is valid before saving to database
-          let nameValid;
-          let name = tidyName(page.properties.title.title[0].plain_text);
-
-          while (!nameValid) {
-            nameValid = await subdomainCheck(name);
-
-            if (!nameValid) {
-              let word = randomWord();
-              name = [name, word].join("-");
-            }
-          }
-
-          await supabaseAdmin
-            .from("connected_pages")
-            .insert({
-              user: session.user?.id,
-              page_id: page.id,
-              page_name: name,
-              page_cover: page.cover.external.url,
-            });
-        }
-      });
-
-      return redirect(`/account?prompt=true`);
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -277,7 +201,30 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Account() {
-  const { userData, pages, prompt } = useLoaderData();
+  const { userData } = useLoaderData();
+  const [data, setData] = useState(userData);
+
+  useEffect(() => setData(userData), [userData]);
+
+  const fetcher = useFetcher();
+  const intervalTimer = userData?.sites ? 30 : 5;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        console.log("fetching fresh data");
+        fetcher.load("/account");
+      }
+    }, 30 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (fetcher.data) {
+      setData(fetcher.data);
+    }
+  }, [fetcher.data]);
 
   const actionData = useActionData();
   const transition = useTransition();
@@ -302,12 +249,6 @@ export default function Account() {
   const redirectURL = canManagePlan
     ? "/api/create-customer-portal-session"
     : "/pricing";
-
-  useEffect(() => {
-    if (prompt) {
-      nav(`/account`);
-    }
-  }, [prompt]);
 
   return (
     <>
