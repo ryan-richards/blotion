@@ -39,33 +39,19 @@ import {
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
+import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
 import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
-//function regex to remove special characters and convert to lowercase
-function tidyName(str: string) {
-  return str.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-}
-
-async function subdomainCheck(str: string) {
-  let nameFree;
-
-  const { data, error } = await supabaseAdmin
-    .from("sites")
-    .select("*")
-    .match({ site_name: str })
-    .single();
-
-  if (data) {
-    return (nameFree = false);
-  } else if (!data) {
-    return (nameFree = true);
-  }
-}
-
 export const loader: LoaderFunction = async ({ request }) => {
-  const session = await oAuthStrategy.checkSession(request, {
+  /* const session = await oAuthStrategy.checkSession(request, {
     failureRedirect: "/",
-  });
+  }); */
+
+  const session = {
+    user: {
+      id: "8497d3fd-a1c9-415d-977d-88ae1c4d5ca2",
+    }
+  }
 
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
@@ -122,7 +108,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       const workspaces = pages.results.filter(
         (page: any) => page.parent.type === "workspace"
       );
-  
+
       // extract the id's from the workspaces array
       const workspaceIds = workspaces.map((workspace: any) => workspace.id);
       //extract all index_page from the userData.sites array

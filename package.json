@@ -7,7 +7,7 @@
   "sideEffects": false,
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev",
+    "dev": "concurrently 'remix dev' 'quirrel'",
     "postinstall": "remix setup node",
     "start": "remix-serve build"
   },
@@ -32,6 +32,7 @@
     "marked": "^4.0.18",
     "notion-to-md": "^2.5.5",
     "postmark": "^3.0.14",
+    "quirrel": "^1.14.1",
     "random-words": "^1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.1.0",

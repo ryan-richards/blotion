@@ -35,21 +35,17 @@ export const meta: MetaFunction = ({ data }) => {
     };
 
   return {
-    title: `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } - Blotion`,
-    description: `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    title: `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } - Blotion`,
+    description: `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
     author: `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
     "og:type": "website",
     "og:url": `https://${data.data.site_name}.blotion.com`,
-    "og:title": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    }`,
-    "og:description": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    "og:title": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      }`,
+    "og:description": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
     "og:image": `${data.data.cover}`,
     "twitter:image": `${data.data.cover}`,
     "twitter:card": "summary_large_image",
@@ -58,9 +54,8 @@ export const meta: MetaFunction = ({ data }) => {
     "twitter:title": data.data.siteName
       ? data.data.siteName
       : data.data.site_name,
-    "twitter:description": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    "twitter:description": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
   };
 };
 
@@ -118,14 +113,11 @@ export const loader: LoaderFunction = async ({ request }) => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
         : "https://blotion.com";
-    const site = process.env.SERVERLESSQ_URL;
     try {
-      await fetch(`${site}${url}/api/refresh-blog?site=${data.site_name}`, {
+      await fetch(`${url}/api/buster?site=${data.site_name}`, {
         method: HttpMethod.POST,
         headers: {
-          Authorization: `Bearer ${process.env.AUTH_BEARER_TOKEN}`,
           "Content-Type": "application/json",
-          "x-api-key": `${process.env.SERVERLESSQ_API_KEY}`,
         },
       });
     } catch (error) {
