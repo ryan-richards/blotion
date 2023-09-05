@@ -1,18 +1,14 @@
 import { Stack, Heading, Flex, Box } from "@chakra-ui/react";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { json, LoaderFunction, MetaFunction, redirect } from "@remix-run/node";
-import { Link as RemixLink, useLoaderData } from "@remix-run/react";
-import { marked } from "marked";
-import { getNotionPagebyID } from "~/lib/notion/notion-api";
-import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
+import { useLoaderData } from "@remix-run/react";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
-import getPageLinks from "~/lib/notion/load-pageLinks";
 import checkIndex from "~/lib/notion/check-index";
 import LandingPage from "~/lib/components/landingPage";
 import BlogCard from "~/lib/components/blogCard";
 import BlogTextLink from "~/lib/components/blogTextLink";
 import { HttpMethod } from "~/lib/@types/http";
+import { generateBlog } from "~/lib/notion/gen-blog";
 
 export const meta: MetaFunction = ({ data }) => {
   if (!data.data)
@@ -67,30 +63,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     session
   );
 
-  if (!data) {
-    return json(
-      { status: "home" },
-      {
-        headers: {
-          "Cache-Control": "s-maxage=86400, stale-while-revalidate=172800",
-        },
-      }
-    );
-  }
+  const cacheControlHeaders = {
+    "Cache-Control": "s-maxage=86400, stale-while-revalidate=172800",
+  };
 
-  if (status === "home") {
-    return json(
-      { status: "home" },
-      {
-        headers: {
-          "Cache-Control": "s-maxage=86400, stale-while-revalidate=172800",
-        },
-      }
-    );
+  if (!data || status === "home") {
+    return json({ status: "home" }, { headers: cacheControlHeaders });
   }
 
   if (data.published === false && !preview) {
-    //console.log('site not published')
     return redirect(
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
@@ -112,7 +93,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     const url =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "https://blotion.com";
+        : "https://www.blotion.com";
     try {
       await fetch(`${url}/api/buster?site=${data.site_name}`, {
         method: HttpMethod.POST,
@@ -133,46 +114,19 @@ export const loader: LoaderFunction = async ({ request }) => {
       },
       {
         headers: {
-          "Cache-Control": "s-maxage=600, stale-while-revalidate=7200",
+          "Cache-Control": "s-maxage=1200, stale-while-revalidate=7200",
         },
       }
     );
   }
 
-  //This should only happen on the first load of the site
-  const decryptedToken = await decryptAPIKey(
-    data.users.notion_token.toString()
-  );
-  const content = await getNotionPagebyID(data.index_page, decryptedToken);
-  const html = marked(content.markdown);
-  const pageObject = content.pageObject;
-  const pageLinks = await getPageLinks(pageObject, decryptedToken);
-
-  if (!data.db_page && pageObject?.posts) {
-    await supabaseAdmin
-      .from("sites")
-      .update({ db_page: pageObject?.posts })
-      .match({ site_name: subdomain });
-  }
-
-  if (!data.home_html && html) {
-    await supabaseAdmin
-      .from("sites")
-      .update({
-        home_html: html,
-        page_links: pageLinks,
-        page_object: pageObject,
-      })
-      .match({ site_name: subdomain });
-  }
-
-  const previewMode = preview ? true : false;
+  const { html, pageObject, pageLinks } = await generateBlog(data, subdomain);
 
   return json(
-    { data, html, pageObject, pageLinks, previewMode },
+    { data, html, pageObject, pageLinks, preview },
     {
       headers: {
-        "Cache-Control": "s-maxage=600, stale-while-revalidate=7200",
+        "Cache-Control": "s-maxage=1200, stale-while-revalidate=7200",
       },
     }
   );
