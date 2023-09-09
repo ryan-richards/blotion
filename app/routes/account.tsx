@@ -31,7 +31,7 @@ import {
   useNavigate,
   useTransition,
 } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FiCopy,
   FiPlus,
@@ -41,8 +41,6 @@ import { HttpMethod } from "~/lib/@types/http";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request, {
@@ -199,26 +197,36 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Account() {
   const { userData } = useLoaderData();
-  const [data, setData] = useState(userData);
+  const [sites, setSites] = useState(userData?.sites);
 
-  useEffect(() => setData(userData), [userData]);
+  useEffect(() => setSites(userData?.sites), [userData]);
 
   const fetcher = useFetcher();
-  const intervalTimer = userData?.sites ? 30 : 5;
+  const prevSitesLengthRef = useRef(userData.sites.length);
+  const [refreshCount, setRefreshCount] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (document.visibilityState === "visible") {
+      if (document.visibilityState === "visible" && refreshCount < 5) {
         fetcher.load("/account");
+
+        if (userData.sites.length !== prevSitesLengthRef.current) {
+          clearInterval(interval);
+          prevSitesLengthRef.current = userData.sites.length;
+        } else {
+          setRefreshCount(prevCount => prevCount + 1);
+        }
+      } else {
+        clearInterval(interval);
       }
-    }, intervalTimer * 1000);
+    }, 5 * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [refreshCount]);
 
   useEffect(() => {
     if (fetcher.data) {
-      setData(fetcher.data);
+      setSites(fetcher.data.userData.sites);
     }
   }, [fetcher.data]);
 
@@ -412,7 +420,7 @@ export default function Account() {
             </Text>
           </Flex>
           <Wrap mt={5} justify={"space-between"}>
-            {userData.sites.map((page: any) => (
+            {sites?.length > 0 && sites?.map((page: any) => (
               <WrapItem key={page.id} maxWidth={{ base: "full", md: "49%" }}>
                 <Box
                   position={"relative"}
