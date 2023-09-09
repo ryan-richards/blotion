@@ -276,12 +276,12 @@ export default function Account() {
             >
               <Flex gap={3}>
                 <Avatar
-                  name={userData.name ? userData.name : userData.email}
-                  src={userData.avatar_url}
+                  name={userData?.name ? userData?.name : userData?.email}
+                  src={userData?.avatar_url}
                 ></Avatar>
                 <Flex direction={"column"}>
                   <Flex gap={2} align={"center"}>
-                    <Text>{userData.name}</Text>
+                    <Text>{userData?.name}</Text>
                     <Badge
                       minW={"50px"}
                       maxWidth={"70px"}
@@ -294,7 +294,7 @@ export default function Account() {
                       {userData?.plan}
                     </Badge>
                   </Flex>
-                  <Text>{userData.email}</Text>
+                  <Text>{userData?.email}</Text>
                 </Flex>
               </Flex>
               <Flex
