@@ -41,6 +41,8 @@ import { HttpMethod } from "~/lib/@types/http";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
+import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
+import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request, {
@@ -96,7 +98,7 @@ export const action: ActionFunction = async ({ request }) => {
   const action = formData.get("action");
   const page = formData.get("page");
 
-  // Get user data
+  // Get user data - revert back to working
   const { data: userData } = await supabaseAdmin
     .from("users")
     .select("plan")
@@ -104,7 +106,7 @@ export const action: ActionFunction = async ({ request }) => {
     .single();
 
   //if user is on free plan, they can only have one published page
-  if (userData?.plan === "free" || userData?.plan === "creative") {
+  if (userData.plan === "free" || userData.plan === "creative") {
     const { data: pages } = await supabaseAdmin
       .from("sites")
       .select("published", { count: "exact" })
@@ -196,19 +198,20 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Account() {
-  const { data } = useLoaderData();
-  const [userData, setData] = useState(data);
+  const { userData } = useLoaderData();
+  const [data, setData] = useState(userData);
 
-  useEffect(() => setData(data), [data]);
+  useEffect(() => setData(userData), [userData]);
 
   const fetcher = useFetcher();
+  const intervalTimer = userData?.sites ? 30 : 5;
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetcher.load("/account");
       }
-    }, 5 * 1000);
+    }, intervalTimer * 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -225,8 +228,8 @@ export default function Account() {
   const [hover, setHover] = useState("");
 
   const pagePublishLimit =
-    userData?.plan === "free" || userData?.plan === "creative" ? 1 : 10;
-  const pagesPublished = userData?.sites.filter(
+    userData.plan === "free" || userData.plan === "creative" ? 1 : 10;
+  const pagesPublished = userData.sites.filter(
     (page: { published: any }) => page.published
   ).length;
 
@@ -236,8 +239,8 @@ export default function Account() {
       : actionData.decrypted
     : "";
   const isSubmitting = transition.state === "submitting";
-  const canManagePlan = userData?.plan === "creative" || userData?.plan === "pro";
-  const canPurchase = userData?.plan === "free";
+  const canManagePlan = userData.plan === "creative" || userData.plan === "pro";
+  const canPurchase = userData.plan === "free";
 
   const redirectURL = canManagePlan
     ? "/api/create-customer-portal-session"
@@ -276,12 +279,12 @@ export default function Account() {
             >
               <Flex gap={3}>
                 <Avatar
-                  name={userData?.name ? userData?.name : userData?.email}
-                  src={userData?.avatar_url}
+                  name={userData.name ? userData.name : userData.email}
+                  src={userData.avatar_url}
                 ></Avatar>
                 <Flex direction={"column"}>
                   <Flex gap={2} align={"center"}>
-                    <Text>{userData?.name}</Text>
+                    <Text>{userData.name}</Text>
                     <Badge
                       minW={"50px"}
                       maxWidth={"70px"}
@@ -291,10 +294,10 @@ export default function Account() {
                       textAlign={"center"}
                       width={"50%"}
                     >
-                      {userData?.plan}
+                      {userData.plan}
                     </Badge>
                   </Flex>
-                  <Text>{userData?.email}</Text>
+                  <Text>{userData.email}</Text>
                 </Flex>
               </Flex>
               <Flex
@@ -380,7 +383,7 @@ export default function Account() {
           <Flex
             justify={"center"}
             mt={4}
-            display={userData && userData?.sites.length < 1 ? "flex" : "none"}
+            display={userData && userData.sites.length < 1 ? "flex" : "none"}
             direction={"column"}
             gap={2}
             align={"center"}
@@ -409,7 +412,7 @@ export default function Account() {
             </Text>
           </Flex>
           <Wrap mt={5} justify={"space-between"}>
-            {userData?.sites.map((page: any) => (
+            {userData.sites.map((page: any) => (
               <WrapItem key={page.id} maxWidth={{ base: "full", md: "49%" }}>
                 <Box
                   position={"relative"}
@@ -457,7 +460,7 @@ export default function Account() {
                         size={"sm"}
                         colorScheme={"purple"}
                         onClick={() => nav(`/metrics/${page.id}`)}
-                        isDisabled={userData?.plan === "free"}
+                        isDisabled={userData.plan === "free"}
                       >
                         Metrics
                       </Button>
