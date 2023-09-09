@@ -104,7 +104,7 @@ export const action: ActionFunction = async ({ request }) => {
     .single();
 
   //if user is on free plan, they can only have one published page
-  if (userData.plan === "free" || userData.plan === "creative") {
+  if (userData?.plan === "free" || userData?.plan === "creative") {
     const { data: pages } = await supabaseAdmin
       .from("sites")
       .select("published", { count: "exact" })
@@ -225,7 +225,7 @@ export default function Account() {
   const [hover, setHover] = useState("");
 
   const pagePublishLimit =
-    userData.plan === "free" || userData.plan === "creative" ? 1 : 10;
+    userData?.plan === "free" || userData?.plan === "creative" ? 1 : 10;
   const pagesPublished = userData.sites.filter(
     (page: { published: any }) => page.published
   ).length;
@@ -236,8 +236,8 @@ export default function Account() {
       : actionData.decrypted
     : "";
   const isSubmitting = transition.state === "submitting";
-  const canManagePlan = userData.plan === "creative" || userData.plan === "pro";
-  const canPurchase = userData.plan === "free";
+  const canManagePlan = userData?.plan === "creative" || userData?.plan === "pro";
+  const canPurchase = userData?.plan === "free";
 
   const redirectURL = canManagePlan
     ? "/api/create-customer-portal-session"
@@ -291,7 +291,7 @@ export default function Account() {
                       textAlign={"center"}
                       width={"50%"}
                     >
-                      {userData.plan}
+                      {userData?.plan}
                     </Badge>
                   </Flex>
                   <Text>{userData.email}</Text>
@@ -457,7 +457,7 @@ export default function Account() {
                         size={"sm"}
                         colorScheme={"purple"}
                         onClick={() => nav(`/metrics/${page.id}`)}
-                        isDisabled={userData.plan === "free"}
+                        isDisabled={userData?.plan === "free"}
                       >
                         Metrics
                       </Button>
