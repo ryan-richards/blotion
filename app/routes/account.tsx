@@ -196,10 +196,10 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Account() {
-  const { userData } = useLoaderData();
-  const [data, setData] = useState(userData);
+  const { data } = useLoaderData();
+  const [userData, setData] = useState(data);
 
-  useEffect(() => setData(userData), [userData]);
+  useEffect(() => setData(data), [data]);
 
   const fetcher = useFetcher();
 
