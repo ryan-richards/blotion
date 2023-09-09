@@ -55,12 +55,15 @@ export const loader: LoaderFunction = async ({ request }) => {
   const prompt = url.searchParams.get("prompt");
 
   if (token || pageConnected) {
+
+    const queryString = `userId=${session?.user?.id}&token=${token}&pageConnected=${pageConnected}`
+
     const url =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
         : "https://www.blotion.com";
     try {
-      await fetch(`${url}/api/generate-site`, {
+      await fetch(`${url}/api/generate-site?${queryString}`, {
         method: HttpMethod.POST,
         headers: {
           "Content-Type": "application/json",
@@ -206,10 +209,9 @@ export default function Account() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
-        console.log("fetching fresh data");
         fetcher.load("/account");
       }
-    }, 30 * 1000);
+    }, intervalTimer * 1000);
 
     return () => clearInterval(interval);
   }, []);

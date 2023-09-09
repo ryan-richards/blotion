@@ -5,16 +5,19 @@ import { subdomainCheck, tidyName } from "../utils/domainFunctions";
 
 export default Queue("queues/generate-site", async (url: any) => {
   const token = url.searchParams.get("token");
+  const pageConnected = url.searchParams.get("pageConnected");
   const userId = url.searchParams.get("userId");
 
-  if (token) {
+  if (token !== "null" || pageConnected) {
     //store the token in the database
-    const { data, error } = await supabaseAdmin
-      .from("users")
-      .update({ notion_token: token })
-      .eq("id", userId);
+    if (token !== "null") {
+      const { data, error } = await supabaseAdmin
+        .from("users")
+        .update({ notion_token: token })
+        .eq("id", userId);
+    }
 
-    if (data) {
+    if (token || pageConnected) {
       const { data: userData } = await supabaseAdmin
         .from("users")
         .select("*, sites(*)")
@@ -93,10 +96,6 @@ export default Queue("queues/generate-site", async (url: any) => {
 
         return console.log("pages added");
       }
-    }
-
-    if (error) {
-      return console.log(error);
     }
   }
 
