@@ -60,7 +60,7 @@ const HomeFooter = () => {
             <HStack>
               <IconButton
                 as={Link}
-                href={"https://twitter.com/ryan_blotion"}
+                href={"https://twitter.com/blotion_"}
                 isExternal
                 aria-label={"Twitter Icon"}
                 variant={"link"}
