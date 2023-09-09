@@ -98,7 +98,7 @@ export const action: ActionFunction = async ({ request }) => {
   const action = formData.get("action");
   const page = formData.get("page");
 
-  // Get user data
+  // Get user data - revert back to working
   const { data: userData } = await supabaseAdmin
     .from("users")
     .select("plan")
