@@ -226,7 +226,7 @@ export default function Account() {
 
   const pagePublishLimit =
     userData?.plan === "free" || userData?.plan === "creative" ? 1 : 10;
-  const pagesPublished = userData.sites.filter(
+  const pagesPublished = userData?.sites.filter(
     (page: { published: any }) => page.published
   ).length;
 
@@ -380,7 +380,7 @@ export default function Account() {
           <Flex
             justify={"center"}
             mt={4}
-            display={userData && userData.sites.length < 1 ? "flex" : "none"}
+            display={userData && userData?.sites.length < 1 ? "flex" : "none"}
             direction={"column"}
             gap={2}
             align={"center"}
@@ -409,7 +409,7 @@ export default function Account() {
             </Text>
           </Flex>
           <Wrap mt={5} justify={"space-between"}>
-            {userData.sites.map((page: any) => (
+            {userData?.sites.map((page: any) => (
               <WrapItem key={page.id} maxWidth={{ base: "full", md: "49%" }}>
                 <Box
                   position={"relative"}
