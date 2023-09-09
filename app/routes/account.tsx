@@ -31,7 +31,7 @@ import {
   useNavigate,
   useTransition,
 } from "@remix-run/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FiCopy,
   FiPlus,
@@ -203,17 +203,10 @@ export default function Account() {
 
   const fetcher = useFetcher();
 
-  const prevSitesLengthRef = useRef(userData?.sites?.length);
-
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetcher.load("/account");
-
-        if (userData?.sites?.length !== prevSitesLengthRef.current) {
-          clearInterval(interval);
-          prevSitesLengthRef.current = userData.sites.length;
-        }
       }
     }, 5 * 1000);
 
