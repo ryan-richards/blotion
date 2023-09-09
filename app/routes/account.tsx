@@ -41,8 +41,6 @@ import { HttpMethod } from "~/lib/@types/http";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { subdomainCheck, tidyName } from "~/lib/utils/domainFunctions";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request, {
@@ -204,14 +202,13 @@ export default function Account() {
   useEffect(() => setData(userData), [userData]);
 
   const fetcher = useFetcher();
-  const intervalTimer = userData?.sites ? 30 : 5;
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (document.visibilityState === "visible") {
         fetcher.load("/account");
       }
-    }, intervalTimer * 1000);
+    }, 5 * 1000);
 
     return () => clearInterval(interval);
   }, []);
