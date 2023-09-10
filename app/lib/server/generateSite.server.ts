@@ -71,11 +71,13 @@ export default Queue("queues/generate-site", async (url: any) => {
 
         var randomWord = require("random-words");
 
+        let name;
+
         newWorkspaces.map(async (page: any) => {
           if (page.parent.type === "workspace") {
             //check if name is valid before saving to database
             let nameValid;
-            let name = tidyName(page.properties.title.title[0].plain_text);
+            name = tidyName(page.properties.title.title[0].plain_text);
 
             while (!nameValid) {
               nameValid = await subdomainCheck(name);
