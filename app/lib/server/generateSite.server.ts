@@ -2,6 +2,7 @@ import { Queue } from "quirrel/remix";
 import { supabaseAdmin } from "../storage/supabase.server";
 import { decryptAPIKey } from "../utils/encrypt-api-key";
 import { subdomainCheck, tidyName } from "../utils/domainFunctions";
+import { HttpMethod } from "../@types/http";
 
 export default Queue("queues/generate-site", async (url: any) => {
   const token = url.searchParams.get("token");
@@ -93,6 +94,23 @@ export default Queue("queues/generate-site", async (url: any) => {
             });
           }
         });
+
+        const queryString = `userId=${userId}&subdomain=${name}`;
+
+        const url =
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:3000"
+            : "https://www.blotion.com";
+        try {
+          await fetch(`${url}/api/build-blog?${queryString}`, {
+            method: HttpMethod.POST,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+        } catch (error) {
+          console.error(error);
+        }
 
         return console.log("pages added");
       }
