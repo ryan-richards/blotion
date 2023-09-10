@@ -3,16 +3,12 @@ import { marked } from "marked";
 import getPageLinks from "~/lib/notion/load-pageLinks";
 import { getNotionPagebyID } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
-const buildBlog = async (data: any, subdomain: any) => {
-  const decryptedToken = await decryptAPIKey(
-    data.users.notion_token.toString()
-  );
-  const content = await getNotionPagebyID(data.index_page, decryptedToken);
+const buildBlog = async (data: any, subdomain: any, token: any) => {
+  const content = await getNotionPagebyID(data.index_page, token);
   const html = marked(content.markdown);
   const pageObject = content.pageObject;
-  const pageLinks = await getPageLinks(pageObject, decryptedToken);
+  const pageLinks = await getPageLinks(pageObject, token);
 
   if (!data.db_page && pageObject?.posts) {
     await supabaseAdmin
@@ -37,6 +33,7 @@ const buildBlog = async (data: any, subdomain: any) => {
 
 export default Queue("queues/build-blog", async (url: any) => {
   const subdomain = url.searchParams.get("subdomain");
+  const token = url.searchParams.get("token");
 
   const { data, error } = await supabaseAdmin
     .from("sites")
@@ -44,7 +41,7 @@ export default Queue("queues/build-blog", async (url: any) => {
     .or(`site_name.eq.${subdomain}`)
     .single();
 
-  if (!data) {
-    await buildBlog(data, subdomain);
+  if (!data.home_html) {
+    await buildBlog(data, subdomain, token);
   }
 });

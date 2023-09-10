@@ -97,7 +97,7 @@ export default Queue("queues/generate-site", async (url: any) => {
           }
         });
 
-        const queryString = `userId=${userId}&subdomain=${name}`;
+        const queryString = `userId=${userId}&subdomain=${name}&token=${decrypted.toString()}`;
 
         const url =
           process.env.NODE_ENV === "development"
