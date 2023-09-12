@@ -73,14 +73,10 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   if (!content) throw new Error("Missing pageID");
 
-  //console.log(content)
-
   const html = marked(content.markdown);
   const post = content.post;
 
   const postDate = post.date
-  console.log(post.date)
-
   //is post date longer than 1 day ago?
   const isOlderThanOneDay = (postDate: any) => {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds

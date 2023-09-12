@@ -79,7 +79,7 @@ export default function LandingPage() {
     {
       id: 1,
       title: "Free Account",
-      info: "Get started with a free account and upgrade to Creative or Pro at any time to unlock more features. Like Custom Domains, Dark Mode, and more.",
+      info: "Get started with a free account and upgrade to Creative or Pro at any time to publish your site and access features. Like Custom Domains, Dark Mode, and more.",
       image: feature5,
     },
     {
@@ -187,7 +187,7 @@ export default function LandingPage() {
                 textAlign={"center"}
                 size={"md"}
               >
-                Use a Notion template to generate a free hosted blog. Blotion
+                Use a Notion template to generate a hosted blog. Blotion
                 allows you to edit and publish blog posts from the comfort of
                 your Notion workspace.
               </Heading>
@@ -283,7 +283,7 @@ export default function LandingPage() {
                 >
                   <IconButton
                     size={"lg"}
-                    colorScheme={activeImage.id === 1 ? "green" : "gray"}
+                    colorScheme={activeImage.id === 1 ? "blue" : "gray"}
                     rounded={"full"}
                     isActive={activeImage.id === 1}
                     variant={"outline"}
@@ -295,7 +295,7 @@ export default function LandingPage() {
                 <Tooltip label={"Edit the template"} hasArrow placement="top">
                   <IconButton
                     size={"lg"}
-                    colorScheme={activeImage.id === 2 ? "green" : "gray"}
+                    colorScheme={activeImage.id === 2 ? "blue" : "gray"}
                     isActive={activeImage.id === 2}
                     rounded={"full"}
                     variant={"outline"}
@@ -307,7 +307,7 @@ export default function LandingPage() {
                 <Tooltip label={"Login with Notion"} hasArrow placement="top">
                   <IconButton
                     size={"lg"}
-                    colorScheme={activeImage.id === 3 ? "green" : "gray"}
+                    colorScheme={activeImage.id === 3 ? "blue" : "gray"}
                     rounded={"full"}
                     variant={"outline"}
                     isActive={activeImage.id === 3}
@@ -320,7 +320,7 @@ export default function LandingPage() {
                   <IconButton
                     id={"site_live"}
                     size={"lg"}
-                    colorScheme={activeImage.id === 4 ? "green" : "gray"}
+                    colorScheme={activeImage.id === 4 ? "blue" : "gray"}
                     rounded={"full"}
                     variant={"outline"}
                     isActive={activeImage.id === 4}
@@ -508,7 +508,6 @@ export default function LandingPage() {
                   </Highlight>
                 </Feature>
                 <Feature>Custom Blog Logo (Coming Soon)</Feature>
-                <Feature>Newsletter Integration (Coming Soon)</Feature>
               </Grid>
               <Flex
                 as={motion.div}
@@ -535,7 +534,7 @@ export default function LandingPage() {
               mt={20}
               width={"full"}
               mb={40}
-              bg={"gray.50"}
+              border={"1px gray solid"}
               p={10}
               rounded={"2xl"}
             >
@@ -551,7 +550,7 @@ export default function LandingPage() {
                 size={"lg"}
                 minW={200}
                 as={Link}
-                colorScheme={"gray"}
+                colorScheme={"blue"}
                 variant={"outline"}
                 style={{ textDecoration: "none" }}
                 href={

@@ -197,92 +197,7 @@ export default function Pricing() {
         </Box>
 
         <Box py="20">
-          <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: 16, md: 8 }}>
-            <Box
-              rounded={{ base: "none", md: "lg" }}
-              shadow={"shadow"}
-              bg="white"
-              _dark={{
-                bg: "gray.800",
-              }}
-            >
-              <Flex
-                direction="column"
-                justify="space-between"
-                p="6"
-                borderBottomWidth="1px"
-                color="gray.200"
-                _dark={{
-                  color: "gray.600",
-                }}
-              >
-                <chakra.p
-                  mb={1}
-                  fontSize="lg"
-                  fontWeight="semibold"
-                  color="gray.700"
-                  _dark={{
-                    color: "gray.400",
-                  }}
-                >
-                  Free
-                </chakra.p>
-                <Text
-                  mb={2}
-                  fontSize="5xl"
-                  fontWeight={{ base: "bold", md: "extrabold" }}
-                  color="gray.900"
-                  _dark={{
-                    color: "gray.50",
-                  }}
-                  lineHeight="tight"
-                >
-                  £{frequency === "month" ? 0 : 0}
-                  <chakra.span
-                    fontSize="2xl"
-                    fontWeight="medium"
-                    color="gray.600"
-                    _dark={{
-                      color: "gray.400",
-                    }}
-                  >
-                    {" "}
-                    /{frequency}
-                  </chakra.span>
-                </Text>
-
-                <Button
-                  w={{ base: "full", md: "full" }}
-                  display="inline-flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  border="solid transparent"
-                  fontWeight="bold"
-                  rounded="md"
-                  shadow="shadow"
-                  _light={{
-                    color: "gray.800",
-                  }}
-                  bg="gray.100"
-                  _dark={{
-                    bg: "gray.500",
-                  }}
-                  _hover={{
-                    bg: "gray.200",
-                    _dark: {
-                      bg: "gray.100",
-                    },
-                  }}
-                  onClick={() => nav("/login")}
-                >
-                  Get Started
-                </Button>
-              </Flex>
-              <Stack direction="column" p="6" spacing="3" flexGrow="1">
-                <Feature>1 Published Blog</Feature>
-                <Feature>Custom .blotion.com subdomain</Feature>
-              </Stack>
-            </Box>
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 16, md: 8 }}>
             <Box
               rounded={{ base: "none", md: "lg" }}
               shadow={"shadow"}
@@ -377,7 +292,6 @@ export default function Pricing() {
                 <Feature>1 Published Blog</Feature>
                 <Feature>Add a Custom Domain</Feature>
                 <Feature>Dark / Light Toggle</Feature>
-                <Feature>Newsletter Integration</Feature>
                 <Feature>Custom Logo (Coming Soon)</Feature>
               </Stack>
             </Box>
@@ -473,7 +387,6 @@ export default function Pricing() {
                 <Feature>Dark / Light Toggle</Feature>
                 <Feature>Remove Blotion Branding</Feature>
                 <Feature>Site Metrics</Feature>
-                <Feature>Newsletter Integration</Feature>
                 <Feature>Custom Logo (Coming Soon)</Feature>
               </Stack>
             </Box>
