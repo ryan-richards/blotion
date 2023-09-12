@@ -215,7 +215,7 @@ export default function Account() {
           onOpen();
         }
       }
-    }, 2 * 1000);
+    }, 8 * 1000);
 
     return () => clearTimeout(interval);
   }, []);
