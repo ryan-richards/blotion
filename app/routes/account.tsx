@@ -489,7 +489,7 @@ export default function Account() {
                         ></Input>
                         <Tooltip
                           display={
-                            page.published || pagesPublished < pagePublishLimit
+                            page.published || (pagesPublished < pagePublishLimit || userData.plan === "free")
                               ? "none"
                               : "flex"
                           }
@@ -506,7 +506,7 @@ export default function Account() {
                             isLoading={isSubmitting}
                             isDisabled={
                               page.published == false &&
-                              pagesPublished >= pagePublishLimit
+                              pagesPublished >= pagePublishLimit || userData.plan === "free"
                             }
                             value={page.published ? "unpub" : "pub"}
                             colorScheme={page.published ? "orange" : "green"}
