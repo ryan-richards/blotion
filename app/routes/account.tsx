@@ -333,7 +333,7 @@ export default function Account() {
                     variant={"outline"}
                     type={"submit"}
                   >
-                    {!canManagePlan ? "Manage Plan" : "Upgrade"}
+                    {canManagePlan ? "Manage Plan" : "Upgrade"}
                   </Button>
                 </Form>
                 <Form method={"post"} action={"/auth/logout"}>
