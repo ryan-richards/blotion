@@ -28,7 +28,6 @@ import { marked } from "marked";
 import TimeAgo from "timeago-react";
 import { getSingleBlogPost } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const host = new URL(request.url);
@@ -61,7 +60,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const { data, error } = await supabaseAdmin
     .from("sites")
-    .select("*, users(notion_token,name,avatar_url)")
+    .select("*, users(secret_token,name,avatar_url)")
     .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .eq("published", true)
     .single();
@@ -70,20 +69,17 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return redirect("/");
   }
 
-  const decryptedToken = await decryptAPIKey(
-    data.users.notion_token.toString()
-  );
-  const content = await getSingleBlogPost(data.db_page, decryptedToken, slug);
+  const content = await getSingleBlogPost(data.db_page, data.users.secret_token.toString(), slug);
 
   if (!content) throw new Error("Missing pageID");
 
-    //console.log(content)
+  //console.log(content)
 
   const html = marked(content.markdown);
   const post = content.post;
 
-    const postDate = post.date
-    console.log(post.date)
+  const postDate = post.date
+  console.log(post.date)
 
   //is post date longer than 1 day ago?
   const isOlderThanOneDay = (postDate: any) => {

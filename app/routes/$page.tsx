@@ -10,7 +10,6 @@ import {
   pageToPostTransformer,
 } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 import { capitalize } from "~/lib/utils/slugify";
 
 export const meta: MetaFunction = ({ data, params }) => {
@@ -37,21 +36,17 @@ export const meta: MetaFunction = ({ data, params }) => {
     };
 
   return {
-    title: `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } - ${pageTitle}`,
-    description: `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    title: `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } - ${pageTitle}`,
+    description: `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
     author: `${data.data.siteName ? data.data.siteName : data.data.site_name}`,
     "og:type": "website",
     "og:url": `https://${data.data.site_name}.blotion.com`,
-    "og:title": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    }`,
-    "og:description": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    "og:title": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      }`,
+    "og:description": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
     "og:image": `${data.data.cover}`,
     "twitter:image": `${data.data.cover}`,
     "twitter:card": "summary_large_image",
@@ -60,9 +55,8 @@ export const meta: MetaFunction = ({ data, params }) => {
     "twitter:title": data.data.siteName
       ? data.data.siteName
       : data.data.site_name,
-    "twitter:description": `${
-      data.data.siteName ? data.data.siteName : data.data.site_name
-    } a minimalist blog built with Blotion.`,
+    "twitter:description": `${data.data.siteName ? data.data.siteName : data.data.site_name
+      } a minimalist blog built with Blotion.`,
   };
 };
 
@@ -100,7 +94,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const { data, error } = await supabaseAdmin
     .from("sites")
-    .select("*, users(notion_token)")
+    .select("*, users(secret_token)")
     .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .eq("published", true)
     .single();
@@ -109,11 +103,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     return redirect("/");
   }
 
-  const decryptedToken = await decryptAPIKey(
-    data.users.notion_token.toString()
-  );
   const { Client } = require("@notionhq/client");
-  const notion = new Client({ auth: decryptedToken.toString() });
+  const notion = new Client({ auth: data.users.secret_token.toString() });
 
   const pagebyname = await notion.search({
     query: page_name,
@@ -134,7 +125,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
   const content = await getNotionSubPagebyID(
     pagebynamefilter[0].id,
-    decryptedToken
+    data.users.secret_token.toString()
   );
 
   if (content.markdown === "none") {

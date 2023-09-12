@@ -37,7 +37,7 @@ export default Queue("queues/build-blog", async (url: any) => {
 
   const { data, error } = await supabaseAdmin
     .from("sites")
-    .select("*, users(notion_token)")
+    .select("*, users(secret_token)")
     .or(`site_name.eq.${subdomain}`)
     .single();
 

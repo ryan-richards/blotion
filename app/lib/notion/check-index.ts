@@ -41,7 +41,7 @@ export default async function checkIndex(request: Request, session: any) {
 
   const { data, error } = await supabaseAdmin
     .from("sites")
-    .select("*, users(notion_token,plan)")
+    .select("*, users(secret_token,plan)")
     .or(`site_name.eq.${subdomain},custom_domain.eq.${customDomain}`)
     .single();
 
