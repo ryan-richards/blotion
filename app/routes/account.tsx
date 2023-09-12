@@ -15,6 +15,7 @@ import {
   Tag,
   Tooltip,
   ButtonGroup,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ActionFunction,
@@ -38,6 +39,7 @@ import {
   FiRefreshCw,
 } from "react-icons/fi";
 import { HttpMethod } from "~/lib/@types/http";
+import UpgradeModal from "~/lib/components/upgradeModal";
 import { oAuthStrategy } from "~/lib/storage/auth.server";
 import { signInWithNotion } from "~/lib/storage/supabase.client";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
@@ -46,7 +48,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request, {
     failureRedirect: "/",
   });
-
   const url = new URL(request.url);
   const token = url.searchParams.get("token");
   const pageConnected = url.searchParams.get("pageConnected");
@@ -96,15 +97,15 @@ export const action: ActionFunction = async ({ request }) => {
   const action = formData.get("action");
   const page = formData.get("page");
 
-  // Get user data - revert back to working
+  // Get user data
   const { data: userData } = await supabaseAdmin
     .from("users")
     .select("plan")
     .eq("id", session.user?.id)
     .single();
 
-  //if user is on free plan, they can only have one published page
-  if (userData.plan === "free" || userData.plan === "creative") {
+  //if user is on creative plan, they can only publish 1 page.
+  if (userData.plan === "creative") {
     const { data: pages } = await supabaseAdmin
       .from("sites")
       .select("published", { count: "exact" })
@@ -198,12 +199,26 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Account() {
   const { userData } = useLoaderData();
   const [sites, setSites] = useState(userData?.sites);
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => setSites(userData?.sites), [userData]);
 
   const fetcher = useFetcher();
   const prevSitesLengthRef = useRef(userData.sites.length);
   const [refreshCount, setRefreshCount] = useState(0);
+
+  useEffect(() => {
+
+    const interval = setTimeout(() => {
+      if (document.visibilityState === "visible") {
+        if (userData.plan === "free" && userData.sites.length > 0) {
+          onOpen();
+        }
+      }
+    }, 2 * 1000);
+
+    return () => clearTimeout(interval);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -230,25 +245,18 @@ export default function Account() {
     }
   }, [fetcher.data]);
 
-  const actionData = useActionData();
   const transition = useTransition();
   const nav = useNavigate();
   const [hover, setHover] = useState("");
 
   const pagePublishLimit =
-    userData.plan === "free" || userData.plan === "creative" ? 1 : 10;
+    userData.plan === "creative" ? 1 : 10;
   const pagesPublished = userData.sites.filter(
     (page: { published: any }) => page.published
   ).length;
 
-  const message = actionData
-    ? actionData.encrypted
-      ? actionData.encrypted
-      : actionData.decrypted
-    : "";
   const isSubmitting = transition.state === "submitting";
   const canManagePlan = userData.plan === "creative" || userData.plan === "pro";
-  const canPurchase = userData.plan === "free";
 
   const redirectURL = canManagePlan
     ? "/api/create-customer-portal-session"
@@ -325,7 +333,7 @@ export default function Account() {
                     variant={"outline"}
                     type={"submit"}
                   >
-                    {canManagePlan ? "Manage Plan" : "Upgrade"}
+                    {!canManagePlan ? "Manage Plan" : "Upgrade"}
                   </Button>
                 </Form>
                 <Form method={"post"} action={"/auth/logout"}>
@@ -487,7 +495,7 @@ export default function Account() {
                           }
                           placement="top"
                           hasArrow
-                          label="Upgrade to Pro to publish more pages"
+                          label="Upgrade to publish more pages"
                           shouldWrapChildren
                           mb="3"
                         >
@@ -578,6 +586,7 @@ export default function Account() {
           </Text>
         </Flex>
       </Flex>
+      <UpgradeModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
     </>
   );
 }
