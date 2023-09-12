@@ -13,11 +13,9 @@ export const action: ActionFunction = async ({ request }) => {
   const parsed = JSON.parse(session);
   const token = parsed.provider_token;
 
-  const encryptedToken = await encryptAPIKey(token.toString());
-
   await authenticator.authenticate("sb-oauth", request, {
     failureRedirect: "/",
-    successRedirect: `/account?token=${encryptedToken}`,
+    successRedirect: `/account?token=${token}`,
   });
 
   return json({ status: "success" });

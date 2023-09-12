@@ -7,7 +7,6 @@ import navData from "./lib/notion/load-nav";
 import { getNotionNav } from "./lib/notion/notion-api";
 import { oAuthStrategy } from "./lib/storage/auth.server";
 import { supabaseAdmin } from "./lib/storage/supabase.server";
-import { decryptAPIKey } from "./lib/utils/encrypt-api-key";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request);
@@ -29,10 +28,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   if (data) {
-    const decryptedToken = await decryptAPIKey(
-      data.users.notion_token.toString()
-    );
-    const { nav } = await getNotionNav(data.index_page, decryptedToken);
+    const { nav } = await getNotionNav(data.index_page, data.users.secret_token.toString());
     navItems = await navData(nav);
 
     if (!data.nav_links) {
