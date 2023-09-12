@@ -1,6 +1,5 @@
 import { Queue } from "quirrel/remix";
 import { supabaseAdmin } from "../storage/supabase.server";
-import { decryptAPIKey } from "../utils/encrypt-api-key";
 import { subdomainCheck, tidyName } from "../utils/domainFunctions";
 import { HttpMethod } from "../@types/http";
 
@@ -14,25 +13,23 @@ export default Queue("queues/generate-site", async (url: any) => {
     if (token !== "null") {
       const { data, error } = await supabaseAdmin
         .from("users")
-        .update({ notion_token: token })
+        .update({ token: token })
         .eq("id", userId);
     }
 
     if (token || pageConnected) {
       const { data: userData } = await supabaseAdmin
         .from("users")
-        .select("*, sites(*)")
+        .select("id, secret_token, sites(*)")
         .eq("id", userId)
         .single();
-
-      const decrypted = await decryptAPIKey(userData.notion_token.toString());
 
       const { Client } = require("@notionhq/client");
 
       let pages;
 
-      if (decrypted) {
-        const notion = new Client({ auth: decrypted.toString() });
+      if (userData?.secret_token) {
+        const notion = new Client({ auth: userData.secret_token.toString() });
 
         pages = await notion.search({
           sort: {
@@ -97,7 +94,7 @@ export default Queue("queues/generate-site", async (url: any) => {
           }
         });
 
-        const queryString = `userId=${userId}&subdomain=${name}&token=${decrypted.toString()}`;
+        const queryString = `userId=${userId}&subdomain=${name}&token=${userData.secret_token}`;
 
         const url =
           process.env.NODE_ENV === "development"

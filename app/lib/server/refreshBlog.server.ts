@@ -3,16 +3,18 @@ import { marked } from "marked";
 import getPageLinks from "~/lib/notion/load-pageLinks";
 import { getNotionPagebyID } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
-import { decryptAPIKey } from "~/lib/utils/encrypt-api-key";
 
 const refresh = async (data: any, site: any) => {
-  const decryptedToken = await decryptAPIKey(
-    data.users.notion_token.toString()
+  const content = await getNotionPagebyID(
+    data.index_page,
+    data.users.secret_token.toString()
   );
-  const content = await getNotionPagebyID(data.index_page, decryptedToken);
   const html = marked(content.markdown);
   const pageObject = content.pageObject;
-  const pageLinks = await getPageLinks(pageObject, decryptedToken);
+  const pageLinks = await getPageLinks(
+    pageObject,
+    data.users.secret_token.toString()
+  );
 
   await supabaseAdmin
     .from("sites")
@@ -30,7 +32,7 @@ const refresh = async (data: any, site: any) => {
 export default Queue("queues/bust-blog", async (site: any) => {
   const { data, error } = await supabaseAdmin
     .from("sites")
-    .select("*, users(notion_token)")
+    .select("*, users(secret_token)")
     .or(`site_name.eq.${site}`)
     .single();
 
