@@ -1,6 +1,5 @@
 import { Flex, Tag, Text, Link, Icon, Image } from "@chakra-ui/react";
-import { SiNotion } from "react-icons/si";
-import blotionLogo from "../../../public/blotion_logo.png";
+import blotionLogo from "../../../public/blotion.png";
 
 const Footer = ({ pro }: any) => {
   return (

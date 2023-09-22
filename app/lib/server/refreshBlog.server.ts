@@ -1,8 +1,9 @@
 import { Queue } from "quirrel/remix";
 import { marked } from "marked";
 import getPageLinks from "~/lib/notion/load-pageLinks";
-import { getNotionPagebyID } from "~/lib/notion/notion-api";
+import { getNotionNav, getNotionPagebyID } from "~/lib/notion/notion-api";
 import { supabaseAdmin } from "~/lib/storage/supabase.server";
+import navData from "../notion/load-nav";
 
 const refresh = async (data: any, site: any) => {
   const content = await getNotionPagebyID(
@@ -16,6 +17,12 @@ const refresh = async (data: any, site: any) => {
     data.users.secret_token.toString()
   );
 
+  const { nav } = await getNotionNav(
+    data.index_page,
+    data.users.secret_token.toString()
+  );
+  const navItems = await navData(nav);
+
   await supabaseAdmin
     .from("sites")
     .update({
@@ -23,6 +30,7 @@ const refresh = async (data: any, site: any) => {
       page_links: pageLinks,
       page_object: pageObject,
       db_page: pageObject?.posts,
+      nav_links: navItems,
     })
     .match({ site_name: site });
 

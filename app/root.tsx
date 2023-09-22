@@ -3,10 +3,7 @@ import { Outlet, useLoaderData } from "@remix-run/react";
 import { CatchBoundary, Document, ErrorBoundary } from "~/lib/root";
 import globalStylesUrl from "~/lib/styles/global.css";
 import checkIndex from "./lib/notion/check-index";
-import navData from "./lib/notion/load-nav";
-import { getNotionNav } from "./lib/notion/notion-api";
 import { oAuthStrategy } from "./lib/storage/auth.server";
-import { supabaseAdmin } from "./lib/storage/supabase.server";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const session = await oAuthStrategy.checkSession(request);
@@ -25,18 +22,6 @@ export const loader: LoaderFunction = async ({ request }) => {
         SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
       },
     };
-  }
-
-  if (data) {
-    const { nav } = await getNotionNav(data.index_page, data.users.secret_token.toString());
-    navItems = await navData(nav);
-
-    if (!data.nav_links) {
-      await supabaseAdmin
-        .from("sites")
-        .update({ nav_links: navItems })
-        .match({ site_name: data.site_name });
-    }
   }
 
   return {

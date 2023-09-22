@@ -35,6 +35,7 @@ import header from "../../../public/header1.webp";
 import header2 from "../../../public/header2.png";
 import header3 from "../../../public/header3.png";
 import { useRef, useState } from "react";
+import logo from "../../../public/blotion.png";
 import guide1 from "../../../public/guide1.webp";
 import guide2 from "../../../public/guide2.webp";
 import guide3 from "../../../public/guide3.webp";
@@ -45,8 +46,9 @@ import feature3 from "../../../public/feature3.webp";
 import feature4 from "../../../public/feature4.webp";
 import feature5 from "../../../public/feature5.webp";
 import darkmode from "../../../public/darkmode.webp";
-import { useNavigate } from "@remix-run/react";
+import { Link as RemixLink, useNavigate } from "@remix-run/react";
 import { motion } from "framer-motion";
+import JoinOthers from "./landing/join";
 
 export default function LandingPage() {
   const nav = useNavigate();
@@ -183,13 +185,11 @@ export default function LandingPage() {
               <Heading
                 fontWeight={"normal"}
                 mt={2}
-                maxW={{ base: "95%", md: "70%" }}
+                maxW={{ base: "95%", md: "60%" }}
                 textAlign={"center"}
                 size={"md"}
               >
-                Use a Notion template to generate a hosted blog. Blotion
-                allows you to edit and publish blog posts from the comfort of
-                your Notion workspace.
+                Craft your content effortlessly in Notion and seamlessly publish to a SEO optimized blog – no coding or design expertise necessary!
               </Heading>
               <Flex
                 w={"full"}
@@ -224,9 +224,21 @@ export default function LandingPage() {
                   <span>Login with Notion</span>
                 </Button>
               </Flex>
-              <Text mt={4} opacity={"60%"}>
-                No credit card required
-              </Text>
+
+              <Flex
+                w={"full"}
+                align={"center"}
+                direction={"column"}
+                justify={"center"}
+                gap={2}
+                mt={10}
+              >
+                <JoinOthers />
+                <Text mt={4} opacity={"60%"}>
+                  No credit card required
+                </Text>
+              </Flex>
+
             </Flex>
 
             <Flex
@@ -533,7 +545,7 @@ export default function LandingPage() {
               gap={4}
               mt={20}
               width={"full"}
-              mb={40}
+              mb={30}
               border={"1px gray solid"}
               p={10}
               rounded={"2xl"}
