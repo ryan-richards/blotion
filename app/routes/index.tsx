@@ -90,7 +90,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   if (data.home_html) {
-    const url =
+    /* const url =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
         : "https://www.blotion.com";
@@ -103,7 +103,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       });
     } catch (error) {
       console.error(error);
-    }
+    } */
     return json(
       {
         data,
