@@ -1,9 +1,9 @@
-import { Queue } from "quirrel/remix";
-import { supabaseAdmin } from "../storage/supabase.server";
-import { subdomainCheck, tidyName } from "../utils/domainFunctions";
-import { HttpMethod } from "../@types/http";
+// import { Queue } from "quirrel/remix";
+// import { supabaseAdmin } from "../storage/supabase.server";
+// import { subdomainCheck, tidyName } from "../utils/domainFunctions";
+// import { HttpMethod } from "../@types/http";
 
-export default Queue("queues/generate-site", async (url: any) => {
+/* export default Queue("queues/generate-site", async (url: any) => {
   const token = url.searchParams.get("token");
   const pageConnected = url.searchParams.get("pageConnected");
   const userId = url.searchParams.get("userId");
@@ -117,4 +117,4 @@ export default Queue("queues/generate-site", async (url: any) => {
   }
 
   return console.log("no token found");
-});
+}); */
