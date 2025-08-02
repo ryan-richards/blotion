@@ -63,6 +63,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     session
   );
 
+  console.log(data)
+
   const cacheControlHeaders = {
     "Cache-Control": "s-maxage=86400, stale-while-revalidate=172800",
   };
