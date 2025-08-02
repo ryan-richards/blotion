@@ -1,3 +1,3 @@
-import buildBlogServer from "../../lib/server/buildBlog.server";
+/* import buildBlogServer from "../../lib/server/buildBlog.server";
 
-export const action = buildBlogServer;
+export const action = buildBlogServer;*/
