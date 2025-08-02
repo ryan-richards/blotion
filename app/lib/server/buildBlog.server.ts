@@ -1,4 +1,4 @@
-import { Queue } from "quirrel/remix";
+// import { Queue } from "quirrel/remix";
 import { marked } from "marked";
 import getPageLinks from "~/lib/notion/load-pageLinks";
 import { getNotionPagebyID } from "~/lib/notion/notion-api";
@@ -31,7 +31,7 @@ const buildBlog = async (data: any, subdomain: any, token: any) => {
   console.log("finished building blog", subdomain);
 };
 
-export default Queue("queues/build-blog", async (url: any) => {
+/* export default Queue("queues/build-blog", async (url: any) => {
   const subdomain = url.searchParams.get("subdomain");
   const token = url.searchParams.get("token");
 
@@ -44,4 +44,4 @@ export default Queue("queues/build-blog", async (url: any) => {
   if (!data.home_html) {
     await buildBlog(data, subdomain, token);
   }
-});
+});*/
