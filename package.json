@@ -46,7 +46,7 @@
     "stripe": "^10.2.0",
     "timeago-react": "^3.0.5",
     "tiny-invariant": "^1.2.0"
-  }
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.0",
     "@commitlint/cz-commitlint": "^17.0.0",
