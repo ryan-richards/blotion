@@ -1,3 +1,3 @@
-import refreshBlogServer from "../../lib/server/refreshBlog.server";
+/* import refreshBlogServer from "../../lib/server/refreshBlog.server";
 
-export const action = refreshBlogServer;
+export const action = refreshBlogServer; */
