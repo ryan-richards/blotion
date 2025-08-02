@@ -1,4 +1,4 @@
-import { Queue } from "quirrel/remix";
+// import { Queue } from "quirrel/remix";
 import { marked } from "marked";
 import getPageLinks from "~/lib/notion/load-pageLinks";
 import { getNotionNav, getNotionPagebyID } from "~/lib/notion/notion-api";
@@ -37,7 +37,7 @@ const refresh = async (data: any, site: any) => {
   console.log("finished refresh blog", site);
 };
 
-export default Queue("queues/bust-blog", async (site: any) => {
+/* export default Queue("queues/bust-blog", async (site: any) => {
   const { data, error } = await supabaseAdmin
     .from("sites")
     .select("*, users(secret_token)")
@@ -47,4 +47,4 @@ export default Queue("queues/bust-blog", async (site: any) => {
   if (data) {
     await refresh(data, site);
   }
-});
+});*/
